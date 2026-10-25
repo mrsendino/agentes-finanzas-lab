@@ -11,6 +11,8 @@ No escribe nada en data/ del proyecto.
 v3 (2026-10-25): sincronización con 03 v3 (beta de regresión 1,84 -> WACC inicial 11,55 %). Las tasas WACC0 y WACC_T se
 toman del modelo importado (antes WACC0 = 0,1160 estaba copiado a mano de 03 v2). Nueva §14: imprime cada cifra que
 04 copia, redondeada UNA sola vez (mitad hacia arriba, Decimal) desde el valor completo y con el formato del documento.
+v4 (2026-10-25): M-v3-1 de 05-veredicto-v3.md. ROIC A TTM a precisión completa (antes 0.055 a mano) y las demás cifras
+de 02/03 (precio, caja neta, ingresos, EBIT, créditos, BN, SBC, FCF, plan CEO, energía FY25) leídas de ratios.csv / del modelo.
 Convenciones:
   * Cifras en M$ salvo que se indique.
   * DATO = cifra con fuente (ID entre corchetes, ver fuentes/fuentes.md).
@@ -51,24 +53,43 @@ with contextlib.redirect_stdout(io.StringIO()):
     _spec.loader.exec_module(f3)          # ejecuta fase3 en la copia temporal (su Excel se escribe allí)
 shutil.rmtree(_tmp, ignore_errors=True)
 
-PRICE = 372.22                      # 03 §1 (M1)
-SH_COVER = 3952.757946              # 10-Q 3T26 portada (P2/M3)
+# v4 (M-v3-1): las cifras de 02 y 03 ya no se copian a mano; se leen de data/ratios.csv (vía f3.r, que lo carga del
+# modelo importado) o del propio modelo de Fase 3. Los asserts comprueban que coinciden con los valores de v3.
+PRICE = f3.PRICE                    # 03 §1 (M1): 372,22
+SH_COVER = 3952.757946              # 10-Q 3T26 portada (P2/M3); se comprueba contra 03 abajo
 SH_DIL_3T = 3541.0                  # P2
 SH_BAS_3T = 3240.0                  # P2
-CEO_AWARD_SH = 423.7                # 02 §5.1 (Form 4 jun-2026: 423.743.904 restringidas del plan CEO 2025)
-EX2018_NET_SH = 286.43              # 02 §5.1 (Form 4 16-jun-2026: 303,96 ejercidas - 17,53 retenidas)
+CEO_AWARD_SH = f3.r("acc_restringidas_ceo2025")   # 02 §5.1 (Form 4 jun-2026: 423.743.904 restringidas del plan CEO 2025)
+EX2018_NET_SH = 286.43              # Form 4 16-jun-2026: 303,96 ejercidas - 17,53 retenidas (02 §5.1 lo da a 1 decimal)
+assert fmt(EX2018_NET_SH, 1) == fmt(f3.r("acc_netas_ejercicio_2018"), 1), "ejercicio 2018 neto distinto de 02 §5.1"
 SH_FD = f3.SH_FD                    # 03 v2 / 02 §5.1: totalmente diluidas aprox. (portada + ~15 M de empleados)
 assert abs(SH_COVER - f3.SH) < 1e-6, "acciones de portada distintas de las de 03"
 MCAP = PRICE * SH_COVER
-NETCASH = 35924.0                   # 02 §5
-REV_TTM = 103570.0                  # 02 §2
-EBIT_TTM = 3466.0                   # 02 §3
-CRED_TTM = 1181.0                   # 02 §2
-NI_TTM = 3218.0                     # 02 §3 (atribuible a comunes)
-SBC_TTM = 4300.0                    # 02 §4
-SBC_FY24 = 1999.0                   # 02 §4
-FCF_TTM = 3303.0                    # 02 §4
-ROIC_A_TTM = 0.055                  # 02 §6
+NETCASH = f3.r("caja_neta")                       # 02 §5 (ratios.csv)
+REV_TTM = f3.r("ingresos_totales")                # 02 §2
+EBIT_TTM = f3.r("beneficio_operativo")            # 02 §3
+CRED_TTM = f3.r("creditos_regulatorios")          # 02 §2
+NI_TTM = f3.r("beneficio_neto_atrib_comunes")     # 02 §3 (atribuible a comunes)
+SBC_TTM = f3.r("sbc")                             # 02 §4
+SBC_FY24 = f3.r("sbc", "FY2024")                  # 02 §4 (ratios.csv, FY2024)
+FCF_TTM = f3.r("fcf")                             # 02 §4
+_v3 = {"PRICE": (PRICE, 372.22), "CEO": (CEO_AWARD_SH, 423.7), "NETCASH": (NETCASH, 35924.0), "REV": (REV_TTM, 103570.0),
+       "EBIT": (EBIT_TTM, 3466.0), "CRED": (CRED_TTM, 1181.0), "NI": (NI_TTM, 3218.0), "SBC": (SBC_TTM, 4300.0), "FCF": (FCF_TTM, 3303.0), "SBC24": (SBC_FY24, 1999.0)}
+for _k, (_a, _b) in _v3.items():
+    assert abs(_a - _b) < 1e-9, f"{_k}: {_a} distinto del valor de v3 {_b}"
+
+# ROIC A TTM a precisión completa (M-v3-1; v3: ROIC_A_TTM = 0.055 copiado a mano de 02 §6 a un decimal).
+# Misma fórmula que fase2_ratios.py: NOPAT (beneficio operativo x (1 - 0,21)) / capital invertido A medio
+# (saldo 30-sep-2026 de ratios.csv y saldo 30-sep-2025 de tesla_financials.csv). ratios.csv guarda el ratio a 4 decimales.
+_s2 = importlib.util.spec_from_file_location("f2", os.path.join(BASE, "scripts", "fase2_ratios.py"))
+f2 = importlib.util.module_from_spec(_s2)
+_s2.loader.exec_module(f2)          # solo define funciones y constantes (main() va bajo __main__); no escribe nada
+_raw = f2.load()
+_ic_open = (_raw["patrimonio_neto_accionistas"]["9M2025"] + _raw["deuda_corriente"]["9M2025"]
+            + _raw["deuda_no_corriente"]["9M2025"] - _raw["caja_y_inversiones_cp"]["9M2025"])
+_ic_close = f3.r("capital_invertido_A_neto_caja")
+ROIC_A_TTM = EBIT_TTM * (1 - f2.TAX_NORM) / ((_ic_close + _ic_open) / 2)   # 02 §6
+assert round(ROIC_A_TTM, 4) == f3.r("roic_A_neto_caja"), "ROIC A TTM distinto de ratios.csv"
 WACC0 = f3.WACC0                    # 03 v3 §1.1 (11,55 %; v2: 0,1160 copiado a mano)
 WACC_T = f3.WACC_T                  # 03 v3 §1.1 (9,79 %)
 
@@ -93,7 +114,8 @@ FSD_ARR_ANALYST = 1000.0            # ~1.000 M$: estimación de un analista que 
 # Energía (P4/P6): despliegues GWh
 STOR_FY25 = 46.7
 STOR_Q = [12.5, 14.2, 8.8, 13.5, 13.7]  # 3T25..3T26
-REV_ENERGY_FY25 = 12771.0
+REV_ENERGY_FY25 = f3.r("ingresos_energia", "FY2025")   # 02 (ratios.csv, FY2025); v4: antes 12771.0 a mano
+assert REV_ENERGY_FY25 == 12771.0
 
 # Comparables robotaxi
 WAYMO_RIDES_WEEK = 500_000          # abr-2026, Alphabet 1T26 vía T4 (solo secundaria)

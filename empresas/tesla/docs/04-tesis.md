@@ -1,13 +1,13 @@
 # 04 — Tesis alcista, tesis bajista y abogado del diablo (TSLA)
 
-**Fecha del análisis:** 2026-10-24 · **Versión:** v3 (2026-10-25): correcciones de 05-veredicto-v2.md (§8, prioridad 3) y sincronización con 02 v3 y 03 v3 (beta de regresión 1,84); v2.1: sincronizada con 02 v2 (§5.1) y 03 v2; v2: correcciones tras 05-veredicto.md. Ver los registros de cambios al final · **Analista:** Fase 4 (rol *Investment Researcher*) · **Precio de referencia:** 372,22 $ (cierre del 23-oct-2026, 03 §1)
+**Fecha del análisis:** 2026-10-24 · **Versión:** v4 (2026-10-25): corrección M-v3-1 de 05-veredicto-v3.md (diferencial ROIC − WACC −6,0 pp; el script lee de 02/03 las cifras que antes copiaba a mano); v3: correcciones de 05-veredicto-v2.md (§8, prioridad 3) y sincronización con 02 v3 y 03 v3 (beta de regresión 1,84); v2.1: sincronizada con 02 v2 (§5.1) y 03 v2; v2: correcciones tras 05-veredicto.md. Ver los registros de cambios al final · **Analista:** Fase 4 (rol *Investment Researcher*) · **Precio de referencia:** 372,22 $ (cierre del 23-oct-2026, 03 §1)
 **Alcance:** contrastar dos tesis con el mismo rigor y definir qué datos las confirmarían o las refutarían. **No es una recomendación.** No hay precio objetivo ni lenguaje de compra o venta.
 
 **Archivos de esta fase:**
 
 | Archivo | Contenido |
 |---|---|
-| [`scripts/fase4_opcionalidad.py`](../scripts/fase4_opcionalidad.py) | Todas las cuentas de este documento: dimensionado de la opcionalidad, combinaciones, rangos y controles sobre 03. **v2.1:** importa el modelo de 03 al principio y toma de él los valores DCF por escenario y las acciones totalmente diluidas. **v3:** toma también de 03 el WACC inicial y el terminal, y su §14 imprime cada cifra de este documento redondeada una sola vez |
+| [`scripts/fase4_opcionalidad.py`](../scripts/fase4_opcionalidad.py) | Todas las cuentas de este documento: dimensionado de la opcionalidad, combinaciones, rangos y controles sobre 03. **v2.1:** importa el modelo de 03 al principio y toma de él los valores DCF por escenario y las acciones totalmente diluidas. **v3:** toma también de 03 el WACC inicial y el terminal, y su §14 imprime cada cifra de este documento redondeada una sola vez. **v4:** el ROIC A TTM y las demás cifras de 02/03 se leen de `data/ratios.csv` y del modelo, no a mano |
 | [`fuentes/fuentes.md`](../fuentes/fuentes.md) | Fuentes nuevas T1–T10, más la relectura de P2 y P4 |
 | [`fuentes/nuevas_fase4_v2.md`](../fuentes/nuevas_fase4_v2.md) | Fuentes de la ronda v2: V1 (nota de BPA del 10-Q 3T26) y V2 (PER de GuruFocus vía Fase 5) |
 | [`fuentes/nuevas_fase4_v3.md`](../fuentes/nuevas_fase4_v3.md) | Ronda v3: sin fuentes externas nuevas; documentos internos de los que se copian las cifras |
@@ -60,7 +60,7 @@ Las dos tesis parten de los mismos hechos:
 | Margen operativo TTM sin créditos | 2,2 % (3T26 trimestral: 2,6 % GAAP) | 02 §3; P4 |
 | Créditos regulatorios | 1.181 M$ TTM, −73 % interanual en 3T26 | 02 §2; P4 |
 | FCF / FCF − SBC TTM | 3.303 / **−997 M$** | 02 §4 |
-| ROIC A TTM / WACC inicial | 5,5 % / 11,55 % (diferencial −6,1 pp) | 02 §6; 03 v3 §1.1; script §11 y §14 |
+| ROIC A TTM / WACC inicial | 5,5 % / 11,55 % (diferencial −6,0 pp) | 02 §6; 03 v3 §1.1; script §11 y §14 (v4: ROIC a precisión completa) |
 | Caja neta | 35.924 M$; además, línea de crédito de hasta 30.000 M$ sin disponer [CALL] | 02 §5; T1 |
 | Capex 2026 | ~20.000 M$, revisado a la baja desde ">25.000 M$" [CALL] | T1; T10 |
 | DCF del negocio reportado | 10,4 / 24,7 / 55,9 $ por acción (portada); 10,4 / 24,6 / 55,7 $ con acciones totalmente diluidas | 03 v3 §3 |
@@ -483,3 +483,33 @@ Las señales A1-A6 y B1-B6 son los puntos de control que permitirán estrechar e
 - `fase5_consistencia.py` (v1) espera un EBIT_10 central de 147.527 M$ con 1 M$ de tolerancia y dará MISMATCH (ahora 147.484). Es otra expectativa fijada al modelo v2, igual que las de WACC y VPA que avisa 03 v3.
 
 **Lo que no cambia:** los supuestos de Fase 4 (§4-§8 del script), las combinaciones A/B/C y su EBIT (31.600 / 91.650 / 354.200 M$), las señales A1-A6 y B1-B6, los estados de las críticas a 03 y las conclusiones. El negocio reportado vale ~10-56 $ por acción, el sesgo neto de los supuestos de 03 sigue siendo más bien optimista y pequeño frente al precio, y el precio de 372,22 $ equivale a ~42-49 % de probabilidad de la combinación extrema C. **Ningún escenario ni conclusión cambia de orden de magnitud.** Los rangos de §5 se mueven entre 0 y 3 $.
+
+## Registro de cambios v4
+
+**Fecha:** 2026-10-25 · **Origen:** [05-veredicto-v3.md](05-veredicto-v3.md) §2 (M-v3-1) y §8 (devoluciones restantes, prioridad 1: Fase 4) · **Archivos tocados:** `docs/04-tesis.md` y `scripts/fase4_opcionalidad.py`. Sin fuentes nuevas, así que no se crea `fuentes/nuevas_fase4_v4.md`.
+
+**1. Puntos del veredicto**
+
+| Punto del veredicto | Decisión | Qué se cambió |
+|---|---|---|
+| **M-v3-1** 04 §1 (tabla de hechos): diferencial ROIC A TTM − WACC inicial "−6,1 pp" | **Aplicado** | Pasa a **"−6,0 pp"** (§14 del script). El valor completo es 5,510 % − 11,555 % = −6,04 pp. El −6,1 salía de `ROIC_A_TTM = 0.055`, copiado a mano de 02 §6 a un decimal (0,055 − 0,11555 = −6,05). Es la única aparición vigente en 04 |
+| Registro de cambios v3, fila "Diferencial ROIC A − WACC inicial \| −6,1 pp \| −6,1 pp (−6,05 a 2 decimales; sin cambios a 1 decimal)" | **Se deja como histórico; se corrige aquí** | Esa afirmación era incorrecta: el −6,05 salía de la constante redondeada. Con el ROIC a precisión completa es −6,04 y, a 1 decimal, −6,0 pp. No se reescribe el registro v3 |
+| Resto de devoluciones de §8 (Fase 1 G33, Fase 2 §1.2, Fase 3 capturas de mercado, orquestador dcf.xlsx) | **No aplica a Fase 4** | Sin cambios |
+
+**2. Cambios en el script**
+- `ROIC_A_TTM` ya no es una constante: se calcula con la misma fórmula que `fase2_ratios.py`. Es el NOPAT (beneficio operativo TTM × (1 − `TAX_NORM` 0,21)) dividido por el capital invertido A medio. Ese capital es la media del saldo a 30-sep-2026 (`capital_invertido_A_neto_caja`, de `ratios.csv`) y del saldo a 30-sep-2025 (de `tesla_financials.csv`, vía `fase2_ratios.load()`). `ratios.csv` guarda el ratio a solo 4 decimales (`roic_A_neto_caja` TTM = 0,0551), así que leerlo de ahí no daría la precisión completa. Un `assert` comprueba que el valor calculado, redondeado a 4 decimales, coincide con esa fila. `fase2_ratios.py` solo se importa para usar `load()` y `TAX_NORM`; su `main()` no se ejecuta y no escribe nada.
+- Revisión de las demás constantes copiadas a mano de 02 o 03: ahora se leen de su fuente, con los mismos valores. Un `assert` las compara con los valores de v3.
+  - Precio: `f3.PRICE`.
+  - De `ratios.csv` (vía `f3.r`): caja neta, ingresos TTM, beneficio operativo TTM, créditos TTM, beneficio neto atribuible TTM, SBC TTM y FY2024, FCF TTM, restringidas del plan CEO 2025 e ingresos de energía FY2025.
+  - Ejercicio 2018 neto (286,43): sigue a mano porque viene del Form 4 con 2 decimales y 02 §5.1 lo da a 1. Un `assert` comprueba que coincide con 02 a 1 decimal.
+  - No cambian: las cifras tomadas directamente de fuentes primarias (10-Q, deck 3T26, T1-T10) y los supuestos de Fase 4.
+- Ejecución: rc = 0. Comparada con la de v3, la salida solo cambia en dos líneas, las del diferencial: "−6,1 pp" → **"−6,0 pp"** en la §14, y "-6.1%" → "-6.0%" en la línea de control de la §11. Ninguna otra cifra de la §14 cambia; el modelo es el mismo.
+
+**3. Cifras antiguas → nuevas**
+
+| Cifra | v3 | **v4** | Dónde |
+|---|---:|---:|---|
+| Diferencial ROIC A TTM − WACC inicial | −6,1 pp | **−6,0 pp** | §1 (tabla de hechos) |
+| ROIC A TTM / WACC inicial | 5,5 % / 11,55 % | sin cambios | §1 |
+
+**Lo que no cambia:** ninguna conclusión, escenario ni rango. El negocio reportado sigue en ~10-56 $ por acción frente a 372,22 $.
