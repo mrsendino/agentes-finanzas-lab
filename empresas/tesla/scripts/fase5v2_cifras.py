@@ -1,4 +1,4 @@
-"""Fase 5 v2 (Reality Checker, segunda verificación) - cifras de los documentos v2 frente a la salida de los scripts.
+r"""Fase 5 v2 (Reality Checker, segunda verificación) - cifras de los documentos v2 frente a la salida de los scripts.
 
 A. 02-financieros.md: TODAS las celdas numéricas de las tablas de §2-§6 se comparan con data/ratios.csv regenerado.
 B. 01, 03 y 04: catálogo de cifras citadas en el cuerpo (sin «Registro de cambios»), cada una con la expresión
@@ -6,6 +6,25 @@ B. 01, 03 y 04: catálogo de cifras citadas en el cuerpo (sin «Registro de camb
 Redondeo: mitad hacia arriba sobre el valor completo del script (no sobre un valor ya redondeado).
 Resultado: OK / MISMATCH / NO ENCONTRADA. No modifica data/ ni docs/.
 Uso: python3 scripts/fase5v2_cifras.py
+
+REGISTRO DE CAMBIOS v2 -> v3 (2026-10-25, tercera verificación). No se toca ningún modelo; solo anclas (texto fijo que
+rodea a la cifra en el documento), cobertura y cálculo del valor exacto. Los VALORES esperados siguen saliendo de la
+ejecución viva de fase2/3/4, así que el cambio de beta de 03 v3 (1,86 -> 1,84) entra solo.
+  Anclas que dependían de valores v2 y ya no existen en los documentos v3 (daban NO ENCONTRADA):
+    03 §8   "23,6-(x) $ (coherente)"          -> "(x)-(y) $ (coherente)"; se comprueban los dos extremos
+    04 §4.2.4 "**10,40 / (x) / 55,76 $**"     -> "**a / (x) / c $** con acciones de portada" (+ los 6 valores)
+    04 §4.2.4 "**10,36 / 24,52 / (x) $**"     -> "con acciones de portada y **a / b / (x) $**"
+    04 §4.1.1 "pasa de 24,61 $ a (x) $"       -> "pasa de [\d,]+ $ a (x) $" (+ el punto de partida 24,65)
+    04 §4.1.1 "que 03 v2 §6.3 ((x) /"         -> "que 03 v\d §6.3 ((x) / (y) $)"
+    04 §4.1.3 "(24,6 → (x) $)"                -> "((a) → (x) $)" (+ el punto de partida)
+    04 §4.1.3 "+4,6 $** (→ (x) $)"            -> "**+(d) $** (→ (x) $) si se desplaza" (+ la diferencia y el WACC_T)
+    04 §0   "24,6 $ a **(x)-(y) $** (script"  -> "de (a) $ a **(x)-(y) $** (script"
+  Cobertura nueva (v3): beta de regresión de 03 §1 y §1.1; W9 desplazado +4,4 $ en 03 §4.3; margen operativo TTM 3,3 %
+    en 02 §0, 03 §7 y 04 §3.2; diferencial ROIC A − WACC inicial en 04 §1; VPA a 1 decimal de 04 §0 y saldo; rango
+    "10,4-55,9 $" del saldo de 04; VPA totalmente diluidos de 03 §0.
+  Valor exacto (corrección de un punto ciego de v2): para ROIC A, ROIC B y ROE el comprobador usaba el valor de
+    ratios.csv a 4 decimales; por eso no detectó en v2 el doble redondeo del ROIC B FY23 (12,145 % -> 12,2 %) que
+    encontró Fase 2. Ahora se recalculan desde NOPAT y el capital medio, como fase2_ratios.py.
 """
 import contextlib
 import csv
@@ -112,6 +131,25 @@ with open(os.path.join(TMP, "data", "tesla_financials.csv"), encoding="utf-8") a
         RAW[row["metrica"]] = row
 
 
+def roic_exact(metric, per):
+    """v3: ROIC A / ROIC B / ROE con la misma fórmula que fase2_ratios.py, desde importes (sin redondear el %)."""
+    prev = {"FY2022": "FY2021", "FY2023": "FY2022", "FY2024": "FY2023", "FY2025": "FY2024"}
+    raw9 = lambda m: float(RAW[m]["9M2025"])
+    if metric == "roe":
+        num_, ic, open_ = float(R["beneficio_neto_atrib_comunes"][per]), "patrimonio_neto_accionistas", raw9("patrimonio_neto_accionistas")
+    else:
+        num_ = float(R["beneficio_operativo"][per]) * 0.79
+        ic = "capital_invertido_A_neto_caja" if metric == "roic_A_neto_caja" else "capital_invertido_B_bruto"
+        open_ = raw9("patrimonio_neto_accionistas") + raw9("deuda_corriente") + raw9("deuda_no_corriente") - \
+            (raw9("caja_y_inversiones_cp") if metric == "roic_A_neto_caja" else 0.0)
+    end = float(R[ic][per])
+    if per == "TTM_Q3_2026":
+        return num_ / ((end + open_) / 2)
+    if per == "FY2021":
+        return num_ / end
+    return num_ / ((end + float(R[ic][prev[per]])) / 2)
+
+
 def pct_exact(metric, per, kind):
     """Recalcula el % con los importes del CSV de ratios (sin redondear), cuando la fórmula es directa."""
     rv = lambda m, p: float(R[m][p])
@@ -136,6 +174,8 @@ def pct_exact(metric, per, kind):
         if metric in num_den:
             n, d = num_den[metric]
             return rv(n, per) / rv(d, per)
+        if metric in ("roic_A_neto_caja", "roic_B_bruto", "roe"):   # v3: exacto, no el CSV a 4 decimales
+            return roic_exact(metric, per)
     except (KeyError, ValueError, ZeroDivisionError):
         pass
     return float(R[metric][per])
@@ -223,6 +263,7 @@ CAT = [
     ("01-negocio.md", "Margen energía 3T26", r"Energía \| 2\.881 \| 3\.415 \| −16 % \| ([\d,]+) %", 954 / 2881 * 100, 1),
     ("01-negocio.md", "Margen bruto 3T26", r"≈0 % \| \*\*([\d,]+) %\*\*", 5494 / 28046 * 100, 1),
     ("01-negocio.md", "Q4 capex implícito", r"el Q4 implícito es de ~([\d.]+) M\$", 20000 - 13014, -3),
+    ("02-financieros.md", "§0 margen operativo TTM (v3)", r"y al ([\d,]+) % \(TTM\)", float(R["beneficio_operativo"]["TTM_Q3_2026"]) / float(R["ingresos_totales"]["TTM_Q3_2026"]) * 100, 1),
     ("01-negocio.md", "Ilustrativo 30x BN FY25", r"Eso daría ~([\d.]+) M\$", 30 * 3794, -3),
     # --- 03 ---
     ("03-valoracion.md", "Capitalización", r"\*\*([\d.]+) M\$\*\* \| Calculada como precio", f3.MCAP, 0),
@@ -292,7 +333,22 @@ CAT += [
     ("03-valoracion.md", "§4.3 W9 desplazado VPA", r"como la tabla 4.1\) \| [\d,]+ % \| [\d,]+ % \| ([\d,]+) \$", f3.W9_SHIFT, 1),
     ("03-valoracion.md", "§4.3 W9 WACC sector", r"solo en los años 1-5 \| ([\d,]+) %", f3.WACC0_SEC * 100, 2),
     ("03-valoracion.md", "§4.3 W9 WACC_T desplazado", r"como la tabla 4.1\) \| [\d,]+ % \| ([\d,]+) %", (f3.WACC_T + f3.WACC0_SEC - f3.WACC0) * 100, 2),
-    ("03-valoracion.md", "§8 rango ROIC/beta techo", r"23,6-([\d,]+) \$ \(coherente\)", f3.W9_15, 1),
+    ("03-valoracion.md", "§8 rango ROIC/beta suelo", r"\| ([\d,]+)-[\d,]+ \$ \(coherente\)", f3.ROIC_SENS[0][2], 1),   # v3: ancla sin valores
+    ("03-valoracion.md", "§8 rango ROIC/beta techo", r"\| [\d,]+-([\d,]+) \$ \(coherente\)", f3.W9_15, 1),
+    ("03-valoracion.md", "§8 hasta (W9 desplazado)", r"\(coherente\); hasta ([\d,]+) \$", f3.W9_SHIFT, 1),
+    # --- v3: cobertura nueva en 03 ---
+    ("03-valoracion.md", "§1 beta de regresión (fuente 1)", r"Beta de regresión — \*\*v3\*\* \| ([\d,]+) y", f3.MKT["beta_reg_1"][0], 2),
+    ("03-valoracion.md", "§1 beta de regresión (fuente 2)", r"Beta de regresión — \*\*v3\*\* \| [\d,]+ y ([\d,]+)", f3.MKT["beta_reg_2"][0], 2),
+    ("03-valoracion.md", "§1 beta de regresión (media)", r"Beta de regresión — \*\*v3\*\* \| [\d,]+ y [\d,]+ → \*\*([\d,]+)\*\*", f3.BETA_REG, 2),
+    ("03-valoracion.md", "§1.1 beta de regresión en la mezcla", r"Media al 50 % de la regresión \(([\d,]+)\)", f3.BETA_REG, 2),
+    ("03-valoracion.md", "§4.3 W9 desplazado dif", r"como la tabla 4.1\) \|[^|]*\|[^|]*\|[^|]*\| \+([\d,]+) \$", f3.W9_SHIFT - f3.RES["base"]["vps"], 1),
+    ("03-valoracion.md", "§4.3 VPA modelo", r"\*\*Modelo \(beta mezclada 50/50\)\*\* \|[^|]*\|[^|]*\| \*\*([\d,]+) \$", f3.RES["base"]["vps"], 1),
+    ("03-valoracion.md", "§7 margen operativo TTM", r"varias veces el ([\d,]+) % de Tesla", float(R["beneficio_operativo"]["TTM_Q3_2026"]) / float(R["ingresos_totales"]["TTM_Q3_2026"]) * 100, 1),
+    ("03-valoracion.md", "§0 VPA FD bajista", r"los valores apenas cambian: ([\d,]+) /", f3.RES_DIL["bajista"], 1),
+    ("03-valoracion.md", "§0 VPA FD base", r"los valores apenas cambian: [\d,]+ / ([\d,]+) /", f3.RES_DIL["base"], 1),
+    ("03-valoracion.md", "§0 VPA FD alcista", r"los valores apenas cambian: [\d,]+ / [\d,]+ / ([\d,]+) \$", f3.RES_DIL["alcista"], 1),
+    ("03-valoracion.md", "§0 v3 base a 1 decimal", r"que a un decimal es \*\*([\d,]+) \$\*\*", f3.RES["base"]["vps"], 1),
+    ("03-valoracion.md", "§8 VPA FD base", r"con acciones totalmente diluidas, 10-56 \$ \(base ([\d,]+) \$\)", f3.RES_DIL["base"], 1),
 ]
 for idx, (lab, m0, nf, v) in enumerate(f3.ASYM_RES[1:], start=1):
     rx_lab = ["Sin la SBC por encima de FY2024", "Sin la I\\+D incremental de 3T26", "Sin ninguna de las dos",
@@ -328,26 +384,50 @@ CAT += [
 ]
 # --- 04 ---
 EQ = {k: f3.RES[k]["vps"] for k in ("bajista", "base", "alcista")}
+ROIC_A_TTM_EXACT = roic_exact("roic_A_neto_caja", "TTM_Q3_2026")   # v3: 04 §1 usa 0,055 copiado (02 a 1 decimal)
 CAT += [
     ("04-tesis.md", "§1 DCF portada", r"\| DCF del negocio reportado \| ([\d,]+) / ", EQ["bajista"], 1),
     ("04-tesis.md", "§1 DCF base", r"\| DCF del negocio reportado \| [\d,]+ / ([\d,]+)", EQ["base"], 1),
     ("04-tesis.md", "§1 DCF alcista", r"\| DCF del negocio reportado \| [\d,]+ / [\d,]+ / ([\d,]+)", EQ["alcista"], 1),
-    ("04-tesis.md", "§4.2.4 VPA portada base", r"\*\*10,40 / ([\d,]+) / 55,76 \$\*\*", EQ["base"], 2),
-    ("04-tesis.md", "§4.2.4 VPA FD alcista", r"\*\*10,36 / 24,52 / ([\d,]+) \$\*\*", f3.RES_DIL["alcista"], 2),
+    # v3: anclas sin valores v2 (antes "**10,40 / (x) / 55,76 $**" y "**10,36 / 24,52 / (x) $**")
+    ("04-tesis.md", "§4.2.4 VPA portada bajista", r"\*\*([\d,]+) / [\d,]+ / [\d,]+ \$\*\* con acciones de portada", EQ["bajista"], 2),
+    ("04-tesis.md", "§4.2.4 VPA portada base", r"\*\*[\d,]+ / ([\d,]+) / [\d,]+ \$\*\* con acciones de portada", EQ["base"], 2),
+    ("04-tesis.md", "§4.2.4 VPA portada alcista", r"\*\*[\d,]+ / [\d,]+ / ([\d,]+) \$\*\* con acciones de portada", EQ["alcista"], 2),
+    ("04-tesis.md", "§4.2.4 VPA FD bajista", r"con acciones de portada y \*\*([\d,]+) / [\d,]+ / [\d,]+ \$\*\*", f3.RES_DIL["bajista"], 2),
+    ("04-tesis.md", "§4.2.4 VPA FD base", r"con acciones de portada y \*\*[\d,]+ / ([\d,]+) / [\d,]+ \$\*\*", f3.RES_DIL["base"], 2),
+    ("04-tesis.md", "§4.2.4 VPA FD alcista", r"con acciones de portada y \*\*[\d,]+ / [\d,]+ / ([\d,]+) \$\*\*", f3.RES_DIL["alcista"], 2),
     ("04-tesis.md", "§2.3 EBIT central", r"\*\*([\d.]+) M\$\*\* \(43x", o4(r"referencia central .*?: ([\d,]+) M\$"), 0),
     ("04-tesis.md", "§2.3 rango bajo", r"\*\*([\d.]+)-[\d.]+ M\$\*\*", o4(r"necesario de la opcionalidad: ([\d,]+) -"), 0),
     ("04-tesis.md", "§2.3 rango alto", r"\*\*[\d.]+-([\d.]+) M\$\*\*", o4(r"necesario de la opcionalidad: [\d,]+ - ([\d,]+)"), 0),
     ("04-tesis.md", "§2.3 40x año 10", r"40x en el año 7 \| ([\d.]+) /", o4(r"40x NOPAT en el año 10 -> EBIT necesario ([\d,]+)"), 0),
     ("04-tesis.md", "§2.3 30x año 7", r"40x en el año 7 \| [\d.]+ / ([\d.]+) /", o4(r"30x NOPAT en el año 7 -> EBIT necesario ([\d,]+)"), 0),
     ("04-tesis.md", "§2.3 40x año 7", r"40x en el año 7 \| [\d.]+ / [\d.]+ / ([\d.]+)", o4(r"40x NOPAT en el año 7 -> EBIT necesario ([\d,]+)"), 0),
-    ("04-tesis.md", "§4.1.1 VPA SBC", r"el caso base pasa de 24,61 \$ a ([\d,]+) \$", f3.ASYM_RES[1][3], 2),
+    ("04-tesis.md", "§4.1.1 VPA de partida", r"el caso base pasa de ([\d,]+) \$ a [\d,]+ \$ o", EQ["base"], 2),
+    ("04-tesis.md", "§4.1.1 VPA SBC", r"el caso base pasa de [\d,]+ \$ a ([\d,]+) \$", f3.ASYM_RES[1][3], 2),
     ("04-tesis.md", "§4.1.1 VPA I+D", r"a [\d,]+ \$ o ([\d,]+) \$", f3.ASYM_RES[2][3], 2),
-    ("04-tesis.md", "§4.1.1 cita de 03 §6.3 (SBC)", r"las mismas cifras que 03 v2 §6.3 \(([\d,]+) /", f3.ASYM_RES[1][3], 1),
-    ("04-tesis.md", "§4.1.3 W9 VPA 1-5", r"\(24,6 → ([\d,]+) \$\)", f3.W9_15, 1),
-    ("04-tesis.md", "§4.1.3 W9 desplazado", r"\+4,6 \$\*\* \(→ ([\d,]+) \$\)", f3.W9_SHIFT, 1),
+    ("04-tesis.md", "§4.1.1 cita de 03 §6.3 (SBC)", r"las mismas cifras que 03 v\d §6.3 \(([\d,]+) /", f3.ASYM_RES[1][3], 1),
+    ("04-tesis.md", "§4.1.1 cita de 03 §6.3 (I+D)", r"las mismas cifras que 03 v\d §6.3 \([\d,]+ / ([\d,]+) \$\)", f3.ASYM_RES[2][3], 1),
+    ("04-tesis.md", "§4.1.3 W9 punto de partida", r"\(([\d,]+) → [\d,]+ \$\) si solo cambia", EQ["base"], 1),
+    ("04-tesis.md", "§4.1.3 W9 VPA 1-5", r"\([\d,]+ → ([\d,]+) \$\) si solo cambia", f3.W9_15, 1),
+    ("04-tesis.md", "§4.1.3 W9 dif 1-5", r"\*\*\+([\d,]+) \$\*\* por acción \([\d,]+ →", f3.W9_15 - EQ["base"], 1),
+    ("04-tesis.md", "§4.1.3 W9 desplazado dif", r"\*\*\+([\d,]+) \$\*\* \(→ [\d,]+ \$\) si se desplaza", f3.W9_SHIFT - EQ["base"], 1),
+    ("04-tesis.md", "§4.1.3 W9 desplazado", r"\*\*\+[\d,]+ \$\*\* \(→ ([\d,]+) \$\) si se desplaza", f3.W9_SHIFT, 1),
+    ("04-tesis.md", "§4.1.3 W9 WACC_T desplazado", r"si se desplaza también el WACC terminal \(al ([\d,]+) %\)", (f3.WACC_T + f3.WACC0_SEC - f3.WACC0) * 100, 2),
     ("04-tesis.md", "§4.1.3 interpolación", r"\((\d+,\d) \$ interpolando", o4(r"método de 05 §3.3\): ([\d.]+) \$"), 1),
-    ("04-tesis.md", "§0 ajuste máx bajo", r"24,6 \$ a \*\*([\d,]+)-[\d,]+ \$\*\* \(script", G4["up_lo"], 1),
-    ("04-tesis.md", "§0 ajuste máx alto", r"24,6 \$ a \*\*[\d,]+-([\d,]+) \$\*\* \(script", G4["up_hi"], 1),
+    ("04-tesis.md", "§0 ajuste máx punto de partida", r"sube el caso base de ([\d,]+) \$ a \*\*[\d,]+-[\d,]+ \$\*\* \(script", EQ["base"], 1),
+    ("04-tesis.md", "§0 ajuste máx bajo", r"de [\d,]+ \$ a \*\*([\d,]+)-[\d,]+ \$\*\* \(script", G4["up_lo"], 1),
+    ("04-tesis.md", "§0 ajuste máx alto", r"de [\d,]+ \$ a \*\*[\d,]+-([\d,]+) \$\*\* \(script", G4["up_hi"], 1),
+    # --- v3: cobertura nueva en 04 ---
+    ("04-tesis.md", "§0 base a 1 decimal", r"\(03 v\d §3; base ([\d,]+) \$\)", EQ["base"], 1),
+    ("04-tesis.md", "§0 WACC inicial", r"por debajo de un WACC inicial del ([\d,]+) %", f3.WACC0 * 100, 2),
+    ("04-tesis.md", "§1 WACC inicial", r"\| ROIC A TTM / WACC inicial \| [\d,]+ % / ([\d,]+) %", f3.WACC0 * 100, 2),
+    ("04-tesis.md", "§1 diferencial ROIC A − WACC0 (pp)", r"\(diferencial (−[\d,]+) pp\)", (ROIC_A_TTM_EXACT - f3.WACC0) * 100, 1),
+    ("04-tesis.md", "§2.3 tasa alta", r"a una tasa del [\d,]+-([\d,]+) % \(WACC terminal e inicial", f3.WACC0 * 100, 2),
+    ("04-tesis.md", "§3.2 margen operativo TTM", r"al ([\d,]+) % TTM \(02 v3\)", float(R["beneficio_operativo"]["TTM_Q3_2026"]) / float(R["ingresos_totales"]["TTM_Q3_2026"]) * 100, 1),
+    ("04-tesis.md", "Saldo rango bajo", r"\(([\d,]+)-[\d,]+ \$ en 03 v3\)", EQ["bajista"], 1),
+    ("04-tesis.md", "Saldo rango alto", r"\([\d,]+-([\d,]+) \$ en 03 v3\)", EQ["alcista"], 1),
+    ("04-tesis.md", "§4.2.2 ROIC terminal suelo", r"midió su efecto: ([\d,]+)-[\d,]+ \$", f3.ROIC_SENS[0][2], 1),
+    ("04-tesis.md", "§4.2.2 ROIC terminal techo", r"midió su efecto: [\d,]+-([\d,]+) \$", f3.ROIC_SENS[4][2], 1),
     ("04-tesis.md", "Saldo +bajo", r"\*\*\+([\d,]+) a \+[\d,]+ \$\*\* \(script §13", G4["up_lo"] - EQ["base"], 1),
     ("04-tesis.md", "Saldo +alto", r"\*\*\+[\d,]+ a \+([\d,]+) \$\*\* \(script §13", G4["up_hi"] - EQ["base"], 1),
     ("04-tesis.md", "Saldo efecto neto", r"el efecto neto en el caso base es de \+([\d,]+) \$", EQ["base"] - 24.53, 2),
