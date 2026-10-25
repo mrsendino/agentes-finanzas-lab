@@ -12,6 +12,12 @@ Pasos:
 4. Calcula márgenes, crecimientos, FCF, caja neta, créditos/beneficio operativo, ROIC aproximado.
 5. Escribe data/ratios.csv y data/checks.csv.
 
+v2 (2026-10-25, ronda de correcciones de 05-veredicto.md §5 Fase 2):
+  - Añade D&A (depreciation, amortization and impairment) como flujo: FY2025 y TTM construidos
+    y contrastados con la reconciliación EBITDA TTM de P4.
+  - Añade la descomposición de acciones (portada / básica / diluida / emitidas 9M26) con controles.
+  - Añade contraste de FY2021 con el deck Q4-2021 (cifras redondeadas a 0,1 B$).
+
 Método ROIC (aproximación, declarada):
   NOPAT = beneficio operativo x (1 - 21 %)   [tipo federal EE. UU. normativo; se evita el tipo
           efectivo porque FY2023 incluye una liberación de provisión fiscal no recurrente]
@@ -34,7 +40,7 @@ YEARS = ["FY2021", "FY2022", "FY2023", "FY2024", "FY2025", "TTM_Q3_2026"]
 FLOW = ["ingresos_totales", "auto_ventas", "creditos_regulatorios", "auto_leasing",
         "ingresos_automocion_total", "ingresos_energia", "ingresos_servicios_otros",
         "beneficio_bruto", "beneficio_operativo", "beneficio_neto_atrib_comunes",
-        "flujo_caja_operativo", "capex", "sbc"]
+        "flujo_caja_operativo", "capex", "sbc", "dya_amortizacion_deterioro"]
 STOCK = ["caja_y_inversiones_cp", "deuda_corriente", "deuda_no_corriente",
          "patrimonio_neto_accionistas"]
 
@@ -148,6 +154,38 @@ def main():
     chk("PER GAAP a 354,72 $ con BPA TTM a Q2-26 (P4) vs ~327x (S11)", 354.72 / eps_ttm_q2, 327, "01-negocio.md (S11)", tol=3)
     chk("PER GAAP a 354,72 $ con BPA TTM a Q3-26 (P4) — tras resultados", 354.72 / eps_ttm_q3, 327, "01-negocio.md (S11, previo a resultados)", tol=3)
 
+    # ---- 3b. (v2) D&A trimestral P4 y FY2021 frente al deck Q4-2021
+    chk("D&A 9M2026 (10-Q) = 1T+2T+3T 2026 de P4 (1.590+1.619+1.852)", raw["dya_amortizacion_deterioro"]["9M2026"], 1590.0 + 1619 + 1852, P4)
+    chk("D&A TTM P4 = 4T25+1T26+2T26+3T26 (1.643+1.590+1.619+1.852)", raw["dya_amortizacion_deterioro"]["TTM_Q3_2026"], 1643.0 + 1590 + 1619 + 1852, P4)
+    D21 = "8-K Ex.99.1 Q4 2021 Update, acc. 0001564590-22-002476 (texto, cifras en B$ redondeadas)"
+    chk("FY2021 BN atribuible (10-K FY2022) vs deck Q4-2021 (5,5 B$)", raw["beneficio_neto_atrib_comunes"]["FY2021"], 5500, D21, tol=50)
+    chk("FY2021 FCF (10-K FY2022) vs deck Q4-2021 (5,0 B$)", sub(raw["flujo_caja_operativo"]["FY2021"], raw["capex"]["FY2021"]), 5000, D21, tol=50)
+    chk("FY2021 capex (10-K FY2022) vs deck Q4-2021 (6,5 B$)", raw["capex"]["FY2021"], 6500, D21, tol=50)
+    chk("FY2021 efectivo (10-K FY2022: 17.576) vs deck Q4-2021 (17,6 B$)", 17576.0, 17600, D21, tol=50)
+
+    # ---- 3c. (v2) Descomposición de acciones a 30-sep-2026 (M acciones)
+    # Fuentes: P2 (10-Q 3T26) portada, nota de BPA y estado de patrimonio; 10-Q 1T26 y 2T26 (estado de
+    # patrimonio); 10-Q 3T25; Form 4 de E. Musk de 17-jun-2026 (ejercicio de 303.960.630 opciones de 2018,
+    # 17.531.857 retenidas, posesión directa posterior 710.172.677); Form 4 de 4-ago-2025 (96.000.000
+    # acciones restringidas, CEO Interim Award). Ver fuentes/nuevas_fase2_v2.md.
+    SHR = {"portada_15oct26": 3952.757946, "balance_31dic25": 3751.0, "balance_30sep25": 3324.0,
+           "balance_30jun25": 3224.0, "emit_1T26": 4.0, "emit_2T26": 194.0, "emit_3T26": 4.0, "emit_9M26": 202.0,
+           "balance_30sep26": 3953.0, "basica_3T26": 3240.0, "diluida_3T26": 3541.0, "awards_3T26": 301.0,
+           "basica_1T26": 3234.0, "basica_2T26": 3237.0, "basica_3T25": 3227.0, "emit_3T25": 100.0,
+           "ceo2025_restringidas": 423.743904, "op2018_ejercidas": 303.960630, "op2018_retenidas": 17.531857,
+           "interim2025": 96.0, "musk_directas_tras_ejercicio": 710.172677}
+    op2018_netas = SHR["op2018_ejercidas"] - SHR["op2018_retenidas"]
+    restr_excl_basica = SHR["ceo2025_restringidas"] + op2018_netas
+    chk("Acciones: 31-dic-25 + emitidas 9M26 = 30-sep-26 (P2)", SHR["balance_31dic25"] + SHR["emit_9M26"], SHR["balance_30sep26"], "P2 estado de patrimonio")
+    chk("Acciones: emitidas 1T+2T+3T 2026 = 9M26 (10-Q 1T/2T/3T26)", SHR["emit_1T26"] + SHR["emit_2T26"] + SHR["emit_3T26"], SHR["emit_9M26"], "10-Q 1T26, 2T26, 3T26")
+    chk("Acciones: básica + stock-based awards = diluida 3T26 (P2)", SHR["basica_3T26"] + SHR["awards_3T26"], SHR["diluida_3T26"], "P2 nota de BPA")
+    chk("Acciones: directas de Musk = restringidas CEO 2025 + netas del ejercicio 2018 (Form 4)", restr_excl_basica, SHR["musk_directas_tras_ejercicio"], "Form 4 17-jun-2026", tol=0.001)
+    chk("Acciones: emitidas 2T26 ≈ netas 2018 − Interim 2025 cancelada (+~4 empleados)", op2018_netas - SHR["interim2025"], SHR["emit_2T26"], "10-Q 2T26 / Form 4", tol=5)
+    chk("Acciones: emitidas 4T25 (31-dic-25 − 30-sep-25) ≈ restringidas CEO 2025", SHR["balance_31dic25"] - SHR["balance_30sep25"], SHR["ceo2025_restringidas"], "10-Q 3T25 / P2 / Form 4", tol=5)
+    chk("Acciones: emitidas 3T25 ≈ Interim Award 2025 (96 M)", SHR["emit_3T25"], SHR["interim2025"], "10-Q 3T25 / Form 4 ago-2025", tol=5)
+    chk("Acciones: portada − básica 3T26 ≈ restringidas no ganadas (CEO 2025 + 2018 netas)", SHR["portada_15oct26"] - SHR["basica_3T26"], restr_excl_basica, "P2 / Form 4", tol=5)
+    chk("Acciones: básica apenas varía 1T→3T26 pese a +194 M en 2T (restringidas fuera de la básica)", SHR["basica_3T26"] - SHR["basica_1T26"], SHR["emit_1T26"] + SHR["emit_3T26"], "10-Q 1T26 / 3T26", tol=5)
+
     # ---- 4. Ratios
     out = []
 
@@ -170,10 +208,14 @@ def main():
     put("fcf_menos_sbc", "M USD", {y: sub(fcf[y], s["sbc"][y]) for y in YEARS}, "FCF - SBC (SBC tratado como coste real)")
     put("beneficio_operativo_sin_creditos", "M USD", ebit_ex_cred, "benef. operativo - créditos regulatorios (créditos asumidos ~100 % margen)")
 
+    da = series("dya_amortizacion_deterioro")
+    put("capex_neto_de_dya", "M USD", {y: sub(s["capex"][y], da[y]) for y in YEARS}, "capex - D&A (D&A incluye deterioros)")
+    put("ebitda_aprox", "M USD", {y: add(s["beneficio_operativo"][y], da[y]) for y in YEARS}, "benef. operativo + D&A (sin ajustar SBC; no es el EBITDA ajustado de Tesla)")
     rev = series("ingresos_totales")
     for name, m in [("margen_bruto", "beneficio_bruto"), ("margen_operativo", "beneficio_operativo"),
                     ("margen_neto", "beneficio_neto_atrib_comunes"), ("margen_fco", "flujo_caja_operativo"),
-                    ("capex_sobre_ingresos", "capex"), ("sbc_sobre_ingresos", "sbc")]:
+                    ("capex_sobre_ingresos", "capex"), ("sbc_sobre_ingresos", "sbc"),
+                    ("dya_sobre_ingresos", "dya_amortizacion_deterioro")]:
         put(name, "%", {y: div(s[m][y], rev[y]) for y in YEARS}, f"{m} / ingresos totales")
     put("margen_fcf", "%", {y: div(fcf[y], rev[y]) for y in YEARS}, "FCF / ingresos totales")
     put("margen_operativo_sin_creditos", "%", {y: div(ebit_ex_cred[y], rev[y]) for y in YEARS}, "(benef. operativo - créditos) / ingresos")
@@ -245,6 +287,17 @@ def main():
     put("var_caja_neta_9M26", "M USD", {"TTM_Q3_2026": sub(sub(s["caja_y_inversiones_cp"]["TTM_Q3_2026"], debt["TTM_Q3_2026"]), sub(s["caja_y_inversiones_cp"]["FY2025"], debt["FY2025"]))}, "caja neta 30-sep-26 - caja neta 31-dic-25")
     put("multiplo_caja_neta_21_3T26", "x", {"TTM_Q3_2026": div(sub(s["caja_y_inversiones_cp"]["TTM_Q3_2026"], debt["TTM_Q3_2026"]), sub(s["caja_y_inversiones_cp"]["FY2021"], debt["FY2021"]))}, "caja neta 30-sep-26 / 31-dic-21")
     put("var_sbc_24_ttm", "%", {"TTM_Q3_2026": div(s["sbc"]["TTM_Q3_2026"], s["sbc"]["FY2024"]) - 1}, "SBC TTM / FY2024 - 1")
+
+    # (v2) Descomposición de acciones a 3T-2026 (M acciones; columna TTM_Q3_2026)
+    put("acc_portada_15oct26", "M acciones", {"TTM_Q3_2026": SHR["portada_15oct26"]}, "portada 10-Q 3T26 (P2)")
+    put("acc_basica_media_3T26", "M acciones", {"TTM_Q3_2026": SHR["basica_3T26"]}, "nota de BPA P2")
+    put("acc_restringidas_ceo2025", "M acciones", {"TTM_Q3_2026": SHR["ceo2025_restringidas"]}, "Form 4: 423.743.904 restringidas; en portada, fuera de básica y de diluida (no 'ganadas')")
+    put("acc_netas_ejercicio_2018", "M acciones", {"TTM_Q3_2026": op2018_netas}, "Form 4 17-jun-26: 303,96 ejercidas - 17,53 retenidas; en portada, fuera de básica; vesting por servicio 19-ene-2028")
+    put("acc_residuo_portada_menos_basica", "M acciones", {"TTM_Q3_2026": SHR["portada_15oct26"] - SHR["basica_3T26"] - restr_excl_basica}, "portada - básica - restringidas: desfase media/saldo y emisiones de empleados")
+    put("acc_stock_based_awards_3T26", "M acciones", {"TTM_Q3_2026": SHR["awards_3T26"]}, "diluida - básica (P2), método de tesorería")
+    put("acc_awards_no_incluidos_en_portada_aprox", "M acciones", {"TTM_Q3_2026": SHR["awards_3T26"] - op2018_netas}, "INFERENCIA: 301 - acciones netas 2018 (ya en portada) = incentivos de empleados aún no emitidos")
+    put("acc_doble_computo_portada_mas_301", "M acciones", {"TTM_Q3_2026": op2018_netas}, "INFERENCIA: parte de las 301 que ya está en la portada")
+    put("acc_totalmente_diluidas_aprox", "M acciones", {"TTM_Q3_2026": SHR["portada_15oct26"] + SHR["awards_3T26"] - op2018_netas}, "portada + incentivos no emitidos (incluye las 423,7 M del CEO aún no ganadas)")
 
     with open(OUT, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=["metrica", "unidad"] + YEARS + ["metodo"])

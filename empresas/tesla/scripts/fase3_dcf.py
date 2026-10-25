@@ -16,10 +16,25 @@ Convenciones del modelo
 - Valor terminal: FCFF_11 = NOPAT_11 x (1 - g / ROIC_terminal); TV = FCFF_11 / (WACC_terminal - g).
 - WACC: años 1-5 = WACC inicial; años 6-10 convergen linealmente a un WACC de empresa madura.
 - Valor de las acciones = valor de la empresa + caja neta (Fase 2, 30-sep-2026).
+
+v2 (2026-10-25): ronda de correcciones tras 05-veredicto.md §5 (prioridad 2) y los datos nuevos de 02 v2:
+- D&A TTM real de Fase 2 (6.704 M$) en lugar de 3T26 x 4 (7.408). El alias DA_TTM_APROX se mantiene porque
+  scripts/fase4_opcionalidad.py lo importa; ahora vale 6.704.
+- Anclas de margen calculadas sobre ingresos SIN créditos, el mismo denominador al que el modelo las aplica.
+  Sin redondeo intermedio (v1 redondeaba el objetivo base a 3 decimales: 8,9 %, no 8,93 %).
+- Línea de dilución: totalmente diluidas ~3.967 M (02 §5.1, fila acc_totalmente_diluidas_aprox) en lugar de
+  portada + 301 M (doble cómputo de ~286 M).
+- Energía: base 12 % -> 8 % y bajista 5 % -> 0 % (despliegues frente a ingreso por GWh; ver §9 del script).
+- Bloques nuevos de control (§9): ROIC terminal, beta (W9), asimetría costes/ingresos de la opcionalidad,
+  capex bruto implícito frente a la guía, mecanismo del margen base, energía, SpaceX y DCF inverso con
+  ventas/capital de tipo software.
 """
 import csv
 import os
+import shutil
 import statistics
+import subprocess
+import tempfile
 
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill, Alignment
@@ -58,20 +73,36 @@ DEBT0 = r("deuda_total")
 NETCASH0 = r("caja_neta")
 IC_A0 = r("capital_invertido_A_neto_caja")
 IC_B0 = r("capital_invertido_B_bruto")
-M_EX0 = r("margen_operativo_sin_creditos")
 assert abs(AUTO_EX0 + CRED0 + ENER0 + SERV0 - REV0) < 1, "segmentos no cuadran"
 
-# márgenes operativos sin créditos históricos (anclas de los escenarios)
-M_EX_HIST = {y: r("margen_operativo_sin_creditos", y) for y in ["FY2021", "FY2022", "FY2023", "FY2024", "FY2025"]}
+
+def m_ex(period):
+    """v2: margen operativo sin créditos sobre ingresos SIN créditos = (EBIT - créditos) / (ingresos - créditos).
+    Es el mismo denominador al que run_dcf aplica el margen: EBIT = m x (ingresos - créditos) + créditos."""
+    cr = r("creditos_regulatorios", period)
+    return (r("beneficio_operativo", period) - cr) / (r("ingresos_totales", period) - cr)
+
+
+M_EX0 = m_ex("TTM_Q3_2026")
+M_EX0_V1 = r("margen_operativo_sin_creditos")  # v1: sobre ingresos totales (solo informativo)
+
+# márgenes operativos sin créditos históricos (anclas de los escenarios), mismo denominador que el modelo
+YEARS = ["FY2021", "FY2022", "FY2023", "FY2024", "FY2025"]
+M_EX_HIST = {y: m_ex(y) for y in YEARS}
 M_EX_AVG_21_24 = statistics.mean([M_EX_HIST[y] for y in ["FY2021", "FY2022", "FY2023", "FY2024"]])
 M_EX_AVG_24_25 = statistics.mean([M_EX_HIST[y] for y in ["FY2024", "FY2025"]])
 M_EX_MAX = max(M_EX_HIST.values())
+# anclas v1 (sobre ingresos totales y redondeadas a 3 decimales, como en v1), solo para el registro de cambios
+M_EX_HIST_V1 = {y: r("margen_operativo_sin_creditos", y) for y in YEARS}
+ANCLAS_V1 = (round(statistics.mean([M_EX_HIST_V1[y] for y in ["FY2024", "FY2025"]]), 3),
+             round(statistics.mean([M_EX_HIST_V1[y] for y in ["FY2021", "FY2022", "FY2023", "FY2024"]]), 3),
+             round(max(M_EX_HIST_V1.values()), 3))
 
-# Amortización (D&A): no está en el CSV de Fase 2. Se usa la de 3T-2026 del deck P4 (1.852 M$, citada en
-# 02-financieros.md §4) anualizada x4 -> aproximación declarada.
-DA_Q3_2026 = 1852.0
-DA_TTM_APROX = DA_Q3_2026 * 4
-NET_CAPEX0 = CAPEX0 - DA_TTM_APROX
+# Amortización (D&A) TTM: v2, dato de Fase 2 (fila dya_amortizacion_deterioro; P4, reconciliación EBITDA TTM).
+DA_TTM = r("dya_amortizacion_deterioro")
+DA_TTM_APROX = DA_TTM          # alias por compatibilidad con fase4_opcionalidad.py (v1 = 3T26 x 4)
+DA_TTM_V1 = 1852.0 * 4         # v1: D&A 3T26 (P4) x 4 = 7.408, solo informativo
+NET_CAPEX0 = CAPEX0 - DA_TTM
 NET_CAPEX0_PCT = NET_CAPEX0 / REV0
 SALES_TO_CAP_A = REV0 / IC_A0
 SALES_TO_CAP_B = REV0 / IC_B0
@@ -96,7 +127,13 @@ MKT = {
 }
 PRICE = MKT["precio"][0]
 SH = MKT["acciones_cover"][0]
-SH_DIL_MAX = SH + (MKT["acciones_diluidas_3T"][0] - MKT["acciones_basicas_3T"][0])  # techo de dilución ilustrativo
+# v2: acciones totalmente diluidas aprox. (02 §5.1). Portada (que ya incluye las 423,7 M restringidas del CEO 2025 y
+# las ~286 M netas del ejercicio de 2018) + ~15 M de incentivos de empleados aún no emitidos. La división 286 / 15
+# de las 301 M es una INFERENCIA de Fase 2 (el 10-Q no la desglosa).
+SH_FD = r("acc_totalmente_diluidas_aprox")
+SH_FD_CHECK = MKT["acciones_diluidas_3T"][0] + r("acc_restringidas_ceo2025")  # contraste: diluida 3T + CEO 2025
+assert abs(SH_FD - SH_FD_CHECK) < 5, "acciones totalmente diluidas no cuadran con diluida 3T + CEO 2025"
+SH_DIL_V1 = SH + (MKT["acciones_diluidas_3T"][0] - MKT["acciones_basicas_3T"][0])  # v1 (doble cómputo), informativo
 RF, ERP, TAX = MKT["rf"][0], MKT["erp"][0], MKT["tipo_imp"][0]
 
 MCAP = PRICE * SH
@@ -120,22 +157,22 @@ N = 10
 # ---------------------------------------------------------------------------
 SCEN = {
     "bajista": dict(
-        g_auto=0.01, g_ener=0.05, g_serv=0.10,
-        m_obj=round(M_EX_AVG_24_25, 3), anio_m=5,
+        g_auto=0.01, g_ener=0.00, g_serv=0.10,  # v2: energía 5 % -> 0 %
+        m_obj=M_EX_AVG_24_25, anio_m=5,
         reinv_pct=NET_CAPEX0_PCT, stc=1.2, g_term=0.025, roic_term=None,  # None -> ROIC = WACC_T (sin creación de valor)
         cred=[CRED0 * 0.4, CRED0 * 0.1, 0.0],
         nota="Automoción estancada (ASP a la baja, BYD/chinos), Energía con compresión de margen, Servicios se modera. Margen operativo ~ media FY2024-25 sin créditos.",
     ),
     "base": dict(
-        g_auto=0.04, g_ener=0.12, g_serv=0.15,
-        m_obj=round(M_EX_AVG_21_24, 3), anio_m=5,
+        g_auto=0.04, g_ener=0.08, g_serv=0.15,  # v2: energía 12 % -> 8 %
+        m_obj=M_EX_AVG_21_24, anio_m=5,
         reinv_pct=NET_CAPEX0_PCT, stc=1.5, g_term=0.03, roic_term=0.12,
         cred=[CRED0 * 0.4, CRED0 * 0.1, 0.0],
         nota="Recuperación moderada de volumen, Energía y Servicios siguen ganando peso. Margen operativo vuelve a la media FY2021-24 sin créditos.",
     ),
     "alcista": dict(
         g_auto=0.08, g_ener=0.20, g_serv=0.22,
-        m_obj=round(M_EX_MAX, 3), anio_m=5,
+        m_obj=M_EX_MAX, anio_m=5,
         reinv_pct=NET_CAPEX0_PCT, stc=2.0, g_term=0.035, roic_term=0.15,
         cred=[CRED0 * 0.4, CRED0 * 0.1, 0.0],
         nota="Vuelta a crecimiento de volumen, Energía retoma ritmo 2021-25, Servicios (incl. FSD) sigue al ritmo 9M26. Margen = máximo histórico sin créditos (FY2022). Sin robotaxi/Optimus explícitos.",
@@ -157,12 +194,14 @@ def margin_path(m0, m_obj, anio):
     return [m0 + (m_obj - m0) * min(t, anio) / anio for t in range(1, N + 1)]
 
 
-def run_dcf(s, w0=WACC0, wt=WACC_T, g_term=None, shares=SH):
+def run_dcf(s, w0=WACC0, wt=WACC_T, g_term=None, shares=SH, m0=None):
+    """m0 = margen de partida sin créditos; None -> M_EX0 global leído en tiempo de ejecución
+    (fase4_opcionalidad.py modifica f3.M_EX0 para su sensibilidad)."""
     g_term = s["g_term"] if g_term is None else g_term
     ga = growth_path(s["g_auto"], g_term)
     ge = growth_path(s["g_ener"], g_term)
     gs = growth_path(s["g_serv"], g_term)
-    mp = margin_path(M_EX0, s["m_obj"], s["anio_m"])
+    mp = margin_path(M_EX0 if m0 is None else m0, s["m_obj"], s["anio_m"])
     wp = wacc_path(w0, wt)
     cred = (s["cred"] + [0.0] * N)[:N]
     auto, ener, serv = AUTO_EX0, ENER0, SERV0
@@ -198,7 +237,8 @@ def run_dcf(s, w0=WACC0, wt=WACC_T, g_term=None, shares=SH):
 
 
 RES = {k: run_dcf(s) for k, s in SCEN.items()}
-RES_DIL = {k: run_dcf(s, shares=SH_DIL_MAX)["vps"] for k, s in SCEN.items()}
+RES_DIL = {k: run_dcf(s, shares=SH_FD)["vps"] for k, s in SCEN.items()}          # v2: totalmente diluidas
+RES_DIL_V1 = {k: run_dcf(s, shares=SH_DIL_V1)["vps"] for k, s in SCEN.items()}   # v1 (doble cómputo), informativo
 
 # ---------------------------------------------------------------------------
 # 4. Sensibilidad (caso base): WACC inicial x crecimiento terminal (WACC terminal se desplaza igual)
@@ -327,6 +367,89 @@ for g in MED:
         "PER": MED[g]["pe"] * EPS_DIL_TTM if MED[g]["pe"] else None,
     }
 
+TSLA_EBITDA0 = r("ebitda_aprox")                      # v2: EBIT + D&A TTM (Fase 2; sin ajustar SBC)
+TSLA_EV_EBITDA = EV_MKT / TSLA_EBITDA0
+TIPRANKS_TSLA_EV, TIPRANKS_TSLA_MCAP = 1.23e6, 1.53e6  # TipRanks TSLA (05 §2.3 D-7): EV y capitalización de la misma página
+N_BIGTECH = sum(1 for p in PEERS if p[1] == "Big tech" and p[2] is not None)
+
+# ---------------------------------------------------------------------------
+# 9. Controles v2 (05-veredicto §5, prioridad 2; 02 v2; 04 v2)
+# ---------------------------------------------------------------------------
+B0 = RES["base"]
+
+# (a) ROIC terminal del caso base: sensibilidad y referencias de Fase 2
+ROIC_A_HIST = {y: r("roic_A_neto_caja", y) for y in ["FY2021", "FY2022", "FY2023", "FY2024", "FY2025", "TTM_Q3_2026"]}
+ROIC_B_HIST = {y: r("roic_B_bruto", y) for y in ["FY2021", "FY2022", "FY2023", "FY2024", "FY2025", "TTM_Q3_2026"]}
+ROIC_GRID = [("igual al WACC terminal (sin creación de valor)", None), ("10 %", 0.10), ("12 % (base)", 0.12),
+             ("13,4 % (mínimo ROIC A FY21-24, FY2024)", ROIC_A_HIST["FY2024"]), ("15 %", 0.15)]
+ROIC_SENS = [(lab, v, run_dcf(dict(SCEN["base"], roic_term=v))["vps"]) for lab, v in ROIC_GRID]
+
+# (b) W9: beta solo sectorial en los años 1-5 (coherente) o desplazando también el WACC terminal (como la tabla 4.1)
+KE_SEC = RF + BETA_BU * ERP
+WACC0_SEC = KE_SEC * (1 - W_D) + KD * W_D
+W9_15 = run_dcf(SCEN["base"], w0=WACC0_SEC, wt=WACC_T)["vps"]
+W9_SHIFT = run_dcf(SCEN["base"], w0=WACC0_SEC, wt=WACC_T + (WACC0_SEC - WACC0))["vps"]
+
+# (c) Asimetría costes/ingresos de la opcionalidad (04 §4.1.1): sensibilidad, NO corrección
+RD_Q3_26, RD_Q3_25 = 2761.0, 1630.0                      # P4: I+D 3T26 y 3T25 (02 §3)
+SBC_FY24 = r("sbc", "FY2024")
+D_RD_ANUAL = 4 * (RD_Q3_26 - RD_Q3_25)                   # I+D incremental 3T26 anualizada (x4): cota alta
+D_SBC = SBC0 - SBC_FY24                                  # SBC TTM por encima de FY2024 (plan del CEO 2025, P4)
+REV0_EX = REV0 - CRED0
+M0_SBC = M_EX0 + D_SBC / REV0_EX
+M0_RD = M_EX0 + D_RD_ANUAL / REV0_EX
+M0_AMBOS = M_EX0 + (D_SBC + D_RD_ANUAL) / REV0_EX
+_s_nofloor = dict(SCEN["base"], reinv_pct=0.0)            # sin suelo de capex en años 1-2: solo ventas/capital
+ASYM = [
+    ("Base v2 (todo cargado al negocio actual)", M_EX0, False),
+    ("Margen de partida sin el exceso de SBC sobre FY2024", M0_SBC, False),
+    ("Margen de partida sin la I+D incremental 3T26 x 4", M0_RD, False),
+    ("Margen de partida sin SBC extra ni I+D incremental", M0_AMBOS, False),
+    ("Sin suelo de capex en años 1-2 (ola de capex = opcionalidad)", M_EX0, True),
+    ("Las tres cosas a la vez (cota superior)", M0_AMBOS, True),
+]
+ASYM_RES = [(lab, m0, nf, run_dcf(_s_nofloor if nf else SCEN["base"], m0=m0)["vps"]) for lab, m0, nf in ASYM]
+
+# (d) Capex bruto implícito del año 1 frente a la guía (T1)
+CAPEX_GUIA_2026 = 20000.0                                  # T1: CFO, call 3T26, "~20.000 M$" (revisado desde >25.000, T10)
+CAPEX_9M26 = 13014.0                                       # P2 (02 §4)
+CAPEX_Y1 = B0["rows"][0]["reinv"] + DA_TTM
+
+# (e) Mecanismo del margen base: qué hace falta para pasar del margen TTM al objetivo en el año 5
+GP0 = r("beneficio_bruto")
+OPEX0 = GP0 - EBIT0                                        # gastos operativos TTM (I+D + SG&A + otros)
+GM_EX0 = (GP0 - CRED0) / REV0_EX                           # margen bruto sin créditos TTM
+OPEX_R0 = OPEX0 / REV0_EX
+GM_EX_HIST = {y: (r("beneficio_bruto", y) - r("creditos_regulatorios", y)) / (r("ingresos_totales", y) - r("creditos_regulatorios", y)) for y in YEARS}
+OPEX_R_HIST = {y: (r("beneficio_bruto", y) - r("beneficio_operativo", y)) / (r("ingresos_totales", y) - r("creditos_regulatorios", y)) for y in YEARS}
+R5_EX = B0["rows"][4]["rev"] - B0["rows"][4]["cred"]
+M_BASE = SCEN["base"]["m_obj"]
+OPEX_R_NEEDED = GM_EX0 - M_BASE                            # con margen bruto constante
+OPEX5_NEEDED = OPEX_R_NEEDED * R5_EX
+GM_NEEDED = OPEX_R0 + M_BASE                               # con gastos operativos / ingresos constantes
+
+# (f) Energía: volumen frente a ingreso por GWh
+STOR_FY25 = 46.7                                           # P6/P7: almacenamiento desplegado FY2025 (01 §1.1)
+STOR_Q = [14.2, 8.8, 13.5, 13.7]                           # P4: 4T25..3T26 (04 §2, script fase4 §7)
+STOR_TTM = sum(STOR_Q)
+ENER_FY25 = r("ingresos_energia", "FY2025")
+G_ENER_TTM = ENER0 / ENER_FY25 - 1
+G_GWH_TTM = STOR_TTM / STOR_FY25 - 1
+G_PRECIO_GWH = (ENER0 / STOR_TTM) / (ENER_FY25 / STOR_FY25) - 1   # incluye solar y leasing: aproximación
+G_ENER_9M = r("crec_9M26_vs_9M25_ingresos_energia")    # Fase 2: -5,7 %
+
+# (g) Activos no operativos fuera de la caja neta (P2, re-leído por Fase 3 el 25-oct-2026)
+SPACEX_COMPRA, SPACEX_PLUSV, DIGITAL = 2002.0, 863.0, 962.0  # P3 (compra 1S26); P2 (plusvalía no realizada 9M26; activos digitales)
+SPACEX_FV_INF = SPACEX_COMPRA + SPACEX_PLUSV                 # INFERENCIA: P2 no publica el valor contable de SpaceX por separado
+NO_OPER_PS = (SPACEX_FV_INF + DIGITAL) / SH
+
+# (h) DCF inverso con ventas/capital de tipo software (04 §4.1.5): advertencia medida
+STC_SW = 3.0
+REVERSE_SW = []
+for M in (0.20, 0.25, 0.30):
+    c_sw = solve(lambda x: reverse_value(x, M, stc=STC_SW)[0], -0.05, 0.80, PRICE)
+    REVERSE_SW.append((M, c_sw))
+
 # ---------------------------------------------------------------------------
 # 7. Excel
 # ---------------------------------------------------------------------------
@@ -347,7 +470,7 @@ def hdr(ws, row, values, col=1):
 # --- Supuestos ---
 ws = wb.active
 ws.title = "Supuestos"
-ws["A1"] = "Tesla (TSLA) - Fase 3 - Supuestos de valoración (azul = input; negro = fórmula). Fecha: 2026-10-24"
+ws["A1"] = "Tesla (TSLA) - Fase 3 v2 - Supuestos de valoración (azul = input; negro = fórmula). Fecha: 2026-10-24; v2 2026-10-25"
 ws["A1"].font = BOLD
 hdr(ws, 3, ["Parámetro", "Valor", "Unidad", "Fuente / justificación"])
 NAMES = {}
@@ -373,6 +496,9 @@ put("precio", "Precio TSLA", PRICE, "USD", MKT["precio"][2], USD)
 put("acc", "Acciones en circulación (portada 10-Q)", SH, "M", MKT["acciones_cover"][2], "#,##0.0")
 put("acc_dil", "Media diluida 3T-2026", MKT["acciones_diluidas_3T"][0], "M", MKT["acciones_diluidas_3T"][2], NUM)
 put("acc_bas", "Media básica 3T-2026", MKT["acciones_basicas_3T"][0], "M", MKT["acciones_basicas_3T"][2], NUM)
+put("acc_fd", "Acciones totalmente diluidas aprox. (v2)", SH_FD, "M",
+    "02 §5.1 (ratios.csv, acc_totalmente_diluidas_aprox): portada + ~15 M de incentivos no emitidos. Contraste: diluida 3T 3.541 + restringidas CEO 2025 423,7 = "
+    f"{SH_FD_CHECK:,.1f}. El reparto 286 / 15 de las 301 M es INFERENCIA de Fase 2. Sustituye a portada + 301 M de v1 (doble cómputo de ~286 M)", "#,##0.0")
 put("mcap", "Capitalización", f"={NAMES['precio'].split('!')[1]}*{NAMES['acc'].split('!')[1]}", "M USD", "Precio x acciones portada (calculado)", NUM, True)
 put("rf", "Tipo libre de riesgo (10a EE. UU.)", RF, "%", MKT["rf"][2], PCT)
 put("erp", "Prima de riesgo de mercado (ERP)", ERP, "%", MKT["erp"][2], PCT)
@@ -389,11 +515,14 @@ put("cred0", "Créditos regulatorios TTM", CRED0, "M USD", "ratios.csv", NUM)
 put("ener0", "Energía TTM", ENER0, "M USD", "ratios.csv", NUM)
 put("serv0", "Servicios y otros TTM", SERV0, "M USD", "ratios.csv", NUM)
 put("ebit0", "Beneficio operativo TTM (GAAP, ya neto de SBC)", EBIT0, "M USD", "ratios.csv", NUM)
-put("m_ex0", "Margen operativo sin créditos TTM", M_EX0, "%", "ratios.csv", PCT)
+put("m_ex0", "Margen operativo sin créditos TTM (sobre ingresos sin créditos)", M_EX0, "%",
+    "ratios.csv: (beneficio operativo - créditos) / (ingresos - créditos). v2: mismo denominador al que se aplica el margen (v1: 2,21 % sobre ingresos totales)", PCT)
 put("ni0", "Beneficio neto atribuible TTM", NI0, "M USD", "ratios.csv", NUM)
 put("sbc0", "SBC TTM (informativo; ya incluida en EBIT)", SBC0, "M USD", "ratios.csv", NUM)
 put("capex0", "Capex TTM", CAPEX0, "M USD", "ratios.csv", NUM)
-put("da0", "Amortización TTM aprox. (3T-26 x 4)", DA_TTM_APROX, "M USD", "P4 deck 3T-2026: D&A 1.852 M$ (02-financieros §4) x 4. Aproximación", NUM)
+put("da0", "Amortización, depreciación y deterioro TTM (v2)", DA_TTM, "M USD",
+    "ratios.csv (dya_amortizacion_deterioro): P4, reconciliación EBITDA TTM 3T26. v1 usaba 3T26 x 4 = 7.408", NUM)
+put("ebitda0", "EBITDA aprox. TTM (EBIT + D&A, sin ajustar SBC)", f"={NAMES['ebit0'].split('!')[1]}+{NAMES['da0'].split('!')[1]}", "M USD", "Calculado; coincide con ratios.csv ebitda_aprox (Fase 2)", NUM, True)
 put("reinv_pct", "Capex neto / ingresos TTM (suelo reinversión años 1-2)", f"=({NAMES['capex0'].split('!')[1]}-{NAMES['da0'].split('!')[1]})/{NAMES['rev0'].split('!')[1]}", "%", "Calculado", PCT, True)
 put("cash0", "Caja + inversiones CP (30-sep-2026)", CASH0, "M USD", "ratios.csv", NUM)
 put("debt0", "Deuda total (30-sep-2026)", DEBT0, "M USD", "ratios.csv (incl. arrend. financieros y deuda sin recurso)", NUM)
@@ -420,12 +549,12 @@ hdr(ws, rowi, ["Supuesto", "Bajista", "Base", "Alcista", "Justificación"]); row
 SC_ROW = {}
 scen_rows = [
     ("g_auto", "Crec. automoción sin créditos, años 1-5", PCT, "Fase 2: FY21-25 TACC 10,2 %; FY24 -6,5 %; FY25 -9,8 %; 9M26 +10,6 %; 3T26 -3 %"),
-    ("g_ener", "Crec. energía, años 1-5", PCT, "Fase 2: FY21-25 TACC 46 %, pero 9M26 -5,7 % y compresión de margen anunciada (S4)"),
+    ("g_ener", "Crec. energía, años 1-5", PCT, f"v2: 9M26 {G_ENER_9M:+.1%}; TTM vs FY25: GWh {G_GWH_TTM:+.1%}, ingreso/GWh {G_PRECIO_GWH:+.1%}. Bajista 0 % (precio compensa volumen); base 8 % (p. ej. +20 % GWh y -10 % ingreso/GWh); alcista 20 %"),
     ("g_serv", "Crec. servicios y otros, años 1-5", PCT, "Fase 2: FY21-25 TACC 34,7 %; 9M26 +41 %"),
-    ("m_obj", "Margen operativo objetivo sin créditos (desde año 5)", PCT, "Bajista = media FY24-25; base = media FY21-24; alcista = máximo FY22 (todos sin créditos, Fase 2)"),
+    ("m_obj", "Margen operativo objetivo sin créditos (desde año 5)", PCT, "Bajista = media FY24-25; base = media FY21-24; alcista = máximo FY22. v2: (EBIT - créditos) / (ingresos - créditos), sin redondeo"),
     ("stc", "Ventas / capital (reinversión incremental)", "0.00", "Fase 2: ventas/capital A 1,94x y B 1,05x (TTM)"),
     ("g_term", "Crecimiento terminal", PCT, "Por debajo de rf nominal (4,97 %)"),
-    ("roic_term", "ROIC terminal (vacío = WACC terminal)", PCT, "Bajista: sin creación de valor; base 12 %; alcista 15 % (Fase 2: ROIC A FY21-24 13-48 %)"),
+    ("roic_term", "ROIC terminal (vacío = WACC terminal)", PCT, "Bajista: = WACC terminal. Base 12 %: POR DEBAJO del mínimo FY21-24 del ROIC A (13,4 %, FY24) y por encima del FY25 (7,6 %) y TTM (5,5 %); diferencial de ~2,2 pp sobre el WACC terminal. Alcista 15 %: dentro de FY21-24 (13,4-48 %)"),
 ]
 for key, label, fmt, just in scen_rows:
     ws.cell(row=rowi, column=1, value=label)
@@ -535,6 +664,7 @@ for sk in ["bajista", "base", "alcista"]:
         ("Valor por acción (USD)", f"=B{rb + 9}/{NAMES['acc']}", USD),
         ("Precio actual (USD)", f"={NAMES['precio']}", USD),
         ("Valor / precio - 1", f"=B{rb + 10}/B{rb + 11}-1", PCT),
+        ("Valor por acción totalmente diluido (USD, v2)", f"=B{rb + 9}/{NAMES['acc_fd']}", USD),
     ]
     for i, (lab, f_, fmt) in enumerate(items):
         ws2.cell(row=rb + i, column=1, value=lab).font = BOLD if "acción" in lab else Font()
@@ -565,7 +695,37 @@ for i, m in enumerate(M_GRID):
     for j, v in enumerate(SENS2[i]):
         ws3.cell(row=r_ + 2 + i, column=2 + j, value=round(v, 2)).number_format = USD
 ws3.cell(row=r_ + 3 + len(M_GRID), column=1, value=f"Precio actual: {PRICE} USD")
-ws3.column_dimensions["A"].width = 22
+# v2: bloques de control (valores calculados por el script)
+r_ = r_ + 5 + len(M_GRID)
+ws3.cell(row=r_, column=1, value="v2 - ROIC terminal del caso base (VPA, USD)").font = BOLD
+hdr(ws3, r_ + 1, ["ROIC terminal", "Valor", "VPA base"])
+for i, (lab, v, vps) in enumerate(ROIC_SENS):
+    ws3.cell(row=r_ + 2 + i, column=1, value=lab)
+    ws3.cell(row=r_ + 2 + i, column=2, value=round(v if v is not None else WACC_T, 4)).number_format = PCT
+    ws3.cell(row=r_ + 2 + i, column=3, value=round(vps, 2)).number_format = USD
+r_ = r_ + 3 + len(ROIC_SENS)
+ws3.cell(row=r_, column=1, value="v2 - W9: beta solo sectorial (VPA base, USD). El modelo mantiene la beta mezclada 50/50").font = BOLD
+hdr(ws3, r_ + 1, ["Variante", "WACC inicial", "WACC terminal", "VPA base", "Diferencia"])
+for i, (lab, w0_, wt_, v_) in enumerate((("Modelo (beta mezclada)", WACC0, WACC_T, B0["vps"]),
+                                          ("Beta sectorial solo años 1-5 (coherente)", WACC0_SEC, WACC_T, W9_15),
+                                          ("Beta sectorial y WACC terminal desplazado (como tabla 4.1)", WACC0_SEC, WACC_T + WACC0_SEC - WACC0, W9_SHIFT))):
+    rr_ = r_ + 2 + i
+    ws3.cell(row=rr_, column=1, value=lab)
+    ws3.cell(row=rr_, column=2, value=round(w0_, 4)).number_format = PCT
+    ws3.cell(row=rr_, column=3, value=round(wt_, 4)).number_format = PCT
+    ws3.cell(row=rr_, column=4, value=round(v_, 2)).number_format = USD
+    ws3.cell(row=rr_, column=5, value=round(v_ - B0["vps"], 2)).number_format = USD
+r_ = r_ + 6
+ws3.cell(row=r_, column=1, value="v2 - Asimetría costes/ingresos de la opcionalidad (sensibilidad, NO corrección; VPA base, USD)").font = BOLD
+hdr(ws3, r_ + 1, ["Variante", "Margen de partida", "Suelo de capex años 1-2", "VPA base", "Diferencia"])
+for i, (lab, m0, nf, vps) in enumerate(ASYM_RES):
+    rr_ = r_ + 2 + i
+    ws3.cell(row=rr_, column=1, value=lab)
+    ws3.cell(row=rr_, column=2, value=round(m0, 4)).number_format = PCT
+    ws3.cell(row=rr_, column=3, value="no" if nf else "sí")
+    ws3.cell(row=rr_, column=4, value=round(vps, 2)).number_format = USD
+    ws3.cell(row=rr_, column=5, value=round(vps - B0["vps"], 2)).number_format = USD
+ws3.column_dimensions["A"].width = 62
 
 # --- DCF inverso ---
 ws4 = wb.create_sheet("DCF_inverso")
@@ -611,6 +771,14 @@ for i, k in enumerate(["bajista", "base", "alcista"]):
     ws4.cell(row=rr_, column=3, value=f"={NAMES['mcap']}").number_format = NUM
     ws4.cell(row=rr_, column=4, value=f"=C{rr_}-B{rr_}").number_format = NUM
     ws4.cell(row=rr_, column=5, value=f"=D{rr_}/C{rr_}").number_format = PCT
+rw = rw + 2 + 3 + 1
+ws4.cell(row=rw, column=1, value=f"v2 - Advertencia: con ventas/capital de tipo software ({STC_SW:.1f}x en lugar de {STC_REV:.1f}x), TACC necesaria").font = BOLD
+hdr(ws4, rw + 1, ["Margen operativo año 10", f"TACC con {STC_REV:.1f}x", f"TACC con {STC_SW:.1f}x"])
+for i, (M, c_sw) in enumerate(REVERSE_SW):
+    base_c = [d["c"] for d in REVERSE if d["M"] == M][0]
+    ws4.cell(row=rw + 2 + i, column=1, value=M).number_format = PCT
+    ws4.cell(row=rw + 2 + i, column=2, value=round(base_c, 4)).number_format = PCT
+    ws4.cell(row=rw + 2 + i, column=3, value=round(c_sw, 4) if c_sw is not None else "no alcanzable").number_format = PCT
 ws4.column_dimensions["A"].width = 30
 for col in "BCDE":
     ws4.column_dimensions[col].width = 24
@@ -624,11 +792,12 @@ rw = 4
 ws5.cell(row=rw, column=1, value="Tesla (calculado)").font = BOLD
 ws5.cell(row=rw, column=2, value="TSLA")
 ws5.cell(row=rw, column=3, value=f"=G{rw}/{NAMES['rev0']}").number_format = "0.0"
+ws5.cell(row=rw, column=4, value=f"=G{rw}/{NAMES['ebitda0']}").number_format = "0.0"
 ws5.cell(row=rw, column=5, value=f"=G{rw}/{NAMES['ebit0']}").number_format = "0.0"
 ws5.cell(row=rw, column=6, value=f"={NAMES['precio']}/({NAMES['ni0']}/{NAMES['acc_dil']})").number_format = "0.0"
 ws5.cell(row=rw, column=7, value=f"={NAMES['mcap']}-{NAMES['netcash']}").number_format = NUM
 ws5.cell(row=rw, column=8, value=f"={NAMES['rev0']}").number_format = NUM
-ws5.cell(row=rw, column=9, value="EV = capitalización (precio 23-oct x acciones portada) - caja neta Fase 2. PER = precio / (BN TTM / media diluida 3T). EV/EBITDA no calculado (D&A TTM no en Fase 2)")
+ws5.cell(row=rw, column=9, value="EV = capitalización (precio 23-oct x acciones portada) - caja neta Fase 2. PER = precio / (BN TTM / media diluida 3T). v2: EV/EBITDA con EBITDA aprox. de Fase 2 (EBIT + D&A TTM, sin ajustar SBC)")
 rw += 1
 ws5.cell(row=rw, column=1, value=TSLA_3RD[0])
 ws5.cell(row=rw, column=2, value="TSLA")
@@ -636,7 +805,9 @@ ws5.cell(row=rw, column=3, value=15.21)
 ws5.cell(row=rw, column=4, value=122.6)
 ws5.cell(row=rw, column=5, value=342.45)
 ws5.cell(row=rw, column=6, value=327.5)
-ws5.cell(row=rw, column=9, value=TSLA_3RD[1])
+ws5.cell(row=rw, column=9, value=TSLA_3RD[1] + (
+    f" | v2 AVISO: la misma página de TipRanks da EV {TIPRANKS_TSLA_EV / 1e6:.2f} bill. $ con capitalización {TIPRANKS_TSLA_MCAP / 1e6:.2f} bill. $ "
+    f"(diferencia {(TIPRANKS_TSLA_MCAP - TIPRANKS_TSLA_EV):,.0f} M$, frente a una caja neta de {NETCASH0:,.0f} M$): dato internamente incoherente, solo contraste"))
 rw += 1
 first_peer = rw
 for p in PEERS:
@@ -676,11 +847,36 @@ for g in ("Auto", "Big tech"):
     m = MED[g]
     ws5.cell(row=rw, column=7, value=" | ".join("SIN VERIFICAR" if m[k] is None else f"{m[k]:.2f}" for k in ("ev_sales", "ev_ebit", "pe")))
     rw += 1
+ws5.cell(row=rw + 1, column=1, value=(f"v2 AVISO: la mediana big tech tiene n = {N_BIGTECH} (Apple y Nvidia; Microsoft SIN VERIFICAR). "
+                                      "No es representativa: con dos datos, la mediana es su media aritmética."))
 ws5.column_dimensions["A"].width = 24
 ws5.column_dimensions["I"].width = 110
 ws5.column_dimensions["H"].width = 22
 
 wb.save(OUT_XLSX)
+
+
+def recalc_xlsx(path):
+    """v2: si LibreOffice está instalado, recalcula el libro y guarda los valores cacheados (05 §1: v1 se guardaba
+    sin valores y un visor que no recalcula mostraba celdas vacías). Si falla, se queda el libro de openpyxl."""
+    soffice = shutil.which("soffice")
+    if not soffice or os.environ.get("DCF_NO_RECALC"):
+        return "no recalculado (LibreOffice no disponible o DCF_NO_RECALC)"
+    tmp = tempfile.mkdtemp(prefix="dcf_recalc_")
+    try:
+        subprocess.run([soffice, f"-env:UserInstallation=file://{tmp}/profile", "--headless", "--calc",
+                        "--convert-to", "xlsx:Calc MS Excel 2007 XML", "--outdir", tmp, path],
+                       check=True, capture_output=True, timeout=180)
+        out = os.path.join(tmp, os.path.basename(path))
+        shutil.copyfile(out, path)
+        return "recalculado con LibreOffice (valores cacheados)"
+    except Exception as e:  # noqa: BLE001
+        return f"no recalculado ({type(e).__name__})"
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
+RECALC = recalc_xlsx(OUT_XLSX)
 
 # ---------------------------------------------------------------------------
 # 8. Salida por pantalla
@@ -693,13 +889,16 @@ pr(f"Ke0 {KE0:.4f} | KeT {KE_T:.4f} | Kd(1-t) {KD:.4f} | wD {W_D:.4f} | WACC0 {W
 for lab, b in (("solo regresión", BETA_REG), ("solo bottom-up", BETA_BU)):
     pr(f"WACC0 alternativo ({lab}, beta {b:.2f}): {(RF + b * ERP) * (1 - W_D) + KD * W_D:.4f}")
 pr(f"Anclas margen sin créditos: media FY21-24 {M_EX_AVG_21_24:.4f} | media FY24-25 {M_EX_AVG_24_25:.4f} | máx {M_EX_MAX:.4f} | TTM {M_EX0:.4f}")
-pr(f"D&A aprox {DA_TTM_APROX:,.0f} | capex neto/ingresos TTM {NET_CAPEX0_PCT:.4f} | ventas/capital A {SALES_TO_CAP_A:.2f} B {SALES_TO_CAP_B:.2f}")
+pr("  v2: sobre ingresos sin créditos, sin redondeo. Por año: " + ", ".join(f"{y} {M_EX_HIST[y]:.2%}" for y in YEARS))
+pr(f"  v1 (sobre ingresos totales, redondeado a 3 decimales): bajista {ANCLAS_V1[0]:.3f} | base {ANCLAS_V1[1]:.3f} | alcista {ANCLAS_V1[2]:.3f} | TTM {M_EX0_V1:.4f}")
+pr(f"D&A TTM {DA_TTM:,.0f} (v1 aprox 3T x 4: {DA_TTM_V1:,.0f}) | capex neto/ingresos TTM {NET_CAPEX0_PCT:.4f} | ventas/capital A {SALES_TO_CAP_A:.2f} B {SALES_TO_CAP_B:.2f}")
+pr(f"Acciones: portada {SH:,.2f} | totalmente diluidas {SH_FD:,.1f} (contraste diluida 3T + CEO 2025 = {SH_FD_CHECK:,.1f}) | v1 portada + 301 = {SH_DIL_V1:,.1f}")
 pr("\n=== ESCENARIOS ===")
 for k, v in RES.items():
     last = v["rows"][-1]
     pr(f"{k:8s}: ingresos año10 {last['rev']:,.0f} (TACC {CAGR_SCEN[k]:.2%}) | EBIT10 {last['ebit']:,.0f} | FCFF10 {last['fcff']:,.0f} | "
        f"VP FCFF {v['pv_sum']:,.0f} | VP TV {v['pv_tv']:,.0f} ({v['tv_share']:.0%}) | EV {v['ev']:,.0f} | equity {v['eq']:,.0f} | "
-       f"VPA {v['vps']:.2f} $ ({v['vps'] / PRICE - 1:+.0%}) | VPA con dilución máx {RES_DIL[k]:.2f}")
+       f"VPA {v['vps']:.2f} $ ({v['vps'] / PRICE - 1:+.0%}) | VPA totalmente diluido {RES_DIL[k]:.2f} (v1 portada+301: {RES_DIL_V1[k]:.2f})")
     pr("          FCFF por año: " + ", ".join(f"{x['fcff']:,.0f}" for x in v["rows"]))
 pr("\n=== SENSIBILIDAD BASE (VPA) WACC0 x g ===")
 pr("WACC0   " + "  ".join(f"g={g:.1%}" for g in G_GRID))
@@ -722,6 +921,10 @@ for k in RES:
 pr("Combinaciones (TACC, margen, VPA): " + "; ".join(f"({c:.0%},{M:.0%}) {v:.0f}" for c, M, v in REV_COMBOS))
 pr("\n=== MÚLTIPLOS ===")
 pr(f"TSLA: EV/Ventas {TSLA_EV_SALES:.1f} | EV/EBIT {TSLA_EV_EBIT:.0f} | PER (BPA diluido aprox {EPS_DIL_TTM:.3f}) {TSLA_PE:.0f} | PER sobre acciones portada {TSLA_PE_COVER:.0f}")
+pr(f"TSLA EV/EBITDA aprox (EBITDA Fase 2 {TSLA_EBITDA0:,.0f}, sin ajustar SBC): {TSLA_EV_EBITDA:.1f}")
+pr(f"AVISO TipRanks TSLA: EV {TIPRANKS_TSLA_EV:,.0f} vs capitalización {TIPRANKS_TSLA_MCAP:,.0f} -> diferencia {TIPRANKS_TSLA_MCAP - TIPRANKS_TSLA_EV:,.0f} M$ "
+   f"frente a caja neta {NETCASH0:,.0f} M$ (incoherente; {(TIPRANKS_TSLA_MCAP - TIPRANKS_TSLA_EV) / NETCASH0:.1f}x)")
+pr(f"AVISO mediana big tech: n = {N_BIGTECH}")
 for g in MED:
     pr(f"Mediana {g}: {MED[g]} -> precio implícito {IMPLIED[g]}")
 for p in PEERS:
@@ -734,6 +937,35 @@ for d in REVERSE:
     if d["M"] in (0.20, 0.25, 0.30):
         pr(f"Margen {d['M']:.0%}: ingresos año10 / ingresos Toyota = {d['rev10'] / toyota_rev:.1f}x | EBIT10 / EBIT TTM = {d['ebit10'] / EBIT0:.0f}x | margen / máx histórico = {d['M'] / M_EX_MAX:.1f}x | capital nuevo acumulado = {(d['rev10'] - REV0) / STC_REV:,.0f} M$")
 pr(f"Capital por $ de ingreso incremental (base): {1 / SCEN['base']['stc']:.2f} $")
-pr(f"SpaceX + xAI (2.002 + 2.000 M$) por acción: {(2002 + 2000) / SH:.2f} $ | caja neta por acción: {NETCASH0 / SH:.2f} $")
-pr(f"Dilución ilustrativa añadida: {SH_DIL_MAX - SH:,.0f} M acciones")
-pr(f"\nExcel escrito en {OUT_XLSX}")
+pr(f"Caja neta por acción: {NETCASH0 / SH:.2f} $")
+pr(f"Acciones añadidas a la portada en la columna totalmente diluida: {SH_FD - SH:,.1f} M (v1: {SH_DIL_V1 - SH:,.0f} M)")
+
+pr("\n=== CONTROLES v2 ===")
+pr("(a) ROIC terminal base. ROIC A hist.: " + ", ".join(f"{y} {v:.1%}" for y, v in ROIC_A_HIST.items())
+   + " | ROIC B: " + ", ".join(f"{y} {v:.1%}" for y, v in ROIC_B_HIST.items()))
+pr(f"    mínimo ROIC A FY21-24 = {min(ROIC_A_HIST[y] for y in ['FY2021', 'FY2022', 'FY2023', 'FY2024']):.1%} ; WACC terminal {WACC_T:.2%} ; "
+   f"diferencial del 12 % sobre WACC terminal {0.12 - WACC_T:+.2%}")
+for lab, v, vps in ROIC_SENS:
+    pr(f"    ROIC terminal {lab} ({(v if v is not None else WACC_T):.2%}): VPA base {vps:.2f} $ ({vps - B0['vps']:+.2f})")
+pr(f"(b) W9 beta sectorial {BETA_BU:.2f} -> WACC0 {WACC0_SEC:.2%}: años 1-5 solo {W9_15:.2f} $ ({W9_15 - B0['vps']:+.2f}) | "
+   f"desplazando también WACC terminal a {WACC_T + WACC0_SEC - WACC0:.2%}: {W9_SHIFT:.2f} $ ({W9_SHIFT - B0['vps']:+.2f}) | el modelo usa la beta mezclada")
+pr(f"(c) Asimetría: I+D incremental 3T26 x4 {D_RD_ANUAL:,.0f} M$ ({D_RD_ANUAL / REV0_EX:.2%} de ingresos sin créditos); "
+   f"SBC TTM - FY24 {D_SBC:,.0f} M$ ({D_SBC / REV0_EX:.2%})")
+for lab, m0, nf, vps in ASYM_RES:
+    pr(f"    {lab}: margen de partida {m0:.2%}, suelo capex {'no' if nf else 'sí'} -> VPA base {vps:.2f} $ ({vps - B0['vps']:+.2f})")
+pr(f"(d) Capex bruto implícito año 1 (base) = reinversión {B0['rows'][0]['reinv']:,.0f} + D&A {DA_TTM:,.0f} = {CAPEX_Y1:,.0f} M$ ; "
+   f"guía 2026 ~{CAPEX_GUIA_2026:,.0f} (T1) -> diferencia {CAPEX_GUIA_2026 - CAPEX_Y1:+,.0f} ; 4T26 implícito {CAPEX_GUIA_2026 - CAPEX_9M26:,.0f} ; sin Terafab")
+pr(f"(e) Margen base {M_BASE:.2%}: margen bruto sin créditos TTM {GM_EX0:.2%} ; gastos operativos TTM {OPEX0:,.0f} M$ = {OPEX_R0:.2%} de ingresos sin créditos")
+pr("    margen bruto sin créditos hist.: " + ", ".join(f"{y} {GM_EX_HIST[y]:.1%}" for y in YEARS)
+   + " | opex/ingresos sin créd.: " + ", ".join(f"{y} {OPEX_R_HIST[y]:.1%}" for y in YEARS))
+pr(f"    con margen bruto constante: opex/ingresos debe bajar a {OPEX_R_NEEDED:.2%} -> opex año 5 {OPEX5_NEEDED:,.0f} M$ ({OPEX5_NEEDED / OPEX0 - 1:+.1%} vs TTM; ingresos sin créd. año 5 {R5_EX:,.0f})")
+pr(f"    con opex/ingresos constante: margen bruto sin créditos debe subir a {GM_NEEDED:.2%}")
+pr(f"    margen de partida sin SBC extra ni I+D incremental: {M0_AMBOS:.2%} (frente al objetivo base {M_BASE:.2%})")
+pr(f"(f) Energía: 9M26 {G_ENER_9M:+.1%} ; TTM vs FY25 ingresos {G_ENER_TTM:+.1%}, GWh {STOR_TTM:.1f} vs {STOR_FY25} ({G_GWH_TTM:+.1%}), ingreso/GWh {G_PRECIO_GWH:+.1%}")
+pr(f"    ingreso/GWh FY25 {ENER_FY25 / STOR_FY25:,.1f} M$ ; TTM {ENER0 / STOR_TTM:,.1f} M$ (incluye solar y leasing: aproximación)")
+pr(f"    combinaciones: +20 % GWh y -10 % ingreso/GWh = {1.2 * 0.9 - 1:+.1%} ; GWh TTM con ingreso/GWh TTM = {(1 + G_GWH_TTM) * (1 + G_PRECIO_GWH) - 1:+.1%}")
+pr(f"(g) Fuera de la caja neta: SpaceX ~{SPACEX_FV_INF:,.0f} (inferencia: {SPACEX_COMPRA:,.0f} + {SPACEX_PLUSV:,.0f}) + activos digitales {DIGITAL:,.0f} "
+   f"= {SPACEX_FV_INF + DIGITAL:,.0f} M$ = {NO_OPER_PS:.2f} $/acción")
+pr("(h) DCF inverso con ventas/capital " + f"{STC_SW:.1f}x: " + "; ".join(
+    f"margen {M:.0%} -> TACC {c_sw:.2%}" if c_sw is not None else f"margen {M:.0%} -> no alcanzable" for M, c_sw in REVERSE_SW))
+pr(f"\nExcel escrito en {OUT_XLSX} ; {RECALC}")

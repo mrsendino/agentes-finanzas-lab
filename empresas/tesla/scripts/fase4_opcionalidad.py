@@ -3,13 +3,24 @@
 Fase 4 — Tesis alcista / bajista: dimensionado de la opcionalidad y controles de 03-valoracion.md.
 
 Todos los números citados en docs/04-tesis.md salen de la salida de este script.
+v2 (2026-10-25): ronda de correcciones tras 05-veredicto.md (W1, W2, W3/§4.1.2, W5, W9).
+v2.1 (2026-10-25): sincronización con 02 v2 (§5.1, descomposición de acciones) y 03 v2. El modelo de Fase 3
+(scripts/fase3_dcf.py) se importa AL PRINCIPIO, en una COPIA TEMPORAL de scripts/ y data/, y de él salen los valores
+DCF por escenario (antes estaban copiados a mano de 03 v1), las acciones totalmente diluidas y las mediciones de §13.
+No escribe nada en data/ del proyecto.
 Convenciones:
   * Cifras en M$ salvo que se indique.
   * DATO = cifra con fuente (ID entre corchetes, ver fuentes/fuentes.md).
   * SUPUESTO = hipótesis de trabajo de esta fase (no es un dato; se declara para poder discutirla).
   * MUSK = afirmación hecha solo por Musk/directivos en una call o evento, no auditada.
 """
+import contextlib
+import importlib.util
+import io
 import math
+import os
+import shutil
+import tempfile
 
 def pr(*a):
     print(*a)
@@ -18,13 +29,26 @@ def h(t):
     print("\n" + "=" * 100 + "\n" + t + "\n" + "=" * 100)
 
 # ---------------------------------------------------------------------------------------------
-# 0. Datos de fases anteriores (DATO)
+# 0. Modelo de Fase 3 v2 (importado en copia temporal) y datos de fases anteriores (DATO)
 # ---------------------------------------------------------------------------------------------
+BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+_tmp = tempfile.mkdtemp(prefix="fase4v21_")
+for _d in ("data", "scripts"):
+    shutil.copytree(os.path.join(BASE, _d), os.path.join(_tmp, _d))
+_spec = importlib.util.spec_from_file_location("f3", os.path.join(_tmp, "scripts", "fase3_dcf.py"))
+f3 = importlib.util.module_from_spec(_spec)
+with contextlib.redirect_stdout(io.StringIO()):
+    _spec.loader.exec_module(f3)          # ejecuta fase3 en la copia temporal (su Excel se escribe allí)
+shutil.rmtree(_tmp, ignore_errors=True)
+
 PRICE = 372.22                      # 03 §1 (M1)
 SH_COVER = 3952.757946              # 10-Q 3T26 portada (P2/M3)
 SH_DIL_3T = 3541.0                  # P2
 SH_BAS_3T = 3240.0                  # P2
-CEO_AWARD_SH = 423.7                # S10: acciones restringidas del plan 2025
+CEO_AWARD_SH = 423.7                # 02 §5.1 (Form 4 jun-2026: 423.743.904 restringidas del plan CEO 2025)
+EX2018_NET_SH = 286.43              # 02 §5.1 (Form 4 16-jun-2026: 303,96 ejercidas - 17,53 retenidas)
+SH_FD = f3.SH_FD                    # 03 v2 / 02 §5.1: totalmente diluidas aprox. (portada + ~15 M de empleados)
+assert abs(SH_COVER - f3.SH) < 1e-6, "acciones de portada distintas de las de 03"
 MCAP = PRICE * SH_COVER
 NETCASH = 35924.0                   # 02 §5
 REV_TTM = 103570.0                  # 02 §2
@@ -38,8 +62,10 @@ ROIC_A_TTM = 0.055                  # 02 §6
 WACC0 = 0.1160                      # 03 §1.1
 WACC_T = 0.0979                     # 03 §1.1
 
-EQ_DCF = {"bajista": 40940.0, "base": 96964.0, "alcista": 216931.0}   # 03 §3
+EQ_DCF_V1 = {"bajista": 40940.0, "base": 96964.0, "alcista": 216931.0}   # 03 v1 §3 (solo para el registro de cambios)
+EQ_DCF = {k: f3.RES[k]["eq"] for k in ("bajista", "base", "alcista")}       # 03 v2 §3, desde el modelo importado
 VPS_DCF = {k: v / SH_COVER for k, v in EQ_DCF.items()}
+VPS_FD = {k: v / SH_FD for k, v in EQ_DCF.items()}
 
 # Trimestre 3T26 vs 3T25 (P4)
 REV_Q3_26 = 28046.0
@@ -65,27 +91,38 @@ WAYMO_RIDES_WEEK_FEB = 400_000      # feb-2026, T3
 UBER_TRIPS_FY25 = 13_567.0          # M viajes, T5
 UBER_GB_FY25 = 193_454.0            # M$, T5 (incluye Delivery)
 
-h("1. Recuento de acciones y PER: ¿coherencia del denominador en 03-valoracion.md?")
+h("1. Recuento de acciones y PER (W1, W2 — v2.1: W2 reformulado con 02 §5.1)")
 pr(f"Capitalización (precio x acciones portada): {MCAP:,.0f} M$")
 gap_cover_basic = SH_COVER - SH_BAS_3T
-pr(f"Acciones portada - media básica 3T26: {gap_cover_basic:,.1f} M  (de ello, plan CEO 2025 restringido: {CEO_AWARD_SH} M)")
-pr(f"Diferencia no explicada por el plan CEO: {gap_cover_basic - CEO_AWARD_SH:,.1f} M  -> SIN VERIFICAR (otras acciones restringidas / emitidas no vestidas)")
-SH_EX_AWARD = SH_COVER - CEO_AWARD_SH
-pr(f"Acciones portada sin el plan CEO (si estuviera incluido en la portada): {SH_EX_AWARD:,.1f} M")
-for k in EQ_DCF:
-    pr(f"  VPA {k:8s}: con portada {VPS_DCF[k]:6.2f} $ | sin acciones del plan CEO {EQ_DCF[k] / SH_EX_AWARD:6.2f} $ "
-       f"| 03 añade además {SH_DIL_3T - SH_BAS_3T:.0f} M -> {EQ_DCF[k] / (SH_COVER + SH_DIL_3T - SH_BAS_3T):6.2f} $")
 SH_OUT_SEP25 = 3324.0   # 10-Q 3T25, balance (T6)
 SH_OUT_DEC25 = 3751.0   # 10-Q 3T26 (P2), balance
 SH_OUT_SEP26 = 3953.0   # 10-Q 3T26 (P2), balance
 ISSUED_9M26 = 202.0     # P2, estado de patrimonio: "Issuance of common stock for equity incentive awards and acquisitions"
 pr(f"Acciones en balance: 30-sep-25 {SH_OUT_SEP25:,.0f} -> 31-dic-25 {SH_OUT_DEC25:,.0f} (+{SH_OUT_DEC25 - SH_OUT_SEP25:,.0f}) -> 30-sep-26 {SH_OUT_SEP26:,.0f} (+{SH_OUT_SEP26 - SH_OUT_DEC25:,.0f}; emitidas 9M26 según P2: {ISSUED_9M26:.0f})")
 pr(f"Aumento total en 12 meses: {SH_OUT_SEP26 - SH_OUT_SEP25:,.0f} M ({SH_OUT_SEP26 / SH_OUT_SEP25 - 1:+.1%}) frente a media básica +{SH_BAS_3T - 3227:,.0f} M")
-pr(f"Acciones en balance excluidas de la media básica 3T26: {SH_OUT_SEP26 - SH_BAS_3T:,.0f} M -> probablemente acciones restringidas emitidas no ganadas (SIN VERIFICAR la composición)")
-pr("Implicación: la portada YA incluiría las acciones restringidas emitidas; sumar 301 M de 'stock-based awards' encima (03 §3) puede contar doble.")
+# 02 §5.1 (v2): descomposición con nota de BPA, estados de patrimonio y Form 4
+resid = gap_cover_basic - CEO_AWARD_SH - EX2018_NET_SH
+pr(f"Portada - media básica 3T26 = {gap_cover_basic:,.1f} M = plan CEO 2025 {CEO_AWARD_SH} + ejercicio 2018 neto {EX2018_NET_SH} + residuo {resid:,.1f} (02 §5.1)")
+emp = (SH_DIL_3T - SH_BAS_3T) - EX2018_NET_SH
+pr(f"Diluida - básica 3T26 = {SH_DIL_3T - SH_BAS_3T:.0f} M ('Stock-based awards', P2) ≈ ejercicio 2018 neto {EX2018_NET_SH:.0f} + empleados ~{emp:.0f} M "
+   "(INFERENCIA de 02 §5.1: el 10-Q no desglosa la línea)")
+pr("Plan CEO 2025 (423,7 M): en la portada SÍ; en la básica NO; en la diluida NO (no 'ganadas', nota de BPA P2).")
+sh_v1_line = SH_COVER + SH_DIL_3T - SH_BAS_3T
+pr(f"W2: la línea de 03 v1 (portada + 301 = {sh_v1_line:,.1f} M) contaba DOS VECES ~{EX2018_NET_SH:.0f} M (ya en la portada) "
+   f"-> sobrestimaba las acciones un {sh_v1_line / SH_FD - 1:+.1%} frente a las totalmente diluidas")
+pr(f"    03 v2 usa totalmente diluidas = {SH_FD:,.1f} M (portada + {SH_FD - SH_COVER:,.1f}); contraste diluida 3T + CEO 2025 = {SH_DIL_3T + CEO_AWARD_SH:,.1f} M")
+SH_EX_AWARD = SH_COVER - CEO_AWARD_SH
+pr(f"    Denominador de los VPA 'corregidos' de 04 v1 (portada - plan CEO = {SH_EX_AWARD:,.1f} M): {SH_EX_AWARD / SH_FD - 1:+.1%} frente a las "
+   f"totalmente diluidas (02 §5.1: ~-10 % medido sobre la media diluida {SH_DIL_3T:,.0f}: {SH_DIL_3T / SH_FD - 1:+.1%}) -> INFRACONTABAN acciones")
+pr("VPA por escenario con el modelo de 03 v2:")
+for k in EQ_DCF:
+    pr(f"  VPA {k:8s}: portada {VPS_DCF[k]:6.2f} $ | totalmente diluidas {VPS_FD[k]:6.2f} $ "
+       f"| [03 v1: portada {EQ_DCF_V1[k] / SH_COVER:6.2f} $ ; portada + 301 {EQ_DCF_V1[k] / sh_v1_line:6.2f} $ ; "
+       f"04 v1 RETIRADO {EQ_DCF_V1[k] / SH_EX_AWARD:6.2f} $]")
 pe_dil = PRICE / (NI_TTM / SH_DIL_3T)
 pe_mcap = MCAP / NI_TTM
-pr(f"PER 03 (precio / BPA con media diluida 3T): {pe_dil:,.0f}x | PER con capitalización / BN TTM (mismo denominador que el EV): {pe_mcap:,.0f}x")
+pr(f"PER convención estándar (precio / BPA diluido TTM aprox.): {pe_dil:,.0f}x  <- el de 03; coincide con GuruFocus 410,4x (05 §3.3)")
+pr(f"Métrica alternativa (capitalización con acciones de portada / BN TTM): {pe_mcap:,.0f}x  <- no es una corrección (W1 retirada)")
 
 h("2. ¿Carga el DCF al negocio actual los costes de la opcionalidad? (margen 'core' ajustado)")
 d_rd = RD_Q3_26 - RD_Q3_25
@@ -98,7 +135,7 @@ m_ex = (EBIT_TTM - CRED_TTM) / (REV_TTM - CRED_TTM)
 m_ex_adj = (EBIT_TTM - CRED_TTM + d_sbc) / (REV_TTM - CRED_TTM)
 pr(f"SBC TTM - SBC FY24 = {d_sbc:,.0f} M$ (coincide con el plan CEO 2025, P4)")
 pr(f"Margen TTM sin créditos: {m_ex:.2%} | añadiendo de vuelta el exceso de SBC: {m_ex_adj:.2%}")
-pr("Lectura: el punto de partida del DCF (2,21 %) incluye costes ligados a la opcionalidad cuyos ingresos el modelo pone a 0.")
+pr(f"Lectura: el punto de partida del DCF ({f3.M_EX0:.2%}, 03 v2) incluye costes ligados a la opcionalidad cuyos ingresos el modelo pone a 0.")
 
 h("3. ¿Cuánto EBIT tendría que generar la opcionalidad en el año 10? (orden de magnitud)")
 pr("Método: brecha de valor G (03 §5) = VP de la opcionalidad. Valor en año 10 = múltiplo x NOPAT_10.")
@@ -223,8 +260,8 @@ for n in COMBOS:
     hi = VPS_DCF["alcista"] + PV_SUCCESS[(n, WACC_T)] / SH_COVER
     pr(f"  alcista + combinación {n} materializada al 100 %: {lo:,.0f} - {hi:,.0f} $")
 # Dilución del plan CEO si se materializa la opcionalidad (los hitos están ligados a ella)
-dil_factor = SH_COVER / (SH_COVER + CEO_AWARD_SH)
-pr(f"Si las acciones del plan CEO NO estuvieran en la portada y vestasen: factor {dil_factor:.3f} (-{1 - dil_factor:.1%}) sobre los valores con éxito")
+pr(f"Plan CEO: sus {CEO_AWARD_SH} M ya están en la portada (02 §5.1) -> no hay dilución adicional sobre estos valores. "
+   f"Con acciones totalmente diluidas ({SH_FD:,.1f} M) todos los valores con opcionalidad bajan un {SH_COVER / SH_FD - 1:.1%}")
 for k, v in VPS_DCF.items():
     pr(f"Caída hasta el VPA DCF {k}: {v / PRICE - 1:+.0%}")
 half = base_core + 0.5 * (PRICE - base_core)
@@ -232,11 +269,63 @@ pr(f"Precio si el mercado recortara a la mitad el valor implícito de la opciona
 
 h("11. Otros controles sobre 03-valoracion.md")
 toyota_rev_03 = 418590 / 1.45
-pr(f"'Ingresos Toyota' de 03 = EV / (EV/Ventas) = {toyota_rev_03:,.0f} M$ -> derivado, no reportado; el EV de Toyota incluye deuda de su financiera")
-pr(f"Capex 2026: 03 usa '>20.000-25.000 M$'; el CFO lo revisó a ~20.000 M$ en la call 3T26 (T1). 9M26 = 13.014 -> 4T26 implícito ~{20000 - 13014:,.0f} M$")
+pr(f"'Ingresos Toyota' de 03 = EV / (EV/Ventas) = {toyota_rev_03:,.0f} M$ = ventas (el EV se cancela: la deuda de la financiera no afecta a esta cifra).")
+pr("  03 §5 ya la presenta como 'implícita en su EV/Ventas' -> W5 v1 RETIRADA (05 §3.3).")
+pr(f"Capex 2026: el texto de 03 cita '>20.000-25.000 M$'; el CFO lo revisó a ~20.000 M$ en la call 3T26 (T1). 9M26 = 13.014 -> 4T26 implícito ~{20000 - 13014:,.0f} M$")
+pr("  El MODELO de 03 no usa esa cifra (usa reinversión = % de ingresos): ver §13 para el capex implícito.")
 pr(f"ROIC A TTM {ROIC_A_TTM:.1%} vs WACC inicial {WACC0:.1%}: diferencial {ROIC_A_TTM - WACC0:+.1%}")
 pr(f"FCF - SBC TTM: {FCF_TTM - SBC_TTM:,.0f} M$")
 
 h("12. Umbral de la señal A1")
 q_growth = (50 / RT_MILES_CUM) ** (1 / 5)
 pr(f"De {RT_MILES_CUM} M a 50 M millas acumuladas en 5 trimestres (3T26->4T27): crecimiento trimestral necesario {q_growth:.2f}x")
+
+h("13. Controles medidos con el modelo de Fase 3 (W3 / §4.1.2, W9 / §4.1.3, asimetría §4.1.1) — v2.1, modelo de 03 v2")
+b0 = f3.run_dcf(f3.SCEN["base"])
+pr(f"Reproducción del caso base de 03 v2: VPA {b0['vps']:.2f} $ (03 v2: 24,61) | WACC0 {f3.WACC0:.2%} | WACC_T {f3.WACC_T:.2%}")
+assert abs(b0["vps"] - VPS_DCF["base"]) < 1e-9
+
+# W3 / §4.1.2: capex implícito del año 1
+y1 = b0["rows"][0]
+capex_y1 = y1["reinv"] + f3.DA_TTM_APROX
+pr(f"W3: año 1 base -> reinversión neta {y1['reinv']:,.0f} + D&A TTM (02 v2) {f3.DA_TTM_APROX:,.0f} = capex bruto implícito {capex_y1:,.0f} M$ "
+   f"(FCFF año 1 {y1['fcff']:,.0f})")
+pr(f"    Guía revisada ~20.000 M$ (T1): el modelo queda {20000 - capex_y1:,.0f} M$ POR DEBAJO -> no es pesimista en capex; si acaso, ligero")
+pr("    (y no incluye la Terafab: 'tens of billions' hasta 2028 [MUSK, T1]). W3 / §4.1.2 v1 RETIRADA.")
+
+# W9 / §4.1.3: beta solo sectorial en los años 1-5 (WACC terminal sin cambios)
+ke_sec = f3.RF + f3.BETA_BU * f3.ERP
+w0_sec = ke_sec * (1 - f3.W_D) + f3.KD * f3.W_D
+v_sec = f3.run_dcf(f3.SCEN["base"], w0=w0_sec, wt=f3.WACC_T)["vps"]
+v_sec_shift = f3.run_dcf(f3.SCEN["base"], w0=w0_sec, wt=f3.WACC_T + (w0_sec - f3.WACC0))["vps"]
+pr(f"W9: beta sectorial {f3.BETA_BU:.2f} -> WACC0 {w0_sec:.2%} (03: {f3.WACC0:.2%})")
+pr(f"    VPA base con WACC terminal sin cambios: {v_sec:.2f} $ ({v_sec - b0['vps']:+.2f} $)")
+pr(f"    VPA base desplazando también el WACC terminal (como la tabla 4.1 de 03): {v_sec_shift:.2f} $ ({v_sec_shift - b0['vps']:+.2f} $)")
+_ig = f3.G_GRID.index(0.03)
+_v116, _v106 = f3.SENS[f3.W_GRID.index(round(f3.WACC0, 4))][_ig], f3.SENS[f3.W_GRID.index(round(f3.WACC0 - 0.01, 4))][_ig]
+pr(f"    Interpolación lineal de la tabla 4.1 de 03 v2 (método de 05 §3.3): {_v116 + (_v106 - _v116) * (f3.WACC0 - w0_sec) / 0.01:.1f} $")
+pr(f"    Contraste con 03 v2 §4.3: {f3.W9_15:.2f} $ / {f3.W9_SHIFT:.2f} $")
+
+# §4.1.1: sensibilidad del margen de partida (no es corrección: la SBC es un coste real)
+m0_03 = f3.M_EX0
+# v2.1: denominador = ingresos SIN créditos (f3.REV0_EX), el mismo al que 03 v2 aplica el margen (antes f3.REV0)
+m0_adj_sbc = m0_03 + d_sbc / f3.REV0_EX
+m0_adj_rd = m0_03 + 4 * d_rd / f3.REV0_EX
+for lab, m0 in (("+ exceso de SBC sobre FY24", m0_adj_sbc), ("+ I+D incremental 3T26 x 4", m0_adj_rd)):
+    f3.M_EX0 = m0
+    v = f3.run_dcf(f3.SCEN["base"])["vps"]
+    v2 = f3.run_dcf(f3.SCEN["base"], w0=w0_sec, wt=f3.WACC_T)["vps"]
+    pr(f"§4.1.1 sensibilidad: margen de partida {m0_03:.2%} -> {m0:.2%} ({lab}): VPA base {v:.2f} $ ({v - b0['vps']:+.2f}) ; "
+       f"junto con beta sectorial {v2:.2f} $ ({v2 - b0['vps']:+.2f})")
+f3.M_EX0 = m0_03
+pr(f"    Contraste con 03 v2 §6.3 (script §9 c): " + " | ".join(f"{v:.2f} $" for _, _, _, v in f3.ASYM_RES[1:3]))
+SPACEX_FV = 2002.0 + 863.0   # P2: compra + plusvalía no realizada 9M26 (inferencia del valor contable)
+DIGITAL = 962.0              # P2
+pr(f"W8: SpaceX (~{SPACEX_FV:,.0f}) + activos digitales ({DIGITAL:,.0f}) fuera de la caja neta = {(SPACEX_FV + DIGITAL) / SH_COVER:.2f} $/acción")
+# Suma de los ajustes hacia arriba de §4.1 que se pueden medir (beta sectorial + margen de partida sin I+D incremental + W8)
+f3.M_EX0 = m0_adj_rd
+up_lo = f3.run_dcf(f3.SCEN["base"], w0=w0_sec, wt=f3.WACC_T)["vps"] + (SPACEX_FV + DIGITAL) / SH_COVER
+up_hi = f3.run_dcf(f3.SCEN["base"], w0=w0_sec, wt=f3.WACC_T + (w0_sec - f3.WACC0))["vps"] + (SPACEX_FV + DIGITAL) / SH_COVER
+f3.M_EX0 = m0_03
+pr(f"Ajuste máximo medido hacia arriba (§4.1: beta sectorial + margen de partida sin I+D incremental + W8): VPA base {up_lo:.2f} - {up_hi:.2f} $ "
+   f"({up_lo - b0["vps"]:+.2f} a {up_hi - b0["vps"]:+.2f} $) ; el capex (W3) ya no suma")

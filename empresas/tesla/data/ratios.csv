@@ -12,6 +12,7 @@ beneficio_neto_atrib_comunes,M USD,5519.0,12556.0,14997.0,7091.0,3794.0,3218.0,D
 flujo_caja_operativo,M USD,11497.0,14724.0,13256.0,14923.0,14747.0,18710.0,Dato (FY2025 flujos = 9M25+Q4-25; TTM = FY25+9M26-9M25; balances a cierre)
 capex,M USD,6482.0,7158.0,8898.0,11339.0,8527.0,15407.0,Dato (FY2025 flujos = 9M25+Q4-25; TTM = FY25+9M26-9M25; balances a cierre)
 sbc,M USD,2121.0,1560.0,1812.0,1999.0,2825.0,4300.0,Dato (FY2025 flujos = 9M25+Q4-25; TTM = FY25+9M26-9M25; balances a cierre)
+dya_amortizacion_deterioro,M USD,2911.0,3747.0,4667.0,5368.0,6148.0,6704.0,Dato (FY2025 flujos = 9M25+Q4-25; TTM = FY25+9M26-9M25; balances a cierre)
 caja_y_inversiones_cp,M USD,17707.0,22185.0,29094.0,36563.0,44059.0,45447.0,Dato (FY2025 flujos = 9M25+Q4-25; TTM = FY25+9M26-9M25; balances a cierre)
 deuda_corriente,M USD,1589.0,1502.0,2373.0,2456.0,1640.0,1387.0,Dato (FY2025 flujos = 9M25+Q4-25; TTM = FY25+9M26-9M25; balances a cierre)
 deuda_no_corriente,M USD,5245.0,1597.0,2857.0,5757.0,6736.0,8136.0,Dato (FY2025 flujos = 9M25+Q4-25; TTM = FY25+9M26-9M25; balances a cierre)
@@ -22,12 +23,15 @@ caja_neta,M USD,10873.0,19086.0,23864.0,28350.0,35683.0,35924.0,caja+inv. CP - d
 fcf,M USD,5015.0,7566.0,4358.0,3584.0,6220.0,3303.0,FCO - capex
 fcf_menos_sbc,M USD,2894.0,6006.0,2546.0,1585.0,3395.0,-997.0,FCF - SBC (SBC tratado como coste real)
 beneficio_operativo_sin_creditos,M USD,5058.0,11880.0,7101.0,4313.0,2362.0,2285.0,benef. operativo - créditos regulatorios (créditos asumidos ~100 % margen)
+capex_neto_de_dya,M USD,3571.0,3411.0,4231.0,5971.0,2379.0,8703.0,capex - D&A (D&A incluye deterioros)
+ebitda_aprox,M USD,9434.0,17403.0,13558.0,12444.0,10503.0,10170.0,benef. operativo + D&A (sin ajustar SBC; no es el EBITDA ajustado de Tesla)
 margen_bruto,%,0.2528,0.256,0.1825,0.1786,0.1803,0.1929,beneficio_bruto / ingresos totales
 margen_operativo,%,0.1212,0.1676,0.0919,0.0724,0.0459,0.0335,beneficio_operativo / ingresos totales
 margen_neto,%,0.1025,0.1541,0.155,0.0726,0.04,0.0311,beneficio_neto_atrib_comunes / ingresos totales
 margen_fco,%,0.2136,0.1807,0.137,0.1528,0.1555,0.1807,flujo_caja_operativo / ingresos totales
 capex_sobre_ingresos,%,0.1204,0.0879,0.0919,0.1161,0.0899,0.1488,capex / ingresos totales
 sbc_sobre_ingresos,%,0.0394,0.0192,0.0187,0.0205,0.0298,0.0415,sbc / ingresos totales
+dya_sobre_ingresos,%,0.0541,0.046,0.0482,0.0549,0.0648,0.0647,dya_amortizacion_deterioro / ingresos totales
 margen_fcf,%,0.0932,0.0929,0.045,0.0367,0.0656,0.0319,FCF / ingresos totales
 margen_operativo_sin_creditos,%,0.094,0.1458,0.0734,0.0441,0.0249,0.0221,(benef. operativo - créditos) / ingresos
 creditos_sobre_benef_operativo,%,0.2246,0.1301,0.2013,0.3905,0.4576,0.3407,créditos regulatorios / benef. operativo
@@ -80,3 +84,12 @@ nopat_max_sobre_ttm,x,,,,,,3.9,NOPAT FY2022 / NOPAT TTM
 var_caja_neta_9M26,M USD,,,,,,241.0,caja neta 30-sep-26 - caja neta 31-dic-25
 multiplo_caja_neta_21_3T26,x,,,,,,3.3,caja neta 30-sep-26 / 31-dic-21
 var_sbc_24_ttm,%,,,,,,1.1511,SBC TTM / FY2024 - 1
+acc_portada_15oct26,M acciones,,,,,,3952.8,portada 10-Q 3T26 (P2)
+acc_basica_media_3T26,M acciones,,,,,,3240.0,nota de BPA P2
+acc_restringidas_ceo2025,M acciones,,,,,,423.7,"Form 4: 423.743.904 restringidas; en portada, fuera de básica y de diluida (no 'ganadas')"
+acc_netas_ejercicio_2018,M acciones,,,,,,286.4,"Form 4 17-jun-26: 303,96 ejercidas - 17,53 retenidas; en portada, fuera de básica; vesting por servicio 19-ene-2028"
+acc_residuo_portada_menos_basica,M acciones,,,,,,2.6,portada - básica - restringidas: desfase media/saldo y emisiones de empleados
+acc_stock_based_awards_3T26,M acciones,,,,,,301.0,"diluida - básica (P2), método de tesorería"
+acc_awards_no_incluidos_en_portada_aprox,M acciones,,,,,,14.6,INFERENCIA: 301 - acciones netas 2018 (ya en portada) = incentivos de empleados aún no emitidos
+acc_doble_computo_portada_mas_301,M acciones,,,,,,286.4,INFERENCIA: parte de las 301 que ya está en la portada
+acc_totalmente_diluidas_aprox,M acciones,,,,,,3967.3,"portada + incentivos no emitidos (incluye las 423,7 M del CEO aún no ganadas)"

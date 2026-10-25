@@ -1,14 +1,15 @@
 # 04 — Tesis alcista, tesis bajista y abogado del diablo (TSLA)
 
-**Fecha del análisis:** 2026-10-24 · **Analista:** Fase 4 (rol *Investment Researcher*) · **Precio de referencia:** 372,22 $ (cierre del 23-oct-2026, 03 §1)
+**Fecha del análisis:** 2026-10-24 · **Versión:** v2.1 (2026-10-25), sincronizada con 02 v2 (§5.1) y 03 v2; v2: correcciones tras 05-veredicto.md. Ver los registros de cambios al final · **Analista:** Fase 4 (rol *Investment Researcher*) · **Precio de referencia:** 372,22 $ (cierre del 23-oct-2026, 03 §1)
 **Alcance:** contrastar dos tesis con el mismo rigor y definir qué datos las confirmarían o las refutarían. **No es una recomendación.** No hay precio objetivo ni lenguaje de compra o venta.
 
 **Archivos de esta fase:**
 
 | Archivo | Contenido |
 |---|---|
-| [`scripts/fase4_opcionalidad.py`](../scripts/fase4_opcionalidad.py) | Todas las cuentas de este documento: dimensionado de la opcionalidad, combinaciones, rangos y controles sobre 03 |
+| [`scripts/fase4_opcionalidad.py`](../scripts/fase4_opcionalidad.py) | Todas las cuentas de este documento: dimensionado de la opcionalidad, combinaciones, rangos y controles sobre 03. **v2.1:** importa el modelo de 03 v2 al principio y toma de él los valores DCF por escenario y las acciones totalmente diluidas |
 | [`fuentes/fuentes.md`](../fuentes/fuentes.md) | Fuentes nuevas T1–T10, más la relectura de P2 y P4 |
+| [`fuentes/nuevas_fase4_v2.md`](../fuentes/nuevas_fase4_v2.md) | Fuentes de la ronda v2: V1 (nota de BPA del 10-Q 3T26) y V2 (PER de GuruFocus vía Fase 5) |
 
 **Convenciones de etiquetado:**
 - **[DEMOSTRADO]**: aparece en un documento presentado ante la SEC (P2, P4, etc.).
@@ -17,14 +18,14 @@
 - **[SUPUESTO]**: hipótesis de esta fase. No es un dato y se declara para poder discutirla.
 - **SIN VERIFICAR**: no se pudo contrastar.
 
-Las cifras financieras son las corregidas en Fase 2 (02 §8.1): SBC de 3T26 de 1.165 M$, capex de 9M26 de 13.014 M$, deuda contable de 9.523 M$ a 30-sep-2026 y caja e inversiones de 45.447 M$.
+Las cifras financieras son las corregidas en Fase 2 (02 §8.1): SBC de 3T26 de 1.165 M$, capex de 9M26 de 13.014 M$, deuda contable de 9.523 M$ a 30-sep-2026 y caja e inversiones de 45.447 M$. La descomposición de acciones es la de 02 §5.1 (v2) y los valores DCF son los de 03 v2.
 
 ---
 
 ## 0. Resumen
 
-1. **Hechos.** El negocio que Tesla reporta vale entre ~10 $ y ~55 $ por acción (03 §3). Su margen operativo sin créditos es del 2,2 % (02 §3) y su ROIC del 5,5 %, por debajo de un WACC de ~11,6 %. Por tanto, **~93 % del precio (≈1,37 billones $ en el caso base) es opcionalidad**.
-2. **Lo que exige el precio.** Para justificar esa brecha, los negocios nuevos tendrían que generar **~135.000-270.000 M$ de EBIT anual hacia 2036**, entre 39 y 78 veces el EBIT TTM de toda Tesla (script §3). Si ese EBIT llegara antes (año 7) o se valorara a 40x, la cifra baja a **~85.000-110.000 M$**.
+1. **Hechos.** El negocio que Tesla reporta vale entre ~10 $ y ~56 $ por acción (03 v2 §3; base 24,6 $). Su margen operativo sin créditos es del 2,2 % (02 §3) y su ROIC del 5,5 %, por debajo de un WACC de ~11,6 %. Por tanto, **~93 % del precio (≈1,37 billones $ en el caso base) es opcionalidad**.
+2. **Lo que exige el precio.** Para justificar esa brecha, los negocios nuevos tendrían que generar **~135.000-270.000 M$ de EBIT anual hacia 2036**, entre 39 y 78 veces el EBIT TTM de toda Tesla (script §3). Si ese EBIT llegara antes (año 7) o se valorara a 40x, la cifra baja a **~84.000-111.000 M$**.
 3. **Tesis alcista.** Tesla es la única empresa que combina flota de datos, fabricación a escala, chip propio y energía. Lo que ya ha **demostrado** es real pero pequeño:
    - un robotaxi sin supervisión en varias ciudades, con ~2 M de millas acumuladas;
    - 1,74 M de clientes de FSD;
@@ -38,8 +39,8 @@ Las cifras financieras son las corregidas en Fase 2 (02 §8.1): SBC de 3T26 de 1
 
    Si el mercado recortara a la mitad el valor implícito de la opcionalidad, el precio sería de ~198 $ (−47 %).
 5. **Contra el caso base de Fase 3:**
-   - **Puede ser demasiado pesimista.** Carga al negocio actual el gasto en I+D de IA, la SBC del plan del CEO y el capex de Optimus, Cybercab y Terafab, pero pone sus ingresos a cero. Sin el aumento de I+D, el margen de 3T26 sería del 6,6 % y no del 2,6 %.
-   - **Puede ser demasiado optimista.** Supone un margen del 8,9 %, un ROIC terminal del 12 % y ventas/capital de 1,5x, todos muy por encima de los datos TTM. Además, la línea de dilución de 03 probablemente cuenta dos veces las acciones restringidas.
+   - **Puede ser algo pesimista, pero poco.** Carga al negocio actual el gasto en I+D de IA, la SBC del plan del CEO y el capex de las iniciativas nuevas, pero pone sus ingresos a cero. Sin el aumento de I+D, el margen de 3T26 sería del 6,6 % y no del 2,6 %. Medido con el propio modelo de 03, el ajuste máximo hacia arriba (beta sectorial, margen de partida sin I+D incremental, SpaceX) sube el caso base de 24,6 $ a **28,5-31,9 $** (script §13). El capex **no** es fuente de pesimismo: el modelo implica ~15.900 M$ en el año 1, por debajo de la guía de ~20.000 M$.
+   - **Puede ser demasiado optimista.** Supone un margen del 9,15 % en el año 5 (desde el 2,23 % TTM), un ROIC terminal del 12 % y ventas/capital de 1,5x, todos muy por encima de los datos TTM. 03 v2 ya explica el mecanismo que exige ese margen (03 §2.3) y bajó la energía al +8 %, pero los supuestos siguen siendo exigentes (§4.2). La dilución ya no es un punto abierto: la línea de v1 de 03 contaba dos veces ~286 M de acciones, y 03 v2 la sustituye por las acciones totalmente diluidas (§4.2.4).
 
 **Horizonte:** las señales de §2.6 y §3.6 se evalúan en 4-8 trimestres (4T26-3T28). La valoración se refiere a 10 años.
 **Confianza:**
@@ -61,8 +62,8 @@ Las dos tesis parten de los mismos hechos:
 | ROIC A TTM / WACC inicial | 5,5 % / 11,6 % (diferencial −6,1 pp) | 02 §6; 03 §1.1; script §11 |
 | Caja neta | 35.924 M$; además, línea de crédito de hasta 30.000 M$ sin disponer [CALL] | 02 §5; T1 |
 | Capex 2026 | ~20.000 M$, revisado a la baja desde ">25.000 M$" [CALL] | T1; T10 |
-| DCF del negocio reportado | 10 / 25 / 55 $ por acción | 03 §3 |
-| Opcionalidad implícita | 1,25-1,43 billones $ (317-362 $ por acción) | 03 §5 |
+| DCF del negocio reportado | 10,4 / 24,6 / 55,8 $ por acción (portada); 10,4 / 24,5 / 55,6 $ con acciones totalmente diluidas | 03 v2 §3 |
+| Opcionalidad implícita | 1,25-1,43 billones $ (316-362 $ por acción) | 03 v2 §5 |
 
 **La pregunta que separa las dos tesis no es si Tesla es un buen fabricante de coches.** Los datos dicen que hoy es uno mediocre en rentabilidad. La pregunta es si los negocios nuevos pueden generar del orden de **100.000-250.000 M$ de EBIT anual** en un plazo de 7-10 años, y con qué probabilidad.
 
@@ -103,9 +104,9 @@ Todo lo que mueve la valoración está en la columna "anunciado".
 
 | Brecha | EBIT anual necesario en el año 10 |
 |---|---|
-| Rango completo (las tres brechas × r × múltiplo) | **134.680-271.287 M$** |
-| Referencia central (brecha base, r = 9,79 %, 30x) | **147.561 M$** (43x el EBIT TTM) |
-| Sensibilidad: 40x en el año 10 / 30x en el año 7 / 40x en el año 7 | 110.671 / 111.502 / 83.627 M$ |
+| Rango completo (las tres brechas × r × múltiplo) | **134.308-271.254 M$** |
+| Referencia central (brecha base, r = 9,79 %, 30x) | **147.527 M$** (43x el EBIT TTM) |
+| Sensibilidad: 40x en el año 10 / 30x en el año 7 / 40x en el año 7 | 110.645 / 111.477 / 83.607 M$ |
 
 Esta cuenta **favorece a la tesis alcista**: no descuenta el capital que haría falta invertir para generar ese EBIT.
 
@@ -135,7 +136,7 @@ Esta cuenta **favorece a la tesis alcista**: no descuenta el capital que haría 
 
 ### 2.4 Por qué el alcista puede tener razón aunque las cifras parezcan enormes
 
-- **El sesgo del DCF juega en contra del alcista.** El margen de partida (2,2 %) incluye el aumento de I+D de IA (+1.131 M$ interanual en 3T26) y la SBC extra del plan del CEO (+2.301 M$ sobre FY24). Sumándolos de vuelta, el margen subyacente sería del **6,6 %** en 3T26 (6,2 % sin créditos) y del **4,5 %** en TTM (script §2). El caso base de 03 lo recupera solo a partir del año 5.
+- **El sesgo del DCF juega en contra del alcista.** El margen de partida (2,2 %) incluye el aumento de I+D de IA (+1.131 M$ interanual en 3T26) y la SBC extra del plan del CEO (+2.301 M$ sobre FY24). Sumándolos de vuelta, el margen subyacente sería del **6,6 %** en 3T26 (6,2 % sin créditos) y del **4,5 %** en TTM (script §2). El caso base de 03 lo recupera solo a partir del año 5 (9,15 % en 03 v2).
 - **La adopción de FSD es una señal económica real.** Tesla lo considera "driving demand" (P4), y el +67 % interanual de suscripciones activas es un dato [DEMOSTRADO]. Que más del 75 % de las entregas en Norteamérica incluyan FSD de pago [CALL] apunta a que el software empieza a tener poder de precio.
 - **Velocidad desde una base pequeña.** Las millas sin supervisión se multiplicaron por 8 en un trimestre (P4). En Waymo, los viajes semanales pasaron de ~400.000 a 500.000 entre febrero y abril de 2026 (+25 %; T3, T4). Si Tesla consigue una curva de crecimiento comparable con un coste por vehículo menor, la flota podría crecer más deprisa.
 - **La energía tiene demanda declarada** ("almost sold out" en 2027 [MUSK]) y capacidad nueva de 50 GWh en Texas [DEMOSTRADO].
@@ -145,7 +146,7 @@ Esta cuenta **favorece a la tesis alcista**: no descuenta el capital que haría 
 
 - La combinación B, que ya es ambiciosa (3 M de robotaxis, más del doble de los viajes de Uber; 5 M de humanoides al año), **no cubre** la brecha con las hipótesis centrales. Solo la cubre si el EBIT llega en el año 7 o el mercado paga 40x (paso 1).
 - **Canibalización.** Las combinaciones no la restan: cada viaje en robotaxi puede sustituir la venta de un coche.
-- **Dilución.** El valor de las combinaciones se reparte entre las 3.953 M de acciones de portada.
+- **Dilución.** El valor de las combinaciones se reparte entre las 3.953 M de acciones de portada, que ya incluyen las 423,7 M del plan del CEO 2025 (02 §5.1). Con las ~3.967 M totalmente diluidas, todos los valores con opcionalidad bajan un 0,4 %.
 
 ### 2.6 Señales de confirmación o refutación de la tesis alcista (4-8 trimestres)
 
@@ -177,7 +178,7 @@ Por un lado, el negocio que Tesla tiene se está deteriorando y destruye valor c
   - Una flota propia de 3 M de robotaxis costaría ~90.000 M$ (script §4).
   - Tesla ya ha asegurado 30.000 M$ de deuda disponible [CALL]. Su balance, que es la principal fortaleza financiera (02 §5), dejará de crecer.
 - **Calidad del beneficio.** El margen bruto de energía del 33,1 % en 3T26, presentado sin matices en 01 §1.2, estuvo "helped by tariff refunds and warranty true-downs" [CALL, T1]. La partida "Other income" oscila entre −592 y +590 M$ por trimestre (02 §3).
-- **Dilución mayor de lo que dice la media diluida.** Las acciones en balance pasaron de 3.324 M (30-sep-25) a 3.953 M (30-sep-26), un **+18,9 % en 12 meses**, mientras que la media básica solo sube 13 M (script §1; T6; P2). La diferencia (~713 M de acciones) está en circulación legal pero aún no "ganada". Si se cumplen los hitos, ese capital se reparte entre más acciones.
+- **Dilución mayor de lo que dice la media diluida.** Las acciones en balance pasaron de 3.324 M (30-sep-25) a 3.953 M (30-sep-26), un **+18,9 % en 12 meses**, mientras que la media básica solo sube 13 M (script §1; T6; P2). Las ~713 M de acciones en balance que no entran en la media básica son, según 02 §5.1: **423,7 M** restringidas del plan del CEO 2025 (emitidas en 4T25, no "ganadas"), **286,4 M** netas del ejercicio de opciones de 2018 (restringidas por servicio hasta ene-2028) y ~2,6 M de residuo. Ni el BPA básico ni el diluido recogen las 423,7 M del CEO, así que **el BPA publicado se reparte entre menos acciones de las que existen legalmente**. El valor por acción de 03 v2 sí las cuenta (portada o totalmente diluidas).
 
 ### 3.3 La opcionalidad no está asegurada
 
@@ -204,8 +205,8 @@ Por un lado, el negocio que Tesla tiene se está deteriorando y destruye valor c
 |---|---:|---:|
 | El mercado recorta a la mitad el valor implícito de la opcionalidad (base) | ~198 $ | −47 % |
 | Base + 25 % de probabilidad de la combinación B | 70-79 $ | ≈ −79 % a −81 % |
-| DCF alcista del negocio reportado, sin opcionalidad | 54,9 $ | −85 % |
-| DCF base | 24,5 $ | −93 % |
+| DCF alcista del negocio reportado, sin opcionalidad | 55,8 $ | −85 % |
+| DCF base | 24,6 $ | −93 % |
 | DCF bajista (casi todo es caja neta) | 10,4 $ | −97 % |
 
 ### 3.5 Debilidades de la propia tesis bajista (reconocidas)
@@ -229,70 +230,85 @@ Por un lado, el negocio que Tesla tiene se está deteriorando y destruye valor c
 
 ## 4. Abogado del diablo: el caso base de Fase 3 en ambas direcciones
 
-### 4.1 Por qué el caso base de 03 podría ser **demasiado pesimista**
+### 4.1 Por qué el caso base de 03 podría ser **demasiado pesimista** (v2.1: el efecto medido es pequeño, +3,9 a +7,2 $; ver el saldo)
 
-1. **Asimetría de costes e ingresos.** El margen de partida del 2,21 % y la reinversión del 7,7 % de los ingresos en los años 1-2 cargan al negocio reportado:
+Cada crítica lleva su **estado frente a 03 v2**: «resuelta en 03 v2», «parcialmente» o «sigue abierta».
+
+1. **Asimetría de costes e ingresos** (crítica válida según 05 §3.3). **Estado: resuelta en 03 v2** (03 §6.3: seis variantes medidas, de +0,8 $ a +4,8 $, presentadas como sensibilidad y con la conclusión cualitativa explícita). El margen de partida del 2,23 % y la reinversión del 8,4 % de los ingresos en los años 1-2 (03 v2, con la D&A real de 6.704 M$) cargan al negocio reportado:
    - la I+D de "SI and other R&D projects" (+1.131 M$ interanual, P4);
    - la SBC del plan del CEO (+2.301 M$ sobre FY24);
    - el capex de Optimus, Cybercab, Cortex y la Austin Fab.
 
-   Al mismo tiempo, los ingresos de esas iniciativas se ponen a 0. Lo coherente sería **o** sacar esos costes del DCF del núcleo, **o** reconocer que la "opcionalidad implícita" de 317-362 $ es en parte el valor de un gasto que ya se está haciendo. Ajustado por la I+D incremental, el margen de 3T26 es del 6,6 % y no del 2,6 % (script §2).
-2. **El capex de 2026 está sobreestimado.** 03 cita ">20.000-25.000 M$" (Fase 1). El CFO lo revisó a **~20.000 M$** en la call de 3T26 (T1). Con 13.014 M$ en 9M26, el 4T26 implícito es de ~7.000 M$.
-3. **El WACC es alto para el negocio que se descuenta.** La beta de 1,59 mezcla al 50 % la beta de regresión (1,86), que refleja la volatilidad que **genera la opcionalidad**. Para descontar solo los flujos del núcleo, la beta del sector (1,32 → WACC de ~10,5 %) sería más coherente con el propio planteamiento de 03. El efecto es moderado: unos +4-10 $ por acción según la tabla 4.1.
-4. **Activos no operativos fuera del cálculo.** La inversión en SpaceX está en "Other non-current assets" a valor razonable (P2), es decir, **no** en la caja neta. Son unos ~2.865 M$ (inferencia), a los que se suman 962 M$ en activos digitales. En total, ~1 $ por acción que no está en el valor de las acciones. Es inmaterial, pero 03 §6 lo dejaba sin verificar.
-5. **El DCF inverso supone capital industrial también para el software.** Usa ventas/capital de 1,5x para todos los ingresos futuros. Si una parte relevante fuera FSD o software, el capital necesario sería mucho menor y la TACC requerida, también. En sentido contrario, el robotaxi con flota propia es más intensivo en capital (ver 4.2).
+   Al mismo tiempo, los ingresos de esas iniciativas se ponen a 0. Lo coherente sería **o** sacar esos costes del DCF del núcleo, **o** reconocer que la "opcionalidad implícita" de 316-362 $ es en parte el valor de un gasto que ya se está haciendo. Ajustado por la I+D incremental, el margen de 3T26 es del 6,6 % y no del 2,6 % (script §2). **Cuánto pesa en el valor** (script §13; es una sensibilidad, no una corrección, porque la SBC y la I+D son costes reales): con el margen de partida subido al 4,48 % (sin el exceso de SBC sobre FY24) o al 6,65 % (sin la I+D incremental anualizada), el caso base pasa de 24,61 $ a 25,45 $ o 26,25 $, las mismas cifras que 03 v2 §6.3 (25,5 / 26,3 $). El efecto es pequeño porque el caso base ya converge al 9,15 % en el año 5. 03 v2 añade además la cota superior con las tres cosas a la vez (29,4 $, +4,8 $), que incluye quitar el suelo de capex de los años 1-2. **La consecuencia relevante es cualitativa**: la "opcionalidad implícita" de 316-362 $ incluye en parte el valor de un gasto que ya está en el EBIT.
+2. ~~El capex de 2026 está sobreestimado~~ **Retirada en v2** (05 §3.3). **Estado del punto de texto: resuelta en 03 v2** (03 §2.1 cita ya la guía de ~20.000 M$). El modelo de 03 **no usa** esa guía: modela la reinversión como un 8,4 % de los ingresos en v2. El capex bruto implícito del año 1 del caso base es de **15.884 M$** (reinversión neta 9.180 + D&A TTM real 6.704; script §13), **4.116 M$ por debajo** de la guía revisada de ~20.000 M$ (T1). Por tanto, el modelo no es pesimista en capex. Si acaso es ligero, porque no incluye la Terafab ("tens of billions" hasta 2028 [MUSK, T1]). Lo único válido de la crítica original era de texto, y 03 v2 ya lo ha corregido.
+3. **El WACC es algo alto para el negocio que se descuenta** (crítica válida en el argumento, exagerada en v1). **Estado: parcialmente.** 03 v2 §4.3 acepta el argumento y publica las dos mediciones, pero el modelo mantiene la beta mezclada 50/50. La beta inicial de 1,59 mezcla al 50 % la beta de regresión (1,86), que refleja la volatilidad que **genera la opcionalidad**. Para descontar solo los flujos del núcleo, la beta del sector (1,32 → WACC inicial del 10,46 %) sería más coherente con el propio planteamiento de 03. **Efecto medido** (script §13):
+   - **+1,2 $** por acción (24,6 → 25,9 $) si solo cambia el WACC de los años 1-5. Es la aplicación coherente: la beta terminal de 03 (1,16) no contiene la beta de regresión.
+   - **+4,6 $** (→ 29,2 $) si se desplaza también el WACC terminal, como hace la tabla 4.1 de 03. Es la cifra de ~+4,5 $ de 05 §3.3, obtenida allí por interpolación (29,1 $ interpolando la tabla 4.1 de 03 v2).
+
+   Las dos cifras coinciden con las de 03 v2 §4.3 (25,85 y 29,21 $). Lo que queda abierto es solo la elección: 03 considera +1,2 $ la variante coherente y la deja como sensibilidad; esta fase está de acuerdo en que el efecto es pequeño.
+
+   La cifra de "+4-10 $" de v1 era incorrecta: el techo de 10 $ corresponde a un WACC del 9,6 %, no a la beta sectorial.
+4. **Activos no operativos fuera del cálculo.** La inversión en SpaceX está en "Other non-current assets" a valor razonable (P2), es decir, **no** en la caja neta. Son unos ~2.865 M$ (inferencia), a los que se suman 962 M$ en activos digitales. En total, **0,97 $ por acción** (script §13) que no está en el valor de las acciones. Es inmaterial. **Estado: resuelta en 03 v2** para SpaceX y los activos digitales (03 §6.4, misma cifra de 0,97 $). La inversión en xAI **sigue abierta** (SIN VERIFICAR en primaria, en 03 y aquí).
+5. **El DCF inverso supone capital industrial también para el software.** Usa ventas/capital de 1,5x para todos los ingresos futuros. Si una parte relevante fuera FSD o software, el capital necesario sería mucho menor y la TACC requerida, también. En sentido contrario, el robotaxi con flota propia es más intensivo en capital (ver 4.2). **Estado: resuelta en 03 v2** (03 §5: con 3,0x de ventas/capital, la TACC necesaria baja 2-4 puntos, a 25,8-32,3 %; sigue exigiendo multiplicar los ingresos por 10-16).
 
 ### 4.2 Por qué el caso base de 03 podría ser **demasiado optimista**
 
-1. **Margen objetivo del 8,93 % (media FY21-24).** Esa media incluye el FY22 (14,6 %), con un ASP y un mix de producto que ya no existen. Desde 2023 el margen bruto está estructuralmente en ~18-19 % (02 §3) y los gastos operativos crecen un +39 % interanual (P4). **Cuadruplicar el margen en 5 años** sin ingresos nuevos es un supuesto alcista disfrazado de "base".
-2. **ROIC terminal del 12 % y ventas/capital de 1,5x.** El ROIC TTM es del 5,5 % (A) o del 2,9 % (B), y la ventas/capital bruta de Fase 2 es de 1,05x. El caso base supone una eficiencia de capital **mejor que la actual en todos los ejes**, justo cuando el capex se duplica.
-3. **Crecimiento del 12 % anual en energía.** Contradice el −5,7 % de 9M26 y el −16 % de 3T26 (02 §2). El margen del 33,1 % de 3T26 incluye efectos puntuales [CALL, T1].
-4. **Línea de dilución probablemente mal construida** (§3.2; script §1):
-   - Las acciones de portada (3.953 M) ya superan en ~713 M la media básica. El salto de +427 M en el 4T25 coincide en tamaño con las 423,7 M acciones restringidas del plan del CEO (S10), aunque esto es **inferencia y está SIN VERIFICAR**.
-   - Si las acciones restringidas ya están en la portada, **sumar 301 M más (03 §3) cuenta dos veces** una parte de la dilución.
-   - Y 03 §6.4 ("el modelo solo recoge una parte") estaría **al revés**: la portada ya recoge la dilución máxima del plan.
-   - Efecto: sin las acciones del plan, el valor por acción sería de 11,6 / 27,5 / 61,5 $, frente a 10,4 / 24,5 / 54,9 $. Es inmaterial para la conclusión, pero es una incoherencia de método.
+1. **Margen objetivo del 9,15 % (media FY21-24; 8,93 % en 03 v1).** **Estado: parcialmente.** La subida a 9,15 % no es un supuesto nuevo: es la corrección del denominador de 03 v2 (EBIT − créditos sobre ingresos − créditos, sin redondeo). Esa media incluye el FY22 (14,91 %), con un ASP y un mix de producto que ya no existen. Desde 2023 el margen bruto está estructuralmente en ~18-19 % (02 §3) y los gastos operativos crecen un +39 % interanual (P4). **Multiplicar el margen por 4,1 en 5 años** (2,23 % → 9,15 %) sin ingresos nuevos sigue siendo un supuesto exigente.
+
+   **Lo que 03 v2 ya resolvió:** la transparencia. 03 §2.3 mide el mecanismo (el gasto operativo tendría que bajar un −21,6 % en términos absolutos con margen bruto constante, o el margen bruto subir al 25,3 %, por encima del máximo histórico del 23,9 %), reconoce que es "un supuesto exigente, no neutral" y rotula la columna «Base (media FY21-24)». **Lo que sigue abierto:** el supuesto en sí. 03 lo justifica como el punto en que el negocio actual deja de soportar el coste de la opcionalidad (margen de partida limpio del 8,90 %), lo que traslada el riesgo a que ese gasto se estabilice o se financie con ingresos nuevos.
+2. **ROIC terminal del 12 % y ventas/capital de 1,5x.** El ROIC TTM es del 5,5 % (A) o del 2,9 % (B), y la ventas/capital bruta de Fase 2 es de 1,05x. El caso base supone una eficiencia de capital **mejor que la actual en todos los ejes**, justo cuando el capex se duplica. **Estado: parcialmente.** 03 v2 corrigió la justificación del ROIC terminal (el 12 % está por debajo del mínimo FY21-24, 13,4 %, y por encima del TTM) y midió su efecto: 23,6-25,5 $, menos de 2 $ (03 §4.3). La ventas/capital de 1,5x **sigue abierta**: no tiene sensibilidad propia en 03 y sigue por encima de la bruta de Fase 2 (1,05x).
+3. **Crecimiento anual en energía (12 % en 03 v1; 8 % en 03 v2).** **Estado: parcialmente.** 03 v2 bajó el base al +8 % y el bajista al 0 %, y lo justifica con volumen frente a precio (+7,5 % de GWh y −10,7 % de ingreso por GWh, TTM frente a FY25; 03 §2.3). Lo que sigue abierto: el +8 % supone que la tendencia se da la vuelta (TTM −4,0 %, 9M26 −5,7 %, 3T26 −16 %; 02 §2), y el propio 03 reconoce que su bajista (0 %) es más benigno que la tendencia actual. El margen del 33,1 % de 3T26 incluye efectos puntuales [CALL, T1]; 03 no lo usa, porque modela un margen consolidado.
+4. **Línea de dilución: era un doble cómputo real** (reformulada en v2.1 con 02 §5.1; script §1). **Estado: resuelta en 03 v2.**
+   - **Lo que dice 02 §5.1.** Las 713 M de diferencia entre la portada (3.952,8 M) y la media básica (3.240 M) son 423,7 M restringidas del plan del CEO 2025, 286,4 M netas del ejercicio de opciones de 2018 y ~2,6 M de residuo. Las 301 M de diferencia entre la diluida y la básica ("Stock-based awards", P2) son ~286 M de ese mismo ejercicio de 2018 y ~15 M de incentivos de empleados. Las 423,7 M del CEO están en la portada, pero no en la básica ni en la diluida (V1: las acciones restringidas se excluyen de la diluida hasta que se "ganan").
+   - **Consecuencia.** La línea de 03 v1 (portada + 301 M = 4.253,8 M) **contaba dos veces ~286 M de acciones**: ya estaban en la portada. Sobrestimaba las acciones un +7,2 % frente a la cifra totalmente diluida. Era un doble cómputo real, aunque no por el mecanismo que proponía la v1 de esta fase (acciones restringidas no ganadas dentro de las 301 M): el que se repetía era el ejercicio de 2018.
+   - **Qué hizo 03 v2.** Sustituye esa línea por **3.967,3 M de acciones totalmente diluidas** (portada + ~15 M de empleados; contraste: 3.541 + 423,7 = 3.964,7 M). Retira además la etiqueta "techo de la dilución del plan del CEO" y corrige su §6.5: el modelo ya recoge entero el plan del CEO.
+   - **Los VPA "corregidos" de 04 v1 (11,6 / 27,5 / 61,5 $) también eran erróneos, en sentido contrario.** Usaban la portada menos el plan del CEO (3.529,1 M) y por tanto **excluían las 423,7 M ya emitidas**. Infracontaban las acciones un −11,0 % frente a las totalmente diluidas (02 §5.1 da ~−10 % para la media diluida de 3.541 M). Siguen retirados.
+   - **Valores por acción vigentes** (03 v2): **10,40 / 24,61 / 55,76 $** con acciones de portada y **10,36 / 24,52 / 55,55 $** con totalmente diluidas. La diferencia es del 0,4 %.
+   - **Advertencias que se mantienen (02 §5.1):** el reparto de las 301 M en ~286 M y ~15 M es una **INFERENCIA** (el 10-Q no desglosa la línea); la cancelación de las 96 M del *Interim Award* de 2025 solo la confirma una fuente secundaria; y las 423,7 M del CEO se cancelan si no se cumplen los hitos, así que contarlas es un criterio prudente en un DCF sin opcionalidad (03 §6.5).
 
 ### 4.3 Otros puntos débiles, incoherencias o problemas de fuente en 03-valoracion.md
 
-| # | Punto de 03 | Problema | Efecto |
-|---|---|---|---|
-| W1 | §1 y §3: denominador de acciones | Capitalización con 3.953 M (portada) pero PER con 3.541 M (media diluida). Con el mismo denominador que el EV, el PER es de **~457x**, no de 410x (script §1) | Presentación |
-| W2 | §3: dilución adicional de 301 M | Posible doble cómputo (ver 4.2.4) | ≤ 3 $ por acción |
-| W3 | §2.1: capex ">20.000-25.000 M$" | Desfasado: revisado a ~20.000 M$ en la call de 3T26 (T1) | Pesimista en los años 1-2 |
-| W4 | §2.1: D&A TTM = 3T × 4 | Aproximación declarada. La D&A crece con el capex, así que sobreestima la D&A TTM y subestima el capex neto actual. Efecto en sentido contrario al de W3 | Pequeño |
-| W5 | §5: "ingresos de Toyota ~289.000 M$" | **Mal citado.** No es un dato reportado: sale de EV / (EV/Ventas) de TipRanks (script §11). Además, el EV de Toyota incluye la deuda de su financiera, que 03 §7 reconoce que infla el EV/Ventas | Solo afecta a la comparación ("4-8 veces Toyota") |
-| W6 | §2.2: margen base del 8,93 % frente a §4.2 | La propia tabla 4.2 de 03 muestra que con un margen del 6 % crecer destruye valor. Aun así, el caso base supone que el margen se cuadruplica sin explicar el mecanismo | Optimista |
-| W7 | §2.2: crecimiento de energía | Incoherente con los datos de 2026 de Fase 2 (−5,7 % en 9M26) | Optimista |
-| W8 | §6.4: SpaceX y xAI "dentro o fuera de la caja neta" | Resuelto: SpaceX está en "Other non-current assets" a valor razonable (P2), fuera de la caja neta. La inversión en xAI sigue **SIN VERIFICAR** en la parte del 10-Q que se pudo leer | ~+1 $ por acción |
-| W9 | §1.1: beta inicial mezclada | Incoherente con descontar solo el núcleo (4.1.3) | Pesimista, moderado |
-| W10 | §1: cifras de Fase 1 | Usa bien las cifras corregidas de Fase 2 (deuda de 9.523 M$ a 30-sep-26, caja de 45.447 M$). Sin incidencias | — |
-| W11 | 01 §1.2 → 03 | El margen de energía de 3T26 (33,1 %) se presenta como operativo, cuando la call lo atribuye en parte a efectos puntuales | Afecta a la lectura cualitativa |
+| # | Punto de 03 | Problema | Efecto | **Estado frente a 03 v2** |
+|---|---|---|---|---|
+| W1 | §1 y §3: PER de 410x | **Retirada en v2.** 410x (precio / BPA diluido) es la convención estándar y coincide con GuruFocus, 410,4x (V2; 05 §3.3). Los 457x de v1 (capitalización con acciones de portada / BN) son una métrica alternativa, no una corrección (script §1). Queda solo una sugerencia de presentación: usar una definición única de PER en 01-04 (05 §3.1) | Ninguno | Retirada (no requería cambio en 03) |
+| W2 | §3: dilución adicional de 301 M | **Doble cómputo real de ~286 M** (02 §5.1; ver 4.2.4): las acciones netas del ejercicio de 2018 ya estaban en la portada. Los VPA "corregidos" de 04 v1 infracontaban acciones un ~10-11 % y siguen retirados | 03 v2: 10,40 / 24,61 / 55,76 $ (portada) y 10,36 / 24,52 / 55,55 $ (3.967,3 M totalmente diluidas). Inmaterial | **Resuelta en 03 v2** (con las advertencias de inferencia de 02 §5.1) |
+| W3 | §2.1: capex ">20.000-25.000 M$" | **Solo de texto.** La cita estaba desfasada: el CFO la revisó a ~20.000 M$ en la call de 3T26 (T1). El modelo no usa esa cifra; implica 15.884 M$ en el año 1 (script §13). La v1 decía "pesimista en los años 1-2", y eso se **retira** | Ninguno en el valor. Si acaso, el modelo es ligero en capex (sin Terafab) | **Resuelta en 03 v2** (03 §2.1 cita ~20.000 M$ y el capex implícito) |
+| W4 | §2.1: D&A TTM = 3T × 4 | Aproximación que sobreestimaba la D&A TTM (7.408 M$) y subestimaba el capex neto | Pequeño | **Resuelta en 03 v2** (D&A TTM real de 6.704 M$, 02 v2; capex neto del 8,4 % de los ingresos) |
+| W5 | §5: "ingresos de Toyota ~289.000 M$" | **Retirada en v2.** 03 §5 ya la presenta como "implícita en su EV/Ventas". El argumento de v1 era matemáticamente erróneo: EV / (EV/Ventas) = ventas, así que la deuda de la financiera se cancela y no infla la cifra (script §11; 05 §3.3) | Ninguno | Retirada (no requería cambio en 03) |
+| W6 | §2.2: margen base (8,93 % en v1; 9,15 % en v2) frente a §4.2 | La propia tabla 4.2 de 03 muestra que con un margen del 6 % crecer destruye valor (~16 $). El caso base supone que el margen se multiplica por 4,1 | Optimista | **Parcialmente:** 03 v2 §2.3 explica y mide el mecanismo; el supuesto se mantiene (ver 4.2.1) |
+| W7 | §2.2: crecimiento de energía | Incoherente con los datos de 2026 de Fase 2 (−5,7 % en 9M26) | Optimista, menor que en v1 | **Parcialmente:** base del 12 % al 8 % y bajista del 5 % al 0 %, justificados con volumen y precio; el +8 % sigue exigiendo que la tendencia (−4,0 % TTM) se dé la vuelta |
+| W8 | §6.4: SpaceX y xAI "dentro o fuera de la caja neta" | SpaceX está en "Other non-current assets" a valor razonable (P2), fuera de la caja neta. La inversión en xAI sigue **SIN VERIFICAR** en la parte del 10-Q que se pudo leer | +0,97 $ por acción | **Resuelta en 03 v2** para SpaceX y activos digitales (03 §6.4); **sigue abierta** para xAI |
+| W9 | §1.1: beta inicial mezclada | Incoherente con descontar solo el núcleo (4.1.3) | **+1,2 $** (solo WACC de los años 1-5) a **+4,6 $** (desplazando también el terminal), script §13. Pesimista, pequeño | **Parcialmente:** 03 v2 §4.3 publica las dos cifras y mantiene la beta mezclada |
+| W10 | §1: cifras de Fase 1 | Usa bien las cifras corregidas de Fase 2 (deuda de 9.523 M$ a 30-sep-26, caja de 45.447 M$). Sin incidencias | — | Sin incidencias |
+| W11 | 01 §1.2 → 03 | El margen de energía de 3T26 (33,1 %) se presentaba como operativo, cuando la call lo atribuye en parte a efectos puntuales | Afecta a la lectura cualitativa | **Resuelta** en 01 (§1.2, nota ¹); 03 no usa ese margen |
+| W12 | §2.2: ventas/capital incremental de 1,5x (de 4.2.2) | Por encima de la bruta de Fase 2 (1,05x), sin sensibilidad propia en 03 | Optimista, sin medir | **Sigue abierta** |
 
-**Saldo del abogado del diablo.** Los puntos 4.1 y 4.2 se compensan en parte:
-- Hacia arriba, el ajuste máximo razonable (margen de partida sin I+D incremental, WACC sectorial, capex revisado) mueve el caso base en **decenas de dólares**.
-- Hacia abajo, los supuestos de margen, ROIC y energía podrían reducirlo hacia el caso bajista (~10 $).
+**Saldo del abogado del diablo.** Los puntos 4.1 y 4.2 no son simétricos:
+- Hacia arriba, el ajuste máximo medido (margen de partida sin I+D incremental, beta sectorial y SpaceX con activos digitales) sube el caso base de 24,6 $ a **28,5-31,9 $**, es decir, **+3,9 a +7,2 $** (script §13, con el modelo de 03 v2). La v1 decía "decenas de dólares" e incluía el capex revisado. Las dos cosas se retiran.
+- Hacia abajo, los supuestos de margen, ROIC, ventas/capital y energía podrían reducirlo hacia el caso bajista (~10,4 $), es decir, unos −14 $. 03 v2 ya ha recortado la energía (12 % → 8 %), pero ha subido el ancla de margen (8,93 % → 9,15 %) al corregir el denominador; el efecto neto en el caso base es de +0,08 $ (24,53 → 24,61 $).
+- Por tanto, **el sesgo neto de los supuestos de 03 es más bien optimista**, aunque los dos lados son pequeños comparados con el precio.
 
-**Ninguno de los dos ajustes cambia el orden de magnitud**: el negocio reportado vale 10-60 $ por acción y el precio de 372 $ depende de la opcionalidad.
+**Ninguno de los dos ajustes cambia el orden de magnitud**: el negocio reportado vale 10-60 $ por acción (10,4-55,8 $ en 03 v2) y el precio de 372 $ depende de la opcionalidad.
 
 ---
 
 ## 5. Cierre: rangos por escenario (sin recomendación)
 
-Fuente: script §10. Los valores con opcionalidad = valor DCF + probabilidad × valor presente de la combinación; el rango corresponde a r = 9,8-11,6 % y 30x NOPAT en el año 10.
+Fuente: script §10. **Actualizado en v2.1** con los valores DCF de 03 v2 (10,40 / 24,61 / 55,76 $). Los cambios son de décimas a 1 $; ninguna conclusión se mueve. Los valores con opcionalidad = valor DCF + probabilidad × valor presente de la combinación; el rango corresponde a r = 9,8-11,6 % y 30x NOPAT en el año 10.
 
 | Escenario | Qué supone | Valor por acción |
 |---|---|---:|
-| Solo el negocio reportado | DCF de 03, de bajista a alcista | 10-55 $ |
+| Solo el negocio reportado | DCF de 03 v2, de bajista a alcista | 10-56 $ |
 | Opcionalidad modesta | Base + 50 % de probabilidad de la combinación A (1 M de robotaxis, 1 M de Optimus al año, 10 M de FSD) | 56-62 $ |
 | Opcionalidad relevante | Base + 50 % de la combinación B (3 M de robotaxis, 5 M de Optimus al año, 15 M de FSD) | 116-133 $ |
-| Éxito ambicioso asegurado | DCF alcista + combinación B al 100 % | 238-271 $ |
+| Éxito ambicioso asegurado | DCF alcista + combinación B al 100 % | 239-272 $ |
 | Éxito extremo probable | Base + 50 % de la combinación C (10 M de robotaxis, 10 M de Optimus al año, 20 M de FSD) | 379-442 $ |
-| Éxito extremo asegurado | DCF alcista + combinación C al 100 % | 764-889 $ |
+| Éxito extremo asegurado | DCF alcista + combinación C al 100 % | 764-890 $ |
 | **Precio de mercado** | — | **372,22 $** |
 
 **Cómo leer la tabla:**
-- Con 30x NOPAT en el año 10, el precio actual equivale a asignar **~42-49 % de probabilidad a la combinación extrema C**, o más del 100 % a la ambiciosa B.
+- Con 30x NOPAT en el año 10, el precio actual equivale a asignar **~42-49 % de probabilidad a la combinación extrema C** (41,7-49,0 %), o más del 100 % a la ambiciosa B (161-190 %).
+- Con acciones totalmente diluidas (3.967,3 M), todos los valores de la tabla bajan un 0,4 %; los rangos redondeados no cambian salvo por 1 $ en los extremos.
 - Con hipótesis más generosas (40x o EBIT en el año 7), la combinación B al 100 % se acerca al precio.
 - Las dos tesis coinciden en que el resultado depende casi por completo de la **autonomía a escala de millones de vehículos**, y en que no hay una métrica pública que lo verifique hoy.
 
@@ -302,8 +318,8 @@ Las señales A1-A6 y B1-B6 son los puntos de control que permitirán estrechar e
 
 ## 6. Partidas SIN VERIFICAR nuevas en esta fase
 
-1. **Composición de las ~713 M de acciones** en balance excluidas de la media básica, y si incluyen las 423,7 M del plan del CEO. El salto de +427 M en el 4T25 lo sugiere, pero no se leyó la nota correspondiente.
-2. **Composición de las 202 M de acciones emitidas en 9M26** ("equity incentive awards and acquisitions"): si hubo adquisiciones pagadas en acciones y cuáles.
+1. ~~Composición de las ~713 M de acciones excluidas de la media básica~~ **Resuelta en v2.1 por 02 §5.1:** 423,7 M del plan del CEO 2025 + 286,4 M del ejercicio de 2018 + ~2,6 M de residuo. **Queda SIN VERIFICAR:** el reparto de las 301 M de "Stock-based awards" en ~286 M y ~15 M (INFERENCIA; el 10-Q no desglosa la línea).
+2. ~~Composición de las 202 M de acciones emitidas en 9M26~~ **Resuelta en v2.1 por 02 §5.1:** 4 + 194 + 4 M; las 194 M de 2T26 ≈ +286,4 M (ejercicio de 2018) − 96,0 M (cancelación del *Interim Award* 2025) + ~3,6 M de empleados. El APIC de 322 M$ es coherente con una liquidación neta y no con una adquisición pagada en acciones. **Queda SIN VERIFICAR:** la cancelación de las 96 M, que solo confirma una fuente secundaria.
 3. **Tamaño de la flota de robotaxi y de Cybercab.** Lo de ">300 Cybercabs" (T2) no está atribuido; el "factor of 10" es [MUSK]. No hay viajes pagados publicados.
 4. **ARR de FSD de ~1.000 M$.** Es una cifra de analista confirmada de forma verbal por el CFO [CALL], no un dato contable. El ARPU de 575 $ que se deriva de ella hereda esa incertidumbre.
 5. **Precio objetivo de Optimus (20.000-30.000 $) y coste del Cybercab (~30.000 $).** Son declaraciones pasadas de Musk, no verificadas en esta fase. Se usan solo como [SUPUESTO].
@@ -316,4 +332,87 @@ Las señales A1-A6 y B1-B6 son los puntos de control que permitirán estrechar e
 
 ---
 
-*Reproducibilidad:* `python3 scripts/fase4_opcionalidad.py` imprime todas las cifras de este documento. Las fuentes nuevas (T1-T10) y la relectura de P2 y P4 están en `fuentes/fuentes.md`.
+*Reproducibilidad:* `python3 scripts/fase4_opcionalidad.py` imprime todas las cifras de este documento. Desde v2.1, la §0 del script importa `scripts/fase3_dcf.py` (v2) en una copia temporal, toma de él los valores DCF y las acciones totalmente diluidas, y no modifica `data/`. Las fuentes nuevas (T1-T10) y la relectura de P2 y P4 están en `fuentes/fuentes.md`; las de v2 (V1, V2), en `fuentes/nuevas_fase4_v2.md`.
+
+---
+
+## Registro de cambios v2
+
+**Fecha:** 2026-10-25 · **Motivo:** devoluciones de 05-veredicto.md (§3.3 y §5, prioridad 1) · **Archivos tocados:** `docs/04-tesis.md`, `scripts/fase4_opcionalidad.py` y el archivo nuevo `fuentes/nuevas_fase4_v2.md`. `fuentes/fuentes.md` no se ha tocado.
+
+| Punto del veredicto | Decisión | Qué se cambió |
+|---|---|---|
+| **W3 / §4.1.2** (capex "pesimista"): inválida | **Aplicado: retirada** | §4.1.2 tachado y sustituido por la medición: capex bruto implícito del año 1 de 15.883 M$, 4.117 M$ por debajo de la guía de ~20.000 M$; sin Terafab (script §13, nuevo). Fila W3 reducida a un problema de texto. Quitado "capex revisado" de §0.5 y del saldo |
+| **W5** (ingresos de Toyota): inválida | **Aplicado: retirada** | Fila W5 reescrita: EV / (EV/Ventas) = ventas, y la deuda se cancela. Corregida también la línea de script §11, que repetía el argumento erróneo |
+| **W1** (PER 410x frente a 457x): inválida | **Aplicado: retirada** | Fila W1: 410x es la convención estándar (GuruFocus 410,4x, V2 vía 05). 457x se queda en el script §1 como métrica alternativa, con esa etiqueta |
+| **W9** (beta): exagerada; bajar a ~+4,5 $ | **Aplicado, con evidencia nueva que lo reduce más** | Medido con el modelo de 03 importado (script §13). **+1,2 $** si solo cambia el WACC de los años 1-5, que es la aplicación coherente porque la beta terminal de 03 (1,16) no incluye la de regresión. **+4,6 $** si se desplaza también el WACC terminal, igual que la tabla 4.1; coincide con los ~+4,5 $ de 05. Se presentan las dos cifras y se retira "+4-10 $" |
+| **W2 / §4.2.4** (dilución): sin verificar en ambos sentidos | **Aplicado, con evidencia nueva** | Reformulado como SIN VERIFICAR. **Evidencia nueva:** la nota de BPA del 10-Q (V1) dice que las acciones restringidas se excluyen de la diluida hasta que se ganan. Por tanto, las 301 M no son acciones restringidas no ganadas, y el mecanismo de doble cómputo de v1 pierde su base. **Retirados** los VPA "corregidos" 11,6 / 27,5 / 61,5 $, que en el script quedan solo como "v1 RETIRADO". Actualizados §0.5, §3.2 y §6.1. Se añade, para Fase 3, que V1 también contradice la etiqueta "techo de la dilución del plan del CEO" |
+| §4.1.1 (asimetría): válida | Mantenido y cuantificado | Añadida la sensibilidad medida: margen de partida del 4,43 % / 6,58 % → 25,4 / 26,2 $. Se aclara que es una sensibilidad y no una corrección. La conclusión relevante es cualitativa |
+| W8 (SpaceX fuera de la caja neta): válida | Mantenido | "~1 $" pasa a 0,97 $ por acción, calculado en el script §13 |
+| §4.1.5, §4.2.1-3, W4, W6, W7, W10, W11: válidas o parcialmente válidas | Mantenidos sin cambios | — |
+| Saldo del abogado del diablo | **Corregido** | "Decenas de dólares" hacia arriba pasa a **+3,9 a +7,3 $** medidos. El sesgo neto de 03 queda como "más bien optimista" |
+| Rangos de §5 y "probabilidad implícita" | **Recomprobados: sin cambios** | Las secciones §2-§10 del script dan la misma salida que en v1 (diff limpio). Se mantienen los rangos 10-55 / 56-62 / 116-133 / 238-271 / 379-442 / 764-889 $ y la probabilidad implícita del 42-49 % para la combinación C. Coherencia: 24,5 + 0,42 × 835 ≈ 375 $ y 24,5 + 0,49 × 709 ≈ 372 $ |
+| Reproducibilidad | Verificado | El script se ejecuta con rc = 0 y no modifica `data/` (comprobado byte a byte frente a una copia previa). Cada cifra nueva de este documento sale de su salida |
+
+**Puntos del veredicto no aplicados:** ninguno. En W9 la cifra final es menor que la que pedía el veredicto (+1,2 $ como valor coherente), y se justifica con la medición directa del modelo. La cifra del veredicto (+4,6 $) se conserva como cota superior.
+
+
+---
+
+## Registro de cambios v2.1
+
+**Fecha:** 2026-10-25 · **Motivo:** sincronización con 02-financieros.md v2 (§5.1, descomposición de acciones) y 03-valoracion.md v2, corregidos después de 04 v2 · **Archivos tocados:** `docs/04-tesis.md` y `scripts/fase4_opcionalidad.py`. No se toca ningún otro archivo.
+
+**1. W2 / §4.2.4 (dilución): de "SIN VERIFICAR en ambos sentidos" a "doble cómputo real, resuelto en 03 v2".**
+- Con 02 §5.1, la línea de 03 v1 (portada + 301 M = 4.253,8 M) **contaba dos veces ~286 M** (las acciones netas del ejercicio de 2018, ya en la portada). La v2 de este documento se equivocaba al decir que el mecanismo de doble cómputo "no se sostiene": descartó bien que las 301 M fueran acciones restringidas del CEO, pero no vio que contenían el ejercicio de 2018.
+- 03 v2 usa ahora **3.967,3 M** de acciones totalmente diluidas.
+- Los VPA "corregidos" de 04 v1 (11,6 / 27,5 / 61,5 $) **infracontaban las acciones** (3.529,1 M, −11,0 % frente a 3.967,3 M; ~−10 % según 02 §5.1 sobre la media diluida), porque excluían las 423,7 M del plan del CEO ya emitidas. Siguen retirados.
+- Se mantienen las advertencias de 02 §5.1: el reparto 286 / 15 de las 301 M es INFERENCIA y la cancelación de las 96 M solo tiene fuente secundaria.
+- Cambiado en §0.5, §2.5, §3.2, §4.2.4, fila W2 y §6.1-§6.2 (estas dos partidas pasan a resueltas, con lo que queda sin verificar).
+
+**2. Cifras recalculadas con el modelo de 03 v2** (salida del script):
+
+| Cifra | v2 | **v2.1** | Dónde |
+|---|---:|---:|---|
+| VPA DCF bajista / base / alcista (portada) | 10,4 / 24,5 / 54,9 $ | **10,40 / 24,61 / 55,76 $** | §0, §1, §3.4, §4, §5 |
+| VPA DCF con acciones totalmente diluidas | — | **10,36 / 24,52 / 55,55 $** | §1, §4.2.4 |
+| Opcionalidad implícita por acción | 317-362 $ | **316-362 $** | §1, §4.1.1 |
+| EBIT_10 necesario: rango / central | 134.680-271.287 / 147.561 M$ | **134.308-271.254 / 147.527 M$** | §2.3 |
+| Sensibilidad 40x año 10 / 30x año 7 / 40x año 7 | 110.671 / 111.502 / 83.627 M$ | **110.645 / 111.477 / 83.607 M$** | §2.3; §0.2 pasa a "~84.000-111.000 M$" |
+| Margen de partida en §4.1.1 (sin SBC extra / sin I+D incremental) | 4,43 % / 6,58 % → 25,4 / 26,2 $ | **4,48 % / 6,65 % → 25,45 / 26,25 $** | §4.1.1 (ver punto 4) |
+| Capex bruto implícito del año 1 | 15.883 M$ (8.475 + 7.408) | **15.884 M$ (9.180 + 6.704)** | §4.1.2, W3 |
+| Beta sectorial (+1,2 $ / +4,6 $) | 24,5 → 25,8 / 29,2 $ | **24,6 → 25,9 / 29,2 $** | §4.1.3, W9 (coincide con 03 v2 §4.3) |
+| **Ajuste máximo hacia arriba** | 28,4-31,8 $ (+3,9 a +7,3 $) | **28,5-31,9 $ (+3,9 a +7,2 $)** (28,49-31,86 $) | §0.5, §4.1, saldo |
+| Rangos §5: negocio reportado / éxito ambicioso asegurado / éxito extremo asegurado | 10-55 / 238-271 / 764-889 $ | **10-56 / 239-272 / 764-890 $** | §5 |
+| Rangos §5: modesta / relevante / extremo probable | 56-62 / 116-133 / 379-442 $ | **sin cambios** | §5 |
+| Probabilidad implícita de la combinación C | 42-49 % | **sin cambios** (41,7-49,0 %) | §2.3, §5 |
+| Recorte a la mitad de la opcionalidad | ~198 $ (−47 %) | **sin cambios** (198,4 $) | §0.4, §3.4 |
+
+**3. Estado de cada crítica a 03** (columna nueva en §4.3 y anotaciones en §4.1-§4.2):
+
+| Crítica | Estado |
+|---|---|
+| §4.1.1 Asimetría costes/ingresos | Resuelta en 03 v2 (§6.3) |
+| §4.1.2 / W3 Capex (texto) | Resuelta en 03 v2 (§2.1) |
+| §4.1.3 / W9 Beta | Parcialmente (medida y publicada; el modelo mantiene la beta mezclada) |
+| §4.1.4 / W8 SpaceX y xAI | Resuelta en 03 v2 para SpaceX y activos digitales; sigue abierta para xAI |
+| §4.1.5 Intensidad de capital del software | Resuelta en 03 v2 (§5, ventas/capital de 3,0x) |
+| §4.2.1 / W6 Margen objetivo (ahora 9,15 %) | Parcialmente (mecanismo explicado y medido en 03 §2.3; el supuesto se mantiene) |
+| §4.2.2 ROIC terminal | Parcialmente (justificación corregida y efecto medido, <2 $) |
+| §4.2.2 / W12 Ventas/capital de 1,5x | Sigue abierta (fila nueva W12) |
+| §4.2.3 / W7 Energía (ahora 8 %) | Parcialmente (rebajada y justificada; sigue suponiendo un giro de tendencia) |
+| §4.2.4 / W2 Dilución | Resuelta en 03 v2 |
+| W4 D&A | Resuelta en 03 v2 |
+| W11 Margen de energía del 33,1 % | Resuelta en 01; 03 no lo usa |
+| W1, W5 | Retiradas en v2 (no requerían cambio en 03) |
+| W10 | Sin incidencias |
+
+**4. Cambios en el script:**
+- El modelo de 03 se importa en la **§0** (antes en la §13), en una copia temporal. Los valores DCF por escenario salen de `f3.RES` en lugar de estar copiados a mano de 03 v1 (`EQ_DCF_V1` se conserva solo para comparar), y las acciones totalmente diluidas, de `f3.SH_FD`. Se comprueba con `assert` que la portada coincide con la de 03 y que el caso base reproducido es el mismo.
+- §1 reescrita con la descomposición de 02 §5.1 (713 = 423,7 + 286,4 + 2,6; 301 ≈ 286 + 15), el doble cómputo (+7,2 %) y el error de signo contrario de 04 v1 (−11,0 %).
+- §10: se sustituye la línea "[Hipotético, SIN VERIFICAR] si las acciones del plan del CEO no estuvieran en la portada" por el hecho de 02 §5.1 (ya están en la portada) y el efecto de usar las totalmente diluidas (−0,4 %).
+- §13: (a) la sensibilidad del margen de partida usa ahora como denominador los **ingresos sin créditos** (`f3.REV0_EX`), el mismo al que 03 v2 aplica el margen; antes usaba los ingresos totales. Por eso 4,43 / 6,58 % pasan a 4,48 / 6,65 %, que coinciden con 03 v2 §6.3. Con el denominador anterior, el ajuste máximo habría sido 28,5-31,8 $ (la cifra que anticipaba el registro de 03 v2); con el corregido es 28,5-31,9 $. (b) La interpolación de W9 lee la tabla 4.1 de 03 v2 en lugar de valores copiados de v1. (c) Se añaden contrastes con 03 v2 §4.3 y §6.3; coinciden.
+- Los formatos de salida que lee `fase5_consistencia.py` (EBIT_10 central, recorte del 50 %, margen 3T26 + I+D) no cambian. La cifra central pasa de 147.561 a 147.527 M$: el control de `fase5_consistencia.py` (valor esperado 147.561, tolerancia de 1 M$) dará **MISMATCH** hasta que Fase 5 actualice sus expectativas, igual que ya avisa 03 v2 para los VPA. No se toca aquí porque está fuera del alcance de esta tarea.
+- Ejecución: rc = 0. El script no escribe en `data/`.
+
+**Lo que no cambia:** los supuestos de Fase 4 (§4-§8 del script), las combinaciones A/B/C y su EBIT, las señales A1-A6 y B1-B6, y la conclusión: el negocio reportado vale ~10-56 $ por acción y el precio de 372,22 $ depende de la opcionalidad.

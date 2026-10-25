@@ -10,9 +10,11 @@ beneficio_neto_atrib_comunes FY2025: 9M25(10-Q)+Q4-25(P4) vs valor fuente FY2025
 flujo_caja_operativo FY2025: 9M25(10-Q)+Q4-25(P4) vs valor fuente FY2025,14747.0,14747.0,S1 o reconciliación TTM de P4 (ver CSV),0.0,OK
 capex FY2025: 9M25(10-Q)+Q4-25(P4) vs valor fuente FY2025,8527.0,8527.0,S1 o reconciliación TTM de P4 (ver CSV),0.0,OK
 sbc FY2025: 9M25(10-Q)+Q4-25(P4) vs valor fuente FY2025,2825.0,2825.0,S1 o reconciliación TTM de P4 (ver CSV),0.0,OK
+dya_amortizacion_deterioro FY2025: 9M25(10-Q)+Q4-25(P4) vs valor fuente FY2025,6148.0,6148.0,S1 o reconciliación TTM de P4 (ver CSV),0.0,OK
 beneficio_neto_atrib_comunes TTM Q3-26: FY25+9M26-9M25 vs TTM publicado P4,3218.0,3218.0,P4 reconciliación TTM,0.0,OK
 flujo_caja_operativo TTM Q3-26: FY25+9M26-9M25 vs TTM publicado P4,18710.0,18710.0,P4 reconciliación TTM,0.0,OK
 capex TTM Q3-26: FY25+9M26-9M25 vs TTM publicado P4,15407.0,15407.0,P4 reconciliación TTM,0.0,OK
+dya_amortizacion_deterioro TTM Q3-26: FY25+9M26-9M25 vs TTM publicado P4,6704.0,6704.0,P4 reconciliación TTM,0.0,OK
 FY2021: suma segmentos = ingresos totales,53823.0,53823.0,mismo CSV,0.0,OK
 FY2021: ventas+créditos+leasing = automoción total,47232.0,47232.0,mismo CSV,0.0,OK
 FY2022: suma segmentos = ingresos totales,81462.0,81462.0,mismo CSV,0.0,OK
@@ -54,3 +56,18 @@ Crec. ingresos Q3-26 vs Q3-25 (P4: 28.046 vs 28.095),-0.0017,0.0,01-negocio.md (
 Crec. benef. neto FY2025 vs FY2024,-0.465,-0.46,01-negocio.md (−46 %),-0.005,OK
 "PER GAAP a 354,72 $ con BPA TTM a Q2-26 (P4) vs ~327x (S11)",328.4444,327,01-negocio.md (S11),1.4444,OK
 "PER GAAP a 354,72 $ con BPA TTM a Q3-26 (P4) — tras resultados",389.8022,327,"01-negocio.md (S11, previo a resultados)",62.8022,DISCREPANCIA
+D&A 9M2026 (10-Q) = 1T+2T+3T 2026 de P4 (1.590+1.619+1.852),5061.0,5061.0,"8-K Ex.99.1 Q3 2026, acc. 0001628280-26-066738",0.0,OK
+D&A TTM P4 = 4T25+1T26+2T26+3T26 (1.643+1.590+1.619+1.852),6704.0,6704.0,"8-K Ex.99.1 Q3 2026, acc. 0001628280-26-066738",0.0,OK
+"FY2021 BN atribuible (10-K FY2022) vs deck Q4-2021 (5,5 B$)",5519.0,5500,"8-K Ex.99.1 Q4 2021 Update, acc. 0001564590-22-002476 (texto, cifras en B$ redondeadas)",19.0,OK
+"FY2021 FCF (10-K FY2022) vs deck Q4-2021 (5,0 B$)",5015.0,5000,"8-K Ex.99.1 Q4 2021 Update, acc. 0001564590-22-002476 (texto, cifras en B$ redondeadas)",15.0,OK
+"FY2021 capex (10-K FY2022) vs deck Q4-2021 (6,5 B$)",6482.0,6500,"8-K Ex.99.1 Q4 2021 Update, acc. 0001564590-22-002476 (texto, cifras en B$ redondeadas)",-18.0,OK
+"FY2021 efectivo (10-K FY2022: 17.576) vs deck Q4-2021 (17,6 B$)",17576.0,17600,"8-K Ex.99.1 Q4 2021 Update, acc. 0001564590-22-002476 (texto, cifras en B$ redondeadas)",-24.0,OK
+Acciones: 31-dic-25 + emitidas 9M26 = 30-sep-26 (P2),3953.0,3953.0,P2 estado de patrimonio,0.0,OK
+Acciones: emitidas 1T+2T+3T 2026 = 9M26 (10-Q 1T/2T/3T26),202.0,202.0,"10-Q 1T26, 2T26, 3T26",0.0,OK
+Acciones: básica + stock-based awards = diluida 3T26 (P2),3541.0,3541.0,P2 nota de BPA,0.0,OK
+Acciones: directas de Musk = restringidas CEO 2025 + netas del ejercicio 2018 (Form 4),710.1727,710.1727,Form 4 17-jun-2026,0.0,OK
+Acciones: emitidas 2T26 ≈ netas 2018 − Interim 2025 cancelada (+~4 empleados),190.4288,194.0,10-Q 2T26 / Form 4,-3.5712,OK
+Acciones: emitidas 4T25 (31-dic-25 − 30-sep-25) ≈ restringidas CEO 2025,427.0,423.7439,10-Q 3T25 / P2 / Form 4,3.2561,OK
+Acciones: emitidas 3T25 ≈ Interim Award 2025 (96 M),100.0,96.0,10-Q 3T25 / Form 4 ago-2025,4.0,OK
+Acciones: portada − básica 3T26 ≈ restringidas no ganadas (CEO 2025 + 2018 netas),712.7579,710.1727,P2 / Form 4,2.5853,OK
+Acciones: básica apenas varía 1T→3T26 pese a +194 M en 2T (restringidas fuera de la básica),6.0,8.0,10-Q 1T26 / 3T26,-2.0,OK

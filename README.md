@@ -10,7 +10,7 @@ audita el resultado y devuelve el trabajo a la fase responsable.
 
 | Empresa | Estado | Último veredicto |
 |---|---|---|
-| [Tesla (TSLA)](empresas/tesla/docs) | v1 | NECESITA TRABAJO, nota B− |
+| [Tesla (TSLA)](empresas/tesla/docs) | v2 | NECESITA TRABAJO (menor), nota B+ |
 
 ## Cómo funciona
 
