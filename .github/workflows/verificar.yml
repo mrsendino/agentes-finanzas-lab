@@ -1,0 +1,25 @@
+name: Verificar cifras
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - name: Verificar cada empresa
+        run: |
+          estado=0
+          for d in empresas/*/; do
+            empresa=$(basename "$d")
+            echo "=== $empresa ==="
+            python herramientas/verificar.py "$empresa" || estado=1
+          done
+          exit $estado
