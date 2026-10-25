@@ -1,0 +1,519 @@
+indicador,periodo,valor,unidad,formula
+crec_ingresos_totales,FY2024/FY2023,0.349283,%,ingresos_totales FY2024/FY2023 - 1
+crec_ingresos_totales,FY2025/FY2024,0.33243,%,ingresos_totales FY2025/FY2024 - 1
+crec_ingresos_totales,9M2026/9M2025,0.974843,%,ingresos_totales 9M2026/9M2025 - 1
+crec_ingresos_totales,Q3_2026/Q3_2025,1.613881,%,ingresos_totales Q3_2026/Q3_2025 - 1
+crec_ingresos_totales,Q2_2026/Q2_2025,0.91943,%,ingresos_totales Q2_2026/Q2_2025 - 1
+crec_ingresos_totales,Q1_2026/Q1_2025,0.154168,%,ingresos_totales Q1_2026/Q1_2025 - 1
+crec_ing_space,FY2024/FY2023,0.067191,%,ing_space FY2024/FY2023 - 1
+crec_ing_space,FY2025/FY2024,0.076396,%,ing_space FY2025/FY2024 - 1
+crec_ing_space,9M2026/9M2025,0.021666,%,ing_space 9M2026/9M2025 - 1
+crec_ing_space,Q3_2026/Q3_2025,0.060624,%,ing_space Q3_2026/Q3_2025 - 1
+crec_ing_space,Q2_2026/Q2_2025,0.289544,%,ing_space Q2_2026/Q2_2025 - 1
+crec_ing_space,Q1_2026/Q1_2025,-0.284393,%,ing_space Q1_2026/Q1_2025 - 1
+crec_ing_launch_services,FY2024/FY2023,0.315682,%,ing_launch_services FY2024/FY2023 - 1
+crec_ing_launch_services,FY2025/FY2024,-0.003096,%,ing_launch_services FY2025/FY2024 - 1
+crec_ing_launch_services,9M2026/9M2025,0.025292,%,ing_launch_services 9M2026/9M2025 - 1
+crec_ing_launch_services,Q3_2026/Q3_2025,0.13,%,ing_launch_services Q3_2026/Q3_2025 - 1
+crec_ing_launch_services,Q2_2026/Q2_2025,0.322449,%,ing_launch_services Q2_2026/Q2_2025 - 1
+crec_ing_launch_services,Q1_2026/Q1_2025,-0.416961,%,ing_launch_services Q1_2026/Q1_2025 - 1
+crec_ing_launch_development,FY2024/FY2023,-0.239171,%,ing_launch_development FY2024/FY2023 - 1
+crec_ing_launch_development,FY2025/FY2024,0.245875,%,ing_launch_development FY2025/FY2024 - 1
+crec_ing_launch_development,9M2026/9M2025,0.015561,%,ing_launch_development 9M2026/9M2025 - 1
+crec_ing_launch_development,Q3_2026/Q3_2025,-0.043544,%,ing_launch_development Q3_2026/Q3_2025 - 1
+crec_ing_launch_development,Q2_2026/Q2_2025,0.226562,%,ing_launch_development Q2_2026/Q2_2025 - 1
+crec_ing_launch_development,Q1_2026/Q1_2025,-0.033445,%,ing_launch_development Q1_2026/Q1_2025 - 1
+crec_ing_connectivity,FY2024/FY2023,0.964073,%,ing_connectivity FY2024/FY2023 - 1
+crec_ing_connectivity,FY2025/FY2024,0.498487,%,ing_connectivity FY2025/FY2024 - 1
+crec_ing_connectivity,9M2026/9M2025,0.568329,%,ing_connectivity 9M2026/9M2025 - 1
+crec_ing_connectivity,Q3_2026/Q3_2025,0.694543,%,ing_connectivity Q3_2026/Q3_2025 - 1
+crec_ing_connectivity,Q2_2026/Q2_2025,0.658037,%,ing_connectivity Q2_2026/Q2_2025 - 1
+crec_ing_connectivity,Q1_2026/Q1_2025,0.31596,%,ing_connectivity Q1_2026/Q1_2025 - 1
+crec_ing_consumer,FY2024/FY2023,0.71459,%,ing_consumer FY2024/FY2023 - 1
+crec_ing_consumer,FY2025/FY2024,0.49234,%,ing_consumer FY2025/FY2024 - 1
+crec_ing_consumer,9M2026/9M2025,0.491728,%,ing_consumer 9M2026/9M2025 - 1
+crec_ing_consumer,Q3_2026/Q3_2025,0.571501,%,ing_consumer Q3_2026/Q3_2025 - 1
+crec_ing_consumer,Q2_2026/Q2_2025,0.443928,%,ing_consumer Q2_2026/Q2_2025 - 1
+crec_ing_consumer,Q1_2026/Q1_2025,0.439678,%,ing_consumer Q1_2026/Q1_2025 - 1
+crec_ing_enterprise_government,FY2024/FY2023,1.632129,%,ing_enterprise_government FY2024/FY2023 - 1
+crec_ing_enterprise_government,FY2025/FY2024,0.509209,%,ing_enterprise_government FY2025/FY2024 - 1
+crec_ing_enterprise_government,9M2026/9M2025,0.702803,%,ing_enterprise_government 9M2026/9M2025 - 1
+crec_ing_enterprise_government,Q3_2026/Q3_2025,0.914491,%,ing_enterprise_government Q3_2026/Q3_2025 - 1
+crec_ing_enterprise_government,Q2_2026/Q2_2025,1.083045,%,ing_enterprise_government Q2_2026/Q2_2025 - 1
+crec_ing_enterprise_government,Q1_2026/Q1_2025,0.128179,%,ing_enterprise_government Q1_2026/Q1_2025 - 1
+crec_ing_si,FY2024/FY2023,-0.115164,%,ing_si FY2024/FY2023 - 1
+crec_ing_si,FY2025/FY2024,0.221756,%,ing_si FY2025/FY2024 - 1
+crec_ing_si,9M2026/9M2025,3.802019,%,ing_si 9M2026/9M2025 - 1
+crec_ing_si,Q3_2026/Q3_2025,8.298893,%,ing_si Q3_2026/Q3_2025 - 1
+crec_ing_si,Q2_2026/Q2_2025,2.474898,%,ing_si Q2_2026/Q2_2025 - 1
+crec_ing_si,Q1_2026/Q1_2025,0.125172,%,ing_si Q1_2026/Q1_2025 - 1
+crec_ing_advertising,FY2024/FY2023,-0.256134,%,ing_advertising FY2024/FY2023 - 1
+crec_ing_advertising,FY2025/FY2024,0.06713,%,ing_advertising FY2025/FY2024 - 1
+crec_ing_advertising,9M2026/9M2025,-0.056689,%,ing_advertising 9M2026/9M2025 - 1
+crec_ing_advertising,Q3_2026/Q3_2025,0.185022,%,ing_advertising Q3_2026/Q3_2025 - 1
+crec_ing_advertising,Q2_2026/Q2_2025,-0.138498,%,ing_advertising Q2_2026/Q2_2025 - 1
+crec_ing_advertising,Q1_2026/Q1_2025,-0.225734,%,ing_advertising Q1_2026/Q1_2025 - 1
+crec_ing_si_solutions_infra,FY2024/FY2023,0.398119,%,ing_si_solutions_infra FY2024/FY2023 - 1
+crec_ing_si_solutions_infra,FY2025/FY2024,0.5213,%,ing_si_solutions_infra FY2025/FY2024 - 1
+crec_ing_si_solutions_infra,9M2026/9M2025,9.147644,%,ing_si_solutions_infra 9M2026/9M2025 - 1
+crec_ing_si_solutions_infra,Q3_2026/Q3_2025,18.559889,%,ing_si_solutions_infra Q3_2026/Q3_2025 - 1
+crec_ing_si_solutions_infra,Q2_2026/Q2_2025,6.054662,%,ing_si_solutions_infra Q2_2026/Q2_2025 - 1
+crec_ing_si_solutions_infra,Q1_2026/Q1_2025,0.672535,%,ing_si_solutions_infra Q1_2026/Q1_2025 - 1
+peso_space,FY2023,0.342447,%,ing_space/ingresos_totales
+peso_connectivity,FY2023,0.372485,%,ing_connectivity/ingresos_totales
+peso_si,FY2023,0.285068,%,ing_si/ingresos_totales
+peso_space,FY2024,0.270853,%,ing_space/ingresos_totales
+peso_connectivity,FY2024,0.542205,%,ing_connectivity/ingresos_totales
+peso_si,FY2024,0.186943,%,ing_si/ingresos_totales
+peso_space,FY2025,0.218807,%,ing_space/ingresos_totales
+peso_connectivity,FY2025,0.609778,%,ing_connectivity/ingresos_totales
+peso_si,FY2025,0.171415,%,ing_si/ingresos_totales
+peso_space,TTM_Q3_2026,0.129732,%,ing_space/ingresos_totales
+peso_connectivity,TTM_Q3_2026,0.500078,%,ing_connectivity/ingresos_totales
+peso_si,TTM_Q3_2026,0.37019,%,ing_si/ingresos_totales
+peso_space,9M2025,0.238953,%,ing_space/ingresos_totales
+peso_connectivity,9M2025,0.594939,%,ing_connectivity/ingresos_totales
+peso_si,9M2025,0.166108,%,ing_si/ingresos_totales
+peso_space,9M2026,0.12362,%,ing_space/ingresos_totales
+peso_connectivity,9M2026,0.472474,%,ing_connectivity/ingresos_totales
+peso_si,9M2026,0.403907,%,ing_si/ingresos_totales
+peso_space,Q1_2026,0.13187,%,ing_space/ingresos_totales
+peso_connectivity,Q1_2026,0.693865,%,ing_connectivity/ingresos_totales
+peso_si,Q1_2026,0.174265,%,ing_si/ingresos_totales
+peso_space,Q2_2026,0.123112,%,ing_space/ingresos_totales
+peso_connectivity,Q2_2026,0.549143,%,ing_connectivity/ingresos_totales
+peso_si,Q2_2026,0.327745,%,ing_si/ingresos_totales
+peso_space,Q3_2025,0.29878,%,ing_space/ingresos_totales
+peso_connectivity,Q3_2025,0.555416,%,ing_connectivity/ingresos_totales
+peso_si,Q3_2025,0.145803,%,ing_si/ingresos_totales
+peso_space,Q3_2026,0.121235,%,ing_space/ingresos_totales
+peso_connectivity,Q3_2026,0.360069,%,ing_connectivity/ingresos_totales
+peso_si,Q3_2026,0.518696,%,ing_si/ingresos_totales
+margen_bruto,FY2023,0.411765,%,(ingresos - coste_ingresos)/ingresos
+margen_operativo,FY2023,-0.337441,%,beneficio_operativo/ingresos
+margen_neto,FY2023,-0.445557,%,beneficio_neto/ingresos
+margen_ebitda_aj,FY2023,0.367864,%,ebitda_ajustado/ingresos
+id_sobre_ingresos,FY2023,0.202657,%,id_total/ingresos
+sbc_sobre_ingresos,FY2023,0.06537,%,(sbc ordinaria + sbc adquisiciones)/ingresos
+margen_bruto,FY2024,0.429468,%,(ingresos - coste_ingresos)/ingresos
+margen_operativo,FY2024,0.03325,%,beneficio_operativo/ingresos
+margen_neto,FY2024,0.05644,%,beneficio_neto/ingresos
+margen_ebitda_aj,FY2024,0.381734,%,ebitda_ajustado/ingresos
+id_sobre_ingresos,FY2024,0.247164,%,id_total/ingresos
+sbc_sobre_ingresos,FY2024,0.05594,%,(sbc ordinaria + sbc adquisiciones)/ingresos
+margen_bruto,FY2025,0.493895,%,(ingresos - coste_ingresos)/ingresos
+margen_operativo,FY2025,-0.138642,%,beneficio_operativo/ingresos
+margen_neto,FY2025,-0.264378,%,beneficio_neto/ingresos
+margen_ebitda_aj,FY2025,0.352576,%,ebitda_ajustado/ingresos
+id_sobre_ingresos,FY2025,0.462836,%,id_total/ingresos
+sbc_sobre_ingresos,FY2025,0.104263,%,(sbc ordinaria + sbc adquisiciones)/ingresos
+margen_bruto,TTM_Q3_2026,0.567363,%,(ingresos - coste_ingresos)/ingresos
+margen_operativo,TTM_Q3_2026,-0.020847,%,beneficio_operativo/ingresos
+margen_neto,TTM_Q3_2026,-0.086134,%,beneficio_neto/ingresos
+margen_ebitda_aj,TTM_Q3_2026,0.466405,%,ebitda_ajustado/ingresos
+id_sobre_ingresos,TTM_Q3_2026,0.452361,%,id_total/ingresos
+sbc_sobre_ingresos,TTM_Q3_2026,0.147801,%,(sbc ordinaria + sbc adquisiciones)/ingresos
+margen_bruto,9M2025,0.493292,%,(ingresos - coste_ingresos)/ingresos
+margen_operativo,9M2025,-0.088669,%,beneficio_operativo/ingresos
+margen_neto,9M2025,-0.188858,%,beneficio_neto/ingresos
+margen_ebitda_aj,9M2025,0.372831,%,ebitda_ajustado/ingresos
+id_sobre_ingresos,9M2025,0.423363,%,id_total/ingresos
+sbc_sobre_ingresos,9M2025,0.076127,%,(sbc ordinaria + sbc adquisiciones)/ingresos
+margen_bruto,9M2026,0.580512,%,(ingresos - coste_ingresos)/ingresos
+margen_operativo,9M2026,0.026031,%,beneficio_operativo/ingresos
+margen_neto,9M2026,-0.015249,%,beneficio_neto/ingresos
+margen_ebitda_aj,9M2026,0.497508,%,ebitda_ajustado/ingresos
+id_sobre_ingresos,9M2026,0.430455,%,id_total/ingresos
+sbc_sobre_ingresos,9M2026,0.141528,%,(sbc ordinaria + sbc adquisiciones)/ingresos
+margen_bruto,Q1_2026,0.491265,%,(ingresos - coste_ingresos)/ingresos
+margen_operativo,Q1_2026,-0.413933,%,beneficio_operativo/ingresos
+margen_neto,Q1_2026,-0.91095,%,beneficio_neto/ingresos
+margen_ebitda_aj,Q1_2026,0.240094,%,ebitda_ajustado/ingresos
+id_sobre_ingresos,Q1_2026,0.748615,%,id_total/ingresos
+sbc_sobre_ingresos,Q1_2026,0.136131,%,(sbc ordinaria + sbc adquisiciones)/ingresos
+margen_bruto,Q2_2026,0.552726,%,(ingresos - coste_ingresos)/ingresos
+margen_operativo,Q2_2026,-0.0183,%,beneficio_operativo/ingresos
+margen_neto,Q2_2026,-0.069235,%,beneficio_neto/ingresos
+margen_ebitda_aj,Q2_2026,0.452777,%,ebitda_ajustado/ingresos
+id_sobre_ingresos,Q2_2026,0.454057,%,id_total/ingresos
+sbc_sobre_ingresos,Q2_2026,0.106348,%,(sbc ordinaria + sbc adquisiciones)/ingresos
+margen_bruto,Q3_2025,0.514885,%,(ingresos - coste_ingresos)/ingresos
+margen_operativo,Q3_2025,-0.04896,%,beneficio_operativo/ingresos
+margen_neto,Q3_2025,-0.189024,%,beneficio_neto/ingresos
+margen_ebitda_aj,Q3_2025,0.388989,%,ebitda_ajustado/ingresos
+id_sobre_ingresos,Q3_2025,0.410868,%,id_total/ingresos
+sbc_sobre_ingresos,Q3_2025,0.062769,%,(sbc ordinaria + sbc adquisiciones)/ingresos
+margen_bruto,Q3_2026,0.624151,%,(ingresos - coste_ingresos)/ingresos
+margen_operativo,Q3_2026,0.191492,%,beneficio_operativo/ingresos
+margen_neto,Q3_2026,0.302161,%,beneficio_neto/ingresos
+margen_ebitda_aj,Q3_2026,0.604391,%,ebitda_ajustado/ingresos
+id_sobre_ingresos,Q3_2026,0.315334,%,id_total/ingresos
+sbc_sobre_ingresos,Q3_2026,0.162127,%,(sbc ordinaria + sbc adquisiciones)/ingresos
+ebitda_aj_menos_operativo,FY2023,7326.0,M USD,ebitda_ajustado - beneficio_operativo
+peso_sbc_en_ajustes,FY2023,0.092684,%,SBC total / (EBITDA aj. - operativo)
+ebitda_aj_menos_operativo,FY2024,4884.0,M USD,ebitda_ajustado - beneficio_operativo
+peso_sbc_en_ajustes,FY2024,0.160524,%,SBC total / (EBITDA aj. - operativo)
+ebitda_aj_menos_operativo,FY2025,9173.0,M USD,ebitda_ajustado - beneficio_operativo
+peso_sbc_en_ajustes,FY2025,0.212253,%,SBC total / (EBITDA aj. - operativo)
+ebitda_aj_menos_operativo,9M2025,6329.0,M USD,ebitda_ajustado - beneficio_operativo
+peso_sbc_en_ajustes,9M2025,0.164955,%,SBC total / (EBITDA aj. - operativo)
+ebitda_aj_menos_operativo,9M2026,12769.0,M USD,ebitda_ajustado - beneficio_operativo
+peso_sbc_en_ajustes,9M2026,0.30018,%,SBC total / (EBITDA aj. - operativo)
+ebitda_aj_menos_operativo,Q3_2025,2442.0,M USD,ebitda_ajustado - beneficio_operativo
+peso_sbc_en_ajustes,Q3_2025,0.143325,%,SBC total / (EBITDA aj. - operativo)
+ebitda_aj_menos_operativo,Q3_2026,6018.0,M USD,ebitda_ajustado - beneficio_operativo
+peso_sbc_en_ajustes,Q3_2026,0.392655,%,SBC total / (EBITDA aj. - operativo)
+ebitda_aj_menos_operativo,TTM_Q3_2026,15613.0,M USD,ebitda_ajustado - beneficio_operativo
+peso_sbc_en_ajustes,TTM_Q3_2026,0.303337,%,SBC total / (EBITDA aj. - operativo)
+margen_bruto_space,FY2023,0.530784,%,(ing - coste)/ing space
+margen_operativo_space,FY2023,-0.000281,%,opinc_space/ing_space
+margen_ebitda_aj_space,FY2023,0.280292,%,ebitda_aj_space/ing_space
+capex_sobre_ingresos_space,FY2023,0.42086,%,capex_space/ing_space
+ebitda_aj_menos_capex_space,FY2023,-500.0,M USD,ebitda_aj_space - capex_space
+id_sobre_ingresos_space,FY2023,0.432387,%,id_space/ing_space
+margen_bruto_space,FY2024,0.594046,%,(ing - coste)/ing space
+margen_operativo_space,FY2024,0.005532,%,opinc_space/ing_space
+margen_ebitda_aj_space,FY2024,0.304004,%,ebitda_aj_space/ing_space
+capex_sobre_ingresos_space,FY2024,0.5353,%,capex_space/ing_space
+ebitda_aj_menos_capex_space,FY2024,-878.0,M USD,ebitda_aj_space - capex_space
+id_sobre_ingresos_space,FY2024,0.483404,%,id_space/ing_space
+margen_bruto_space,FY2025,0.669114,%,(ing - coste)/ing space
+margen_operativo_space,FY2025,-0.160793,%,opinc_space/ing_space
+margen_ebitda_aj_space,FY2025,0.159814,%,ebitda_aj_space/ing_space
+capex_sobre_ingresos_space,FY2025,0.937837,%,capex_space/ing_space
+ebitda_aj_menos_capex_space,FY2025,-3179.0,M USD,ebitda_aj_space - capex_space
+id_sobre_ingresos_space,FY2025,0.735193,%,id_space/ing_space
+margen_bruto_space,TTM_Q3_2026,0.688958,%,(ing - coste)/ing space
+margen_operativo_space,TTM_Q3_2026,-0.405822,%,opinc_space/ing_space
+margen_ebitda_aj_space,TTM_Q3_2026,-0.083955,%,ebitda_aj_space/ing_space
+capex_sobre_ingresos_space,TTM_Q3_2026,1.165745,%,capex_space/ing_space
+ebitda_aj_menos_capex_space,TTM_Q3_2026,-5195.0,M USD,ebitda_aj_space - capex_space
+id_sobre_ingresos_space,TTM_Q3_2026,1.002165,%,id_space/ing_space
+margen_bruto_space,9M2025,0.663106,%,(ing - coste)/ing space
+margen_operativo_space,9M2025,-0.055233,%,opinc_space/ing_space
+margen_ebitda_aj_space,9M2025,0.245041,%,ebitda_aj_space/ing_space
+capex_sobre_ingresos_space,9M2025,0.859933,%,capex_space/ing_space
+ebitda_aj_menos_capex_space,9M2025,-2015.0,M USD,ebitda_aj_space - capex_space
+id_sobre_ingresos_space,9M2025,0.63137,%,id_space/ing_space
+margen_bruto_space,9M2026,0.687873,%,(ing - coste)/ing space
+margen_operativo_space,9M2026,-0.361708,%,opinc_space/ing_space
+margen_ebitda_aj_space,9M2026,-0.059438,%,ebitda_aj_space/ing_space
+capex_sobre_ingresos_space,9M2026,1.144564,%,capex_space/ing_space
+ebitda_aj_menos_capex_space,9M2026,-4031.0,M USD,ebitda_aj_space - capex_space
+id_sobre_ingresos_space,9M2026,0.965054,%,id_space/ing_space
+margen_bruto_space,Q1_2026,0.546042,%,(ing - coste)/ing space
+margen_operativo_space,Q1_2026,-1.069467,%,opinc_space/ing_space
+margen_ebitda_aj_space,Q1_2026,-0.567044,%,ebitda_aj_space/ing_space
+capex_sobre_ingresos_space,Q1_2026,1.699515,%,capex_space/ing_space
+ebitda_aj_menos_capex_space,Q1_2026,-1403.0,M USD,ebitda_aj_space - capex_space
+id_sobre_ingresos_space,Q1_2026,1.502423,%,id_space/ing_space
+margen_bruto_space,Q2_2026,0.658004,%,(ing - coste)/ing space
+margen_operativo_space,Q2_2026,-0.56341,%,opinc_space/ing_space
+margen_ebitda_aj_space,Q2_2026,-0.213098,%,ebitda_aj_space/ing_space
+capex_sobre_ingresos_space,Q2_2026,1.220374,%,capex_space/ing_space
+ebitda_aj_menos_capex_space,Q2_2026,-1379.0,M USD,ebitda_aj_space - capex_space
+id_sobre_ingresos_space,Q2_2026,1.118503,%,id_space/ing_space
+margen_bruto_space,Q3_2025,0.713685,%,(ing - coste)/ing space
+margen_operativo_space,Q3_2025,0.155462,%,opinc_space/ing_space
+margen_ebitda_aj_space,Q3_2025,0.404562,%,ebitda_aj_space/ing_space
+capex_sobre_ingresos_space,Q3_2025,0.668067,%,capex_space/ing_space
+ebitda_aj_menos_capex_space,Q3_2025,-439.0,M USD,ebitda_aj_space - capex_space
+id_sobre_ingresos_space,Q3_2025,0.509604,%,id_space/ing_space
+margen_bruto_space,Q3_2026,0.75382,%,(ing - coste)/ing space
+margen_operativo_space,Q3_2026,-0.003962,%,opinc_space/ing_space
+margen_ebitda_aj_space,Q3_2026,0.202037,%,ebitda_aj_space/ing_space
+capex_sobre_ingresos_space,Q3_2026,0.908885,%,capex_space/ing_space
+ebitda_aj_menos_capex_space,Q3_2026,-1249.0,M USD,ebitda_aj_space - capex_space
+id_sobre_ingresos_space,Q3_2026,0.693265,%,id_space/ing_space
+margen_bruto_connectivity,FY2023,0.279917,%,(ing - coste)/ing connectivity
+margen_operativo_connectivity,FY2023,0.12122,%,opinc_connectivity/ing_connectivity
+margen_ebitda_aj_connectivity,FY2023,0.41406,%,ebitda_aj_connectivity/ing_connectivity
+capex_sobre_ingresos_connectivity,FY2023,0.634531,%,capex_connectivity/ing_connectivity
+ebitda_aj_menos_capex_connectivity,FY2023,-853.0,M USD,ebitda_aj_connectivity - capex_connectivity
+id_sobre_ingresos_connectivity,FY2023,0.098475,%,id_connectivity/ing_connectivity
+margen_bruto_connectivity,FY2024,0.372549,%,(ing - coste)/ing connectivity
+margen_operativo_connectivity,FY2024,0.263982,%,opinc_connectivity/ing_connectivity
+margen_ebitda_aj_connectivity,FY2024,0.506514,%,ebitda_aj_connectivity/ing_connectivity
+capex_sobre_ingresos_connectivity,FY2024,0.460324,%,capex_connectivity/ing_connectivity
+ebitda_aj_menos_capex_connectivity,FY2024,351.0,M USD,ebitda_aj_connectivity - capex_connectivity
+id_sobre_ingresos_connectivity,FY2024,0.059613,%,id_connectivity/ing_connectivity
+margen_bruto_connectivity,FY2025,0.480021,%,(ing - coste)/ing connectivity
+margen_operativo_connectivity,FY2025,0.388425,%,opinc_connectivity/ing_connectivity
+margen_ebitda_aj_connectivity,FY2025,0.62949,%,ebitda_aj_connectivity/ing_connectivity
+capex_sobre_ingresos_connectivity,FY2025,0.36691,%,capex_connectivity/ing_connectivity
+ebitda_aj_menos_capex_connectivity,FY2025,2990.0,M USD,ebitda_aj_connectivity - capex_connectivity
+id_sobre_ingresos_connectivity,FY2025,0.050496,%,id_connectivity/ing_connectivity
+margen_bruto_connectivity,TTM_Q3_2026,0.517661,%,(ing - coste)/ing connectivity
+margen_operativo_connectivity,TTM_Q3_2026,0.40483,%,opinc_connectivity/ing_connectivity
+margen_ebitda_aj_connectivity,TTM_Q3_2026,0.638293,%,ebitda_aj_connectivity/ing_connectivity
+capex_sobre_ingresos_connectivity,TTM_Q3_2026,0.341301,%,capex_connectivity/ing_connectivity
+ebitda_aj_menos_capex_connectivity,TTM_Q3_2026,4759.0,M USD,ebitda_aj_connectivity - capex_connectivity
+id_sobre_ingresos_connectivity,TTM_Q3_2026,0.05342,%,id_connectivity/ing_connectivity
+margen_bruto_connectivity,9M2025,0.476529,%,(ing - coste)/ing connectivity
+margen_operativo_connectivity,9M2025,0.385709,%,opinc_connectivity/ing_connectivity
+margen_ebitda_aj_connectivity,9M2025,0.627896,%,ebitda_aj_connectivity/ing_connectivity
+capex_sobre_ingresos_connectivity,9M2025,0.361686,%,capex_connectivity/ing_connectivity
+ebitda_aj_menos_capex_connectivity,9M2025,2172.0,M USD,ebitda_aj_connectivity - capex_connectivity
+id_sobre_ingresos_connectivity,9M2025,0.049761,%,id_connectivity/ing_connectivity
+margen_bruto_connectivity,9M2026,0.52493,%,(ing - coste)/ing connectivity
+margen_operativo_connectivity,9M2026,0.407237,%,opinc_connectivity/ing_connectivity
+margen_ebitda_aj_connectivity,9M2026,0.639497,%,ebitda_aj_connectivity/ing_connectivity
+capex_sobre_ingresos_connectivity,9M2026,0.33151,%,capex_connectivity/ing_connectivity
+ebitda_aj_menos_capex_connectivity,9M2026,3941.0,M USD,ebitda_aj_connectivity - capex_connectivity
+id_sobre_ingresos_connectivity,9M2026,0.053689,%,id_connectivity/ing_connectivity
+margen_bruto_connectivity,Q1_2026,0.493092,%,(ing - coste)/ing connectivity
+margen_operativo_connectivity,Q1_2026,0.364753,%,opinc_connectivity/ing_connectivity
+margen_ebitda_aj_connectivity,Q1_2026,0.640774,%,ebitda_aj_connectivity/ing_connectivity
+capex_sobre_ingresos_connectivity,Q1_2026,0.408965,%,capex_connectivity/ing_connectivity
+ebitda_aj_menos_capex_connectivity,Q1_2026,755.0,M USD,ebitda_aj_connectivity - capex_connectivity
+id_sobre_ingresos_connectivity,Q1_2026,0.062941,%,id_connectivity/ing_connectivity
+margen_bruto_connectivity,Q2_2026,0.519925,%,(ing - coste)/ing connectivity
+margen_operativo_connectivity,Q2_2026,0.385924,%,opinc_connectivity/ing_connectivity
+margen_ebitda_aj_connectivity,Q2_2026,0.60522,%,ebitda_aj_connectivity/ing_connectivity
+capex_sobre_ingresos_connectivity,Q2_2026,0.318574,%,capex_connectivity/ing_connectivity
+ebitda_aj_menos_capex_connectivity,Q2_2026,1230.0,M USD,ebitda_aj_connectivity - capex_connectivity
+id_sobre_ingresos_connectivity,Q2_2026,0.068515,%,id_connectivity/ing_connectivity
+margen_bruto_connectivity,Q3_2025,0.464966,%,(ing - coste)/ing connectivity
+margen_operativo_connectivity,Q3_2025,0.384243,%,opinc_connectivity/ing_connectivity
+margen_ebitda_aj_connectivity,Q3_2025,0.620923,%,ebitda_aj_connectivity/ing_connectivity
+capex_sobre_ingresos_connectivity,Q3_2025,0.325153,%,capex_connectivity/ing_connectivity
+ebitda_aj_menos_capex_connectivity,Q3_2025,916.0,M USD,ebitda_aj_connectivity - capex_connectivity
+id_sobre_ingresos_connectivity,Q3_2025,0.045528,%,id_connectivity/ing_connectivity
+margen_bruto_connectivity,Q3_2026,0.54878,%,(ing - coste)/ing connectivity
+margen_operativo_connectivity,Q3_2026,0.451029,%,opinc_connectivity/ing_connectivity
+margen_ebitda_aj_connectivity,Q3_2026,0.66673,%,ebitda_aj_connectivity/ing_connectivity
+capex_sobre_ingresos_connectivity,Q3_2026,0.294017,%,capex_connectivity/ing_connectivity
+ebitda_aj_menos_capex_connectivity,Q3_2026,1956.0,M USD,ebitda_aj_connectivity - capex_connectivity
+id_sobre_ingresos_connectivity,Q3_2026,0.035823,%,id_connectivity/ing_connectivity
+margen_bruto_si,FY2023,0.441067,%,(ing - coste)/ing si
+margen_operativo_si,FY2023,-1.341776,%,opinc_si/ing_si
+margen_ebitda_aj_si,FY2023,0.412698,%,ebitda_aj_si/ing_si
+capex_sobre_ingresos_si,FY2023,0.156366,%,capex_si/ing_si
+ebitda_aj_menos_capex_si,FY2023,759.0,M USD,ebitda_aj_si - capex_si
+id_sobre_ingresos_si,FY2023,0.062817,%,id_si/ing_si
+margen_bruto_si,FY2024,0.356107,%,(ing - coste)/ing si
+margen_operativo_si,FY2024,-0.595802,%,opinc_si/ing_si
+margen_ebitda_aj_si,FY2024,0.132443,%,ebitda_aj_si/ing_si
+capex_sobre_ingresos_si,FY2024,2.15,%,capex_si/ing_si
+ebitda_aj_menos_capex_si,FY2024,-5286.0,M USD,ebitda_aj_si - capex_si
+id_sobre_ingresos_si,FY2024,0.448855,%,id_si/ing_si
+margen_bruto_si,FY2025,0.319588,%,(ing - coste)/ing si
+margen_operativo_si,FY2025,-1.985317,%,opinc_si/ing_si
+margen_ebitda_aj_si,FY2025,-0.386442,%,ebitda_aj_si/ing_si
+capex_sobre_ingresos_si,FY2025,3.975945,%,capex_si/ing_si
+ebitda_aj_menos_capex_si,FY2025,-13964.0,M USD,ebitda_aj_si - capex_si
+id_sobre_ingresos_si,FY2025,1.582006,%,id_si/ing_si
+margen_bruto_si,TTM_Q3_2026,0.59189,%,(ing - coste)/ing si
+margen_operativo_si,TTM_Q3_2026,-0.460968,%,opinc_si/ing_si
+margen_ebitda_aj_si,TTM_Q3_2026,0.427078,%,ebitda_aj_si/ing_si
+capex_sobre_ingresos_si,TTM_Q3_2026,3.763699,%,capex_si/ing_si
+ebitda_aj_menos_capex_si,TTM_Q3_2026,-39579.0,M USD,ebitda_aj_si - capex_si
+id_sobre_ingresos_si,TTM_Q3_2026,0.798601,%,id_si/ing_si
+margen_bruto_si,9M2025,0.309043,%,(ing - coste)/ing si
+margen_operativo_si,9M2025,-1.835821,%,opinc_si/ing_si
+margen_ebitda_aj_si,9M2025,-0.356892,%,ebitda_aj_si/ing_si
+capex_sobre_ingresos_si,9M2025,3.545654,%,capex_si/ing_si
+ebitda_aj_menos_capex_si,9M2025,-8890.0,M USD,ebitda_aj_si - capex_si
+id_sobre_ingresos_si,9M2025,1.462248,%,id_si/ing_si
+margen_bruto_si,9M2026,0.61267,%,(ing - coste)/ing si
+margen_operativo_si,9M2026,-0.301216,%,opinc_si/ing_si
+margen_ebitda_aj_si,9M2026,0.501874,%,ebitda_aj_si/ing_si
+capex_sobre_ingresos_si,9M2026,3.656184,%,capex_si/ing_si
+ebitda_aj_menos_capex_si,9M2026,-34505.0,M USD,ebitda_aj_si - capex_si
+id_sobre_ingresos_si,9M2026,0.70756,%,id_si/ing_si
+margen_bruto_si,Q1_2026,0.442543,%,(ing - coste)/ing si
+margen_operativo_si,Q1_2026,-3.018337,%,opinc_si/ing_si
+margen_ebitda_aj_si,Q1_2026,-0.744499,%,ebitda_aj_si/ing_si
+capex_sobre_ingresos_si,Q1_2026,9.44132,%,capex_si/ing_si
+ebitda_aj_menos_capex_si,Q1_2026,-8332.0,M USD,ebitda_aj_si - capex_si
+id_sobre_ingresos_si,Q1_2026,2.908313,%,id_si/ing_si
+margen_bruto_si,Q2_2026,0.568137,%,(ing - coste)/ing si
+margen_operativo_si,Q2_2026,-0.490824,%,opinc_si/ing_si
+margen_ebitda_aj_si,Q2_2026,0.447481,%,ebitda_aj_si/ing_si
+capex_sobre_ingresos_si,Q2_2026,6.180398,%,capex_si/ing_si
+ebitda_aj_menos_capex_si,Q2_2026,-14682.0,M USD,ebitda_aj_si - capex_si
+id_sobre_ingresos_si,Q2_2026,0.850449,%,id_si/ing_si
+margen_bruto_si,Q3_2025,0.297663,%,(ing - coste)/ing si
+margen_operativo_si,Q3_2025,-2.118081,%,opinc_si/ing_si
+margen_ebitda_aj_si,Q3_2025,-0.526445,%,ebitda_aj_si/ing_si
+capex_sobre_ingresos_si,Q3_2025,5.854859,%,capex_si/ing_si
+ebitda_aj_menos_capex_si,Q3_2025,-5188.0,M USD,ebitda_aj_si - capex_si
+id_sobre_ingresos_si,Q3_2025,1.600246,%,id_si/ing_si
+margen_bruto_si,Q3_2026,0.646164,%,(ing - coste)/ing si
+margen_operativo_si,Q3_2026,0.057011,%,opinc_si/ing_si
+margen_ebitda_aj_si,Q3_2026,0.655159,%,ebitda_aj_si/ing_si
+capex_sobre_ingresos_si,Q3_2026,2.175132,%,capex_si/ing_si
+ebitda_aj_menos_capex_si,Q3_2026,-11491.0,M USD,ebitda_aj_si - capex_si
+id_sobre_ingresos_si,Q3_2026,0.421032,%,id_si/ing_si
+flujo_caja_operativo_implicito,Q2_2026,2419.0,M USD,diferencia de acumulados
+flujo_caja_operativo_implicito,Q3_2026,9631.0,M USD,diferencia de acumulados
+flujo_caja_operativo_implicito,Q2_2025,-376.0,M USD,diferencia de acumulados
+flujo_caja_operativo_implicito,Q3_2025,3769.0,M USD,diferencia de acumulados
+flujo_caja_operativo_implicito,Q4_2025,2665.0,M USD,diferencia de acumulados
+capex_implicito,Q2_2026,18369.0,M USD,diferencia de acumulados
+capex_implicito,Q3_2026,19593.0,M USD,diferencia de acumulados
+capex_implicito,Q2_2025,2825.0,M USD,diferencia de acumulados
+capex_implicito,Q3_2025,6881.0,M USD,diferencia de acumulados
+capex_implicito,Q4_2025,6891.0,M USD,diferencia de acumulados
+fcf,FY2023,105.0,M USD,flujo_caja_operativo - capex
+margen_fcf,FY2023,0.010109,%,fcf/ingresos
+fcf_menos_sbc,FY2023,-574.0,M USD,fcf - sbc total
+capex_sobre_ingresos,FY2023,0.425051,%,capex/ingresos
+capex_sobre_dya,FY2023,1.675522,x,capex/dya_total
+fco_sobre_ebitda_aj,FY2023,1.182936,%,flujo_caja_operativo/ebitda_ajustado
+fcf,FY2024,-5387.0,M USD,flujo_caja_operativo - capex
+margen_fcf,FY2024,-0.384374,%,fcf/ingresos
+fcf_menos_sbc,FY2024,-6171.0,M USD,fcf - sbc total
+capex_sobre_ingresos,FY2024,0.796504,%,capex/ingresos
+capex_sobre_dya,FY2024,2.919195,x,capex/dya_total
+fco_sobre_ebitda_aj,FY2024,1.079626,%,flujo_caja_operativo/ebitda_ajustado
+fcf,FY2025,-13952.0,M USD,flujo_caja_operativo - capex
+margen_fcf,FY2025,-0.747135,%,fcf/ingresos
+fcf_menos_sbc,FY2025,-15899.0,M USD,fcf - sbc total
+capex_sobre_ingresos,FY2025,1.110474,%,capex/ingresos
+capex_sobre_dya,FY2025,3.094613,x,capex/dya_total
+fco_sobre_ebitda_aj,FY2025,1.030529,%,flujo_caja_operativo/ebitda_ajustado
+fcf,9M2025,-9726.0,M USD,flujo_caja_operativo - capex
+margen_fcf,9M2025,-0.709202,%,fcf/ingresos
+fcf_menos_sbc,9M2025,-10770.0,M USD,fcf - sbc total
+capex_sobre_ingresos,9M2025,1.009625,%,capex/ingresos
+capex_sobre_dya,9M2025,2.894231,x,capex/dya_total
+fco_sobre_ebitda_aj,9M2025,0.805789,%,flujo_caja_operativo/ebitda_ajustado
+fcf,9M2026,-34972.0,M USD,flujo_caja_operativo - capex
+margen_fcf,9M2026,-1.29129,%,fcf/ingresos
+fcf_menos_sbc,9M2026,-38805.0,M USD,fcf - sbc total
+capex_sobre_ingresos,9M2026,1.774877,%,capex/ingresos
+capex_sobre_dya,9M2026,5.380457,x,capex/dya_total
+fco_sobre_ebitda_aj,9M2026,0.97202,%,flujo_caja_operativo/ebitda_ajustado
+fcf,TTM_Q3_2026,-39198.0,M USD,flujo_caja_operativo - capex
+margen_fcf,TTM_Q3_2026,-1.223294,%,fcf/ingresos
+fcf_menos_sbc,TTM_Q3_2026,-43934.0,M USD,fcf - sbc total
+capex_sobre_ingresos,TTM_Q3_2026,1.715195,%,capex/ingresos
+capex_sobre_dya,TTM_Q3_2026,5.064971,x,capex/dya_total
+fco_sobre_ebitda_aj,TTM_Q3_2026,1.054667,%,flujo_caja_operativo/ebitda_ajustado
+fcf_trimestral,Q1_2025,-3413.0,M USD,FCO - capex (trimestre; implícito si no se publica)
+fcf_trimestral,Q2_2025,-3201.0,M USD,FCO - capex (trimestre; implícito si no se publica)
+fcf_trimestral,Q3_2025,-3112.0,M USD,FCO - capex (trimestre; implícito si no se publica)
+fcf_trimestral,Q4_2025,-4226.0,M USD,FCO - capex (trimestre; implícito si no se publica)
+fcf_trimestral,Q1_2026,-9060.0,M USD,FCO - capex (trimestre; implícito si no se publica)
+fcf_trimestral,Q2_2026,-15950.0,M USD,FCO - capex (trimestre; implícito si no se publica)
+fcf_trimestral,Q3_2026,-9962.0,M USD,FCO - capex (trimestre; implícito si no se publica)
+fcf_ampliado,9M2026,-37541.0,M USD,FCO - capex - intereses capitalizados + reembolsos - PP&E financiado
+crec_capex_space,FY2024/FY2023,0.357381,%,capex a/b - 1
+crec_capex_connectivity,FY2024/FY2023,0.424847,%,capex a/b - 1
+crec_capex_si,FY2024/FY2023,11.166307,%,capex a/b - 1
+crec_capex_space,FY2025/FY2024,0.885827,%,capex a/b - 1
+crec_capex_connectivity,FY2025/FY2024,0.194397,%,capex a/b - 1
+crec_capex_si,FY2025/FY2024,1.259364,%,capex a/b - 1
+crec_capex_space,9M2026/9M2025,0.35983,%,capex a/b - 1
+crec_capex_connectivity,9M2026/9M2025,0.437479,%,capex a/b - 1
+crec_capex_si,9M2026/9M2025,3.951715,%,capex a/b - 1
+deuda_neta_contable,FY2024,1608.0,M USD,deuda contable (incl. arrend. financ.) - caja - valores
+deuda_neta_principal,FY2024,1967.0,M USD,principal + arrend. financiero - caja - valores
+peso_deuda_vinculada,FY2024,0.0,%,deuda vinculada (Valor)/deuda contable
+deuda_neta_sobre_ebitda_aj,FY2024,0.300561,x,deuda neta contable / EBITDA aj. (FY o TTM)
+cobertura_intereses_ebitda_aj,FY2024,3.386076,x,EBITDA aj. / gastos por intereses (FY o TTM)
+caja_y_valores,FY2024,12185.0,M USD,caja + valores negociables
+deuda_contable,FY2024,13793.0,M USD,deuda y arrendamientos corriente + no corriente
+deuda_vinculada,FY2024,0.0,M USD,deuda vinculada corriente + no corriente
+deuda_neta_contable,FY2025,-1851.0,M USD,deuda contable (incl. arrend. financ.) - caja - valores
+deuda_neta_principal,FY2025,-1461.0,M USD,principal + arrend. financiero - caja - valores
+peso_deuda_vinculada,FY2025,0.196847,%,deuda vinculada (Valor)/deuda contable
+deuda_neta_sobre_ebitda_aj,FY2025,-0.281136,x,deuda neta contable / EBITDA aj. (FY o TTM)
+cobertura_intereses_ebitda_aj,FY2025,3.38509,x,EBITDA aj. / gastos por intereses (FY o TTM)
+caja_y_valores,FY2025,24747.0,M USD,caja + valores negociables
+deuda_contable,FY2025,22896.0,M USD,deuda y arrendamientos corriente + no corriente
+deuda_vinculada,FY2025,4507.0,M USD,deuda vinculada corriente + no corriente
+deuda_neta_contable,9M2026,-51011.0,M USD,deuda contable (incl. arrend. financ.) - caja - valores
+deuda_neta_principal,9M2026,-50866.0,M USD,principal + arrend. financiero - caja - valores
+peso_deuda_vinculada,9M2026,0.33202,%,deuda vinculada (Valor)/deuda contable
+deuda_neta_sobre_ebitda_aj,9M2026,-3.413249,x,deuda neta contable / EBITDA aj. (FY o TTM)
+cobertura_intereses_ebitda_aj,9M2026,5.881543,x,EBITDA aj. / gastos por intereses (FY o TTM)
+caja_y_valores,9M2026,89855.0,M USD,caja + valores negociables
+deuda_contable,9M2026,38844.0,M USD,deuda y arrendamientos corriente + no corriente
+deuda_vinculada,9M2026,12897.0,M USD,deuda vinculada corriente + no corriente
+dilucion_interanual_como_convertidas,30-sep-2025->30-sep-2026,0.229759,%,acciones 30-sep-2026 / (ordinarias + preferentes como convertidas a 30-sep-2025) - 1
+emisiones_netas_9M26_sobre_base_convertida,9M2026,0.212643,%,emisiones netas 9M26 / base como convertidas
+emisiones_netas_9M26_sin_restringidas_musk,9M2026,0.094723,%,"(emisiones netas - 1.302,07 M acciones B restringidas de Musk) / base"
+dilucion_potencial_opciones_rsu,9M2026,0.047868,%,(opciones A + B + RSU)/acciones 30-sep-2026
+sbc_total,FY2023,679.0,M USD,sbc ordinaria + adquisiciones
+sbc_sobre_fco,FY2023,0.150221,%,sbc total / FCO
+sbc_total,FY2024,784.0,M USD,sbc ordinaria + adquisiciones
+sbc_sobre_fco,FY2024,0.135734,%,sbc total / FCO
+sbc_total,FY2025,1947.0,M USD,sbc ordinaria + adquisiciones
+sbc_sobre_fco,FY2025,0.286957,%,sbc total / FCO
+sbc_total,9M2025,1044.0,M USD,sbc ordinaria + adquisiciones
+sbc_sobre_fco,9M2025,0.253398,%,sbc total / FCO
+sbc_total,9M2026,3833.0,M USD,sbc ordinaria + adquisiciones
+sbc_sobre_fco,9M2026,0.292662,%,sbc total / FCO
+sbc_total,TTM_Q3_2026,4736.0,M USD,sbc ordinaria + adquisiciones
+sbc_sobre_fco,TTM_Q3_2026,0.300469,%,sbc total / FCO
+capex_space_implicito,Q4_2025,1014.0,M USD,FY2025 - 9M2025
+cliente_B_implicito,Q1_2026 (6M - 2T),2.246,M USD,% Customer B x ingresos consolidados
+cliente_B_implicito,Q2_2026,1523.73,M USD,% Customer B x ingresos consolidados
+cliente_B_implicito,6M2026,1525.976,M USD,% Customer B x ingresos consolidados
+cliente_B_implicito,Q3_2026,5028.375,M USD,% Customer B x ingresos consolidados
+cliente_B_implicito,9M2026,6554.086,M USD,% Customer B x ingresos consolidados
+cliente_B_sobre_ingresos_si,Q2_2026,0.594975,%,B implícito / ing_si
+cliente_B_sobre_ingresos_si,Q3_2026,0.665129,%,B implícito / ing_si
+cliente_B_sobre_ingresos_si,9M2026,0.599149,%,B implícito / ing_si
+peso_cliente_B_en_crecimiento_si,Q3_2026 (si B en el periodo previo = 0),0.745276,%,(B - B previo)/aumento ingresos SI
+peso_cliente_B_en_crecimiento_total,Q3_2026 (si B en el periodo previo = 0),0.55877,%,(B - B previo)/aumento ingresos consolidados
+peso_cliente_B_en_crecimiento_si,Q3_2026 (si B previo = máximo posible),0.662632,%,(B - B previo)/aumento ingresos SI
+peso_cliente_B_en_crecimiento_total,Q3_2026 (si B previo = máximo posible),0.496808,%,(B - B previo)/aumento ingresos consolidados
+ing_si_sin_B_ni_cursor,Q3_2026,1923.625,M USD,ing_si - B implícito - Cursor
+crec_ingresos_sin_cliente_B,Q3_2026,0.712092,%,(ingresos - B)/ingresos previos - 1 (B previo=0)
+peso_cliente_B_en_crecimiento_si,9M2026 (si B en el periodo previo = 0),0.756735,%,(B - B previo)/aumento ingresos SI
+peso_cliente_B_en_crecimiento_total,9M2026 (si B en el periodo previo = 0),0.490245,%,(B - B previo)/aumento ingresos consolidados
+peso_cliente_B_en_crecimiento_si,9M2026 (si B previo = máximo posible),0.598393,%,(B - B previo)/aumento ingresos SI
+peso_cliente_B_en_crecimiento_total,9M2026 (si B previo = máximo posible),0.387664,%,(B - B previo)/aumento ingresos consolidados
+ing_si_sin_B_ni_cursor,9M2026,3776.914,M USD,ing_si - B implícito - Cursor
+crec_ingresos_sin_cliente_B,9M2026,0.496931,%,(ingresos - B)/ingresos previos - 1 (B previo=0)
+margen_incremental_ebitda_aj_si,Q1_2026->Q3_2026,0.824978,%,ΔEBITDA aj SI/Δingresos SI
+margen_incremental_operativo_si,Q1_2026->Q3_2026,0.430139,%,Δopinc SI/Δingresos SI
+margen_incremental_bruto_si,Q1_2026->Q3_2026,0.670869,%,(Δingresos - Δcoste)/Δingresos SI
+escenario_sin_B_si_operativo,Q3_2026 margen 100 %,-4597.375,M USD,opinc_si - B x margen supuesto
+escenario_sin_B_si_ebitda_aj,Q3_2026 margen 100 %,-75.375,M USD,ebitda_aj_si - B x margen supuesto
+escenario_sin_B_grupo_ebitda_aj,Q3_2026 margen 100 %,3780.625,M USD,ebitda_ajustado - B x margen
+escenario_sin_B_si_operativo,"Q3_2026 margen 82,5 % (obs.)",-3717.297501,M USD,opinc_si - B x margen supuesto
+escenario_sin_B_si_ebitda_aj,"Q3_2026 margen 82,5 % (obs.)",804.702499,M USD,ebitda_aj_si - B x margen supuesto
+escenario_sin_B_grupo_ebitda_aj,"Q3_2026 margen 82,5 % (obs.)",4660.702499,M USD,ebitda_ajustado - B x margen
+escenario_sin_B_si_operativo,Q3_2026 margen 75 %,-3340.28125,M USD,opinc_si - B x margen supuesto
+escenario_sin_B_si_ebitda_aj,Q3_2026 margen 75 %,1181.71875,M USD,ebitda_aj_si - B x margen supuesto
+escenario_sin_B_grupo_ebitda_aj,Q3_2026 margen 75 %,5037.71875,M USD,ebitda_ajustado - B x margen
+escenario_sin_B_si_operativo,Q3_2026 margen 50 %,-2083.1875,M USD,opinc_si - B x margen supuesto
+escenario_sin_B_si_ebitda_aj,Q3_2026 margen 50 %,2438.8125,M USD,ebitda_aj_si - B x margen supuesto
+escenario_sin_B_grupo_ebitda_aj,Q3_2026 margen 50 %,6294.8125,M USD,ebitda_ajustado - B x margen
+ing_heredada,FY2023,7426.0,M USD,ing_space + ing_connectivity
+margen_operativo_heredada,FY2023,0.063022,%,(opinc space + connectivity)/(ing space + connectivity)
+ebitda_aj_menos_capex_heredada,FY2023,-1353.0,M USD,EBITDA aj - capex (space + connectivity)
+ing_heredada,FY2024,11395.0,M USD,ing_space + ing_connectivity
+margen_operativo_heredada,FY2024,0.177885,%,(opinc space + connectivity)/(ing space + connectivity)
+ebitda_aj_menos_capex_heredada,FY2024,-527.0,M USD,EBITDA aj - capex (space + connectivity)
+ing_heredada,FY2025,15473.0,M USD,ing_space + ing_connectivity
+margen_operativo_heredada,FY2025,0.243392,%,(opinc space + connectivity)/(ing space + connectivity)
+ebitda_aj_menos_capex_heredada,FY2025,-189.0,M USD,EBITDA aj - capex (space + connectivity)
+ing_heredada,9M2025,11436.0,M USD,ing_space + ing_connectivity
+margen_operativo_heredada,9M2025,0.259356,%,(opinc space + connectivity)/(ing space + connectivity)
+ebitda_aj_menos_capex_heredada,9M2025,157.0,M USD,EBITDA aj - capex (space + connectivity)
+ing_heredada,9M2026,16144.0,M USD,ing_space + ing_connectivity
+margen_operativo_heredada,9M2026,0.24777,%,(opinc space + connectivity)/(ing space + connectivity)
+ebitda_aj_menos_capex_heredada,9M2026,-90.0,M USD,EBITDA aj - capex (space + connectivity)
+ing_heredada,TTM_Q3_2026,20181.0,M USD,ing_space + ing_connectivity
+margen_operativo_heredada,TTM_Q3_2026,0.237847,%,(opinc space + connectivity)/(ing space + connectivity)
+ebitda_aj_menos_capex_heredada,TTM_Q3_2026,-436.0,M USD,EBITDA aj - capex (space + connectivity)
+ing_heredada,Q3_2025,4763.0,M USD,ing_space + ing_connectivity
+margen_operativo_heredada,Q3_2025,0.30422,%,(opinc space + connectivity)/(ing space + connectivity)
+ebitda_aj_menos_capex_heredada,Q3_2025,477.0,M USD,EBITDA aj - capex (space + connectivity)
+ing_heredada,Q3_2026,7015.0,M USD,ing_space + ing_connectivity
+margen_operativo_heredada,Q3_2026,0.336422,%,(opinc space + connectivity)/(ing space + connectivity)
+ebitda_aj_menos_capex_heredada,Q3_2026,707.0,M USD,EBITDA aj - capex (space + connectivity)
+ingresos_totales_implicito,Q4_2025,4960.0,M USD,FY2025 - 9M2025
+ing_space_implicito,Q4_2025,809.0,M USD,FY2025 - 9M2025
+ing_connectivity_implicito,Q4_2025,3228.0,M USD,FY2025 - 9M2025
+ing_si_implicito,Q4_2025,923.0,M USD,FY2025 - 9M2025
+beneficio_operativo_implicito,Q4_2025,-1373.0,M USD,FY2025 - 9M2025
+ebitda_ajustado_implicito,Q4_2025,1471.0,M USD,FY2025 - 9M2025
+beneficio_neto_implicito,Q4_2025,-2347.0,M USD,FY2025 - 9M2025
+flujo_caja_operativo_implicito,Q4_2025,2665.0,M USD,FY2025 - 9M2025
+capex_implicito,Q4_2025,6891.0,M USD,FY2025 - 9M2025
