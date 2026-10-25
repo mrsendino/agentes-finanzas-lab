@@ -1,6 +1,6 @@
 # 02 — Estados financieros de Tesla (TSLA): FY2021–FY2025 y TTM a 3T 2026
 
-**Fecha del análisis:** 2026-10-24 · **Versión:** v2 (2026-10-25, correcciones pedidas en [05-veredicto.md](05-veredicto.md) §5; ver «Registro de cambios v2» al final) · **Analista:** Fase 2 (rol *Financial Analyst*) · **Alcance:** solo datos históricos. Este documento no contiene previsiones, valoraciones ni recomendaciones.
+**Fecha del análisis:** 2026-10-24 · **Versión:** v3 (2026-10-25, correcciones pedidas en [05-veredicto-v2.md](05-veredicto-v2.md) §8, prioridad 1; ver «Registro de cambios v3» al final. v2: correcciones de [05-veredicto.md](05-veredicto.md) §5) · **Analista:** Fase 2 (rol *Financial Analyst*) · **Alcance:** solo datos históricos. Este documento no contiene previsiones, valoraciones ni recomendaciones.
 
 **Archivos de esta fase:**
 
@@ -10,9 +10,10 @@
 | [`scripts/fase2_ratios.py`](../scripts/fase2_ratios.py) | Script que hace todos los cálculos |
 | [`data/ratios.csv`](../data/ratios.csv) | Salida con todos los ratios |
 | [`data/checks.csv`](../data/checks.csv) | 72 controles de cuadre (55 en v1 + 17 en v2) |
+| [`data/tablas_02_redondeo.csv`](../data/tablas_02_redondeo.csv) | (v3) Cada cifra de `ratios.csv` tal como se escribe en este documento: % a 1 decimal y M$ a 0, con redondeo mitad hacia arriba sobre el valor completo |
 | [`fuentes/nuevas_fase2_v2.md`](../fuentes/nuevas_fase2_v2.md) | Fuentes nuevas de la v2 |
 
-Todas las cifras de las tablas salen de `ratios.csv`. No se ha hecho ningún cálculo a mano.
+Todas las cifras de las tablas salen de `ratios.csv`. **v3:** se copian de `tablas_02_redondeo.csv`, que las redondea desde el valor completo y no desde `ratios.csv` ya redondeado, para evitar el doble redondeo. No se ha hecho ningún cálculo a mano.
 
 ---
 
@@ -23,7 +24,7 @@ Todas las cifras de las tablas salen de `ratios.csv`. No se ha hecho ningún cá
    - En los últimos doce meses a 3T 2026 vuelven a subir, hasta 103.570 M$ (los nueve primeros meses de 2026 crecen un +12,5 % sobre los de 2025).
    - Automoción ha pasado del 88 % al 72 % de los ingresos. Energía y Servicios ya suman ~28 %.
 2. **La rentabilidad operativa se ha desplomado.**
-   - El margen operativo pasó del 16,8 % (2022) al 4,6 % (2025) y al 3,4 % (TTM).
+   - El margen operativo pasó del 16,8 % (2022) al 4,6 % (2025) y al 3,3 % (TTM).
    - Sin créditos regulatorios, que son ingreso de margen casi total, el margen operativo es del **2,5 % en 2025** y del **2,2 % TTM**.
    - En 2025, los créditos equivalieron al **45,8 % del beneficio operativo**.
 3. **El flujo de caja libre (FCF) aguanta, pero cada vez se lo come más el capex y la compensación en acciones (SBC).**
@@ -71,7 +72,7 @@ De los 72 controles, **67 están OK** (v1: 50 de 55). Cubren:
 - (v2) FY2021 frente al deck Q4 2021;
 - (v2) descomposición de acciones (§5.1).
 
-Las 5 discrepancias se explican en §8.
+Las 5 discrepancias se explican en §8. Comparan el dato primario con S1, S2, S11 y P1 Item 1A. Cuatro de esas referencias son las cifras que citaba 01 v1 (etiqueta "… / 01 v1" en `checks.csv`), y 01 v2 ya adoptó la cifra primaria.
 
 ---
 
@@ -89,7 +90,7 @@ Las 5 discrepancias se explican en §8.
 
 | Crecimiento interanual | FY2022 | FY2023 | FY2024 | FY2025 | 9M26 vs 9M25 |
 |---|---:|---:|---:|---:|---:|
-| Ingresos totales | 51,3 % | 18,8 % | 0,9 % | −2,9 % | 12,5 % |
+| Ingresos totales | 51,4 % | 18,8 % | 0,9 % | −2,9 % | 12,5 % |
 | Automoción | 51,3 % | 15,3 % | −6,5 % | −9,8 % | 10,6 % |
 | Créditos regulatorios | 21,2 % | 0,8 % | 54,4 % | −27,9 % | −56,0 % |
 | Energía | 40,2 % | 54,4 % | 67,1 % | 26,6 % | −5,7 % |
@@ -104,7 +105,7 @@ Las 5 discrepancias se explican en §8.
 
 Tasas de crecimiento anual compuesto (CAGR) FY2021→FY2025:
 - ingresos totales: 15,2 %;
-- automoción: 10,2 %;
+- automoción: 10,1 %;
 - energía: 46,3 %;
 - servicios: 34,7 %.
 
@@ -124,13 +125,13 @@ Tasas de crecimiento anual compuesto (CAGR) FY2021→FY2025:
 | Beneficio bruto | 13.606 | 20.853 | 17.660 | 17.450 | 17.094 | 19.974 |
 | **Margen bruto** | 25,3 % | 25,6 % | 18,2 % | 17,9 % | 18,0 % | 19,3 % |
 | Beneficio operativo | 6.523 | 13.656 | 8.891 | 7.076 | 4.355 | 3.466 |
-| **Margen operativo** | 12,1 % | 16,8 % | 9,2 % | 7,2 % | 4,6 % | 3,4 % |
+| **Margen operativo** | 12,1 % | 16,8 % | 9,2 % | 7,2 % | 4,6 % | 3,3 % |
 | Beneficio operativo sin créditos | 5.058 | 11.880 | 7.101 | 4.313 | 2.362 | 2.285 |
 | **Margen operativo sin créditos** | 9,4 % | 14,6 % | 7,3 % | 4,4 % | 2,5 % | 2,2 % |
-| **Créditos / beneficio operativo** | 22,5 % | 13,0 % | 20,1 % | 39,1 % | 45,8 % | 34,1 % |
+| **Créditos / beneficio operativo** | 22,5 % | 13,0 % | 20,1 % | 39,0 % | 45,8 % | 34,1 % |
 | Beneficio neto atribuible a comunes | 5.519 | 12.556 | 14.997 | 7.091 | 3.794 | 3.218 |
-| **Margen neto** | 10,2 % | 15,4 % | 15,5 % | 7,3 % | 4,0 % | 3,1 % |
-| Crecimiento del beneficio operativo | — | 109,3 % | −34,9 % | −20,4 % | −38,5 % | 9M: −30,2 % |
+| **Margen neto** | 10,3 % | 15,4 % | 15,5 % | 7,3 % | 4,0 % | 3,1 % |
+| Crecimiento del beneficio operativo | — | 109,4 % | −34,9 % | −20,4 % | −38,5 % | 9M: −30,2 % |
 | Crecimiento del beneficio neto | — | 127,5 % | 19,4 % | −52,7 % | −46,5 % | 9M: −19,5 % |
 
 **Qué cambió y por qué:**
@@ -154,7 +155,7 @@ Tasas de crecimiento anual compuesto (CAGR) FY2021→FY2025:
 | **FCF (FCO − capex)** | 5.015 | 7.566 | 4.358 | 3.584 | 6.220 | 3.303 |
 | **Margen FCF** | 9,3 % | 9,3 % | 4,5 % | 3,7 % | 6,6 % | 3,2 % |
 | SBC | 2.121 | 1.560 | 1.812 | 1.999 | 2.825 | 4.300 |
-| SBC / ingresos | 3,9 % | 1,9 % | 1,9 % | 2,1 % | 3,0 % | 4,2 % |
+| SBC / ingresos | 3,9 % | 1,9 % | 1,9 % | 2,0 % | 3,0 % | 4,2 % |
 | **FCF − SBC** | 2.894 | 6.006 | 2.546 | 1.585 | 3.395 | **−997** |
 | D&A (amortización, depreciación y deterioro) — v2 | 2.911 | 3.747 | 4.667 | 5.368 | 6.148 | **6.704** |
 | D&A / ingresos — v2 | 5,4 % | 4,6 % | 4,8 % | 5,5 % | 6,5 % | 6,5 % |
@@ -169,7 +170,7 @@ Fuentes de la D&A: FY2021-22, 10-K FY2022 (`Financial_Report.xlsx`, estado de fl
 - **El FCO resiste mejor que el beneficio.** En TTM llega a 18.710 M$, máximo de la serie, mientras el beneficio operativo cae. Dos motivos:
   - Las partidas sin salida de caja son grandes y crecientes: la D&A TTM es de 6.704 M$ (1.852 M$ solo en 3T 2026, P4) y la SBC TTM de 4.300 M$ (1.165 M$ en 3T 2026).
   - Influye también el circulante, pero no se ha desglosado (**SIN VERIFICAR**).
-- **El capex de 2025 fue anormalmente bajo** (−24,8 % interanual), lo que infla el FCF de 2025 (+73,6 %). En 2026 se dispara: 13.014 M$ en 9M, un +112 % (10-Q 3T 2026), con 5.789 M$ solo en 2T 2026 (P4). Tesla lo atribuye a inversión en "SI, robotics and energy" (P4). Por eso el FCF de 2025 **no es una base representativa** para extrapolar.
+- **El capex de 2025 fue anormalmente bajo** (−24,8 % interanual), lo que infla el FCF de 2025 (+73,5 %). En 2026 se dispara: 13.014 M$ en 9M, un +112 % (10-Q 3T 2026), con 5.789 M$ solo en 2T 2026 (P4). Tesla lo atribuye a inversión en "SI, robotics and energy" (P4). Por eso el FCF de 2025 **no es una base representativa** para extrapolar.
 - **La SBC se multiplica por más de dos** (+115 %): de 1.999 M$ en FY2024 a 4.300 M$ TTM. Coincide con el plan de retribución del CEO de 2025 (P4, y S10 en 01-negocio.md). Si se trata como coste real, la empresa ya no genera caja libre en TTM (−997 M$). Es el indicador de mayor deterioro de este bloque.
 
 ---
@@ -215,7 +216,7 @@ Fuentes: portada, nota de BPA y estado de patrimonio de los 10-Q 1T, 2T y 3T 202
 **Política contable citada por el 10-Q:** "Restricted stock awards will be excluded from the computation of diluted weighted average shares until the shares have been deemed to be earned" (P2). El 10-Q no dice en texto que se excluyan de la básica, pero los números lo demuestran: la media básica solo pasa de 3.234 (1T26) a 3.240 (3T26) pese a las 194 M emitidas en 2T26, y en 3T25 (3.227) tampoco recoge las 100 M emitidas en el trimestre.
 
 **(a) Diferencia diluida − básica: 301 M.** Es la línea "stock-based awards", calculada por el método de tesorería. El 10-Q **no la desglosa**. Lectura (INFERENCIA, coherente con todos los datos):
-- ~**286 M** son las acciones netas del ejercicio de 2018. Están emitidas, pero restringidas por servicio hasta ene-2028: fuera de la básica, dentro de la diluida. Antes del ejercicio, el mismo papel lo jugaban las 304 M de opciones de 2018 por el método de tesorería (304 M de "awards" en 1T26 y 299-303 M en 2025).
+- ~**286 M** son las acciones netas del ejercicio de 2018. Están emitidas, pero restringidas por servicio hasta ene-2028: fuera de la básica, dentro de la diluida. Antes del ejercicio (jun-2026), ese papel lo jugaban las 303,96 M de opciones de 2018, pero por el método de tesorería no aportaban 304 M a la diluida. Con un precio de ejercicio de 23,34 $ y un precio medio de ~400 $, aportaban **~286,2 M** (283,7-288,2 M con precios de 350-450 $; filas `acc_op2018_tesoreria_px*`). Las 304 M de "awards" de 1T26 serían, por tanto, ~286 M de Musk + **~17,8 M de empleados** (15,8-20,3 M; filas `acc_awards_1T26_resto_empleados_px*`). El precio medio de 1T26 es un supuesto (**SIN VERIFICAR**). La lectura queda reforzada: la parte de Musk son ~286 M antes y después del ejercicio, y la de empleados es de ~15-18 M.
 - ~**15 M** son incentivos de empleados (RSU y opciones) aún no emitidos.
 - Las **423,7 M del CEO 2025 no están** en la diluida: son por objetivos y no se han "ganado".
 
@@ -226,16 +227,16 @@ Fuentes: portada, nota de BPA y estado de patrimonio de los 10-Q 1T, 2T y 3T 202
 
 **(c) Las 202 M emitidas en 9M26:**
 - 1T26: 4 M y 3T26: 4 M → emisiones corrientes de empleados.
-- 2T26: 194 M ≈ +286,4 M (ejercicio de 2018) − 96,0 M (cancelación del Interim Award 2025) + ~3,6 M de empleados. El APIC de la línea es de solo 322 M$, coherente con una liquidación neta sin caja y no con una adquisición pagada en acciones. **La cancelación de las 96 M solo la confirma una fuente secundaria** (Not a Tesla App); el resto del cuadre (190,4 frente a 194) es aritmético.
+- 2T26: 194 M ≈ +286,4 M (ejercicio de 2018) − 96,0 M (cancelación del Interim Award 2025) + ~3,6 M de empleados. El APIC de la línea es de solo 322 M$, coherente con una liquidación neta sin caja y no con una adquisición pagada en acciones. La cifra de 96 M sale del Form 4 de ago-2025, que no menciona ninguna cancelación. **La cancelación solo la recoge una fuente secundaria** (Not a Tesla App: "that backup deal was forfeit once the 2018 deal cleared court proceedings"), que además **no da la cifra de 96 M**: habla de un "$29 billion interim award". Que lo cancelado sean exactamente las 96 M es una inferencia del cuadre, no un dato. El resto del cuadre (190,4 frente a 194) es aritmético.
 
 **¿Dónde están las 423,7 M del plan del CEO 2025?** **En la portada, sí** (emitidas legalmente en 4T25, con derecho de voto cedido por proxy). **En la media básica, no. En la diluida, no** (no "ganadas").
 
 **Consecuencia para la disputa W2 (03 frente a 04):**
 - 03 calcula el valor por acción sobre la portada (3.952,76 M). Esa cifra **ya incluye** las 423,7 M del CEO 2025 y las 286,4 M de 2018.
-- La línea de "dilución adicional" de 03 suma las 301 M encima. **Eso es un doble cómputo real de ~286 M** (el 95 % de la línea). Solo ~15 M son incrementales.
+- La línea de "dilución adicional" de **03 v1** sumaba las 301 M encima. **Era un doble cómputo real de ~286 M** (el 95 % de la línea). Solo ~15 M son incrementales. *Resuelto en 03 v2* (§3): la línea se sustituye por la cifra totalmente diluida de esta sección.
 - Cifra totalmente diluida aproximada: **~3.967 M** (portada + ~15 M). Contraste: diluida 3T26 + restringidas CEO 2025 = 3.541 + 423,7 = 3.964,7 M; la diferencia de ~3 M es el desfase de saldos.
-- Las 4.254 M de 03 (portada + 301) sobrestiman las acciones en ~7 %. Los VPA de 04 "corregidos", si usan la media diluida (3.541 M), las subestiman en ~10 %, porque excluyen las 423,7 M ya emitidas.
-- No se analiza aquí qué cifra debe usar el DCF: es decisión de Fase 3. Desde los datos, **la portada (3.953 M) ya es el techo razonable** y 03 §6.4 ("el modelo solo recoge una parte") queda invertido para el plan del CEO.
+- Las 4.254 M de **03 v1** (portada + 301) sobrestimaban las acciones un 7,2 % frente a la cifra totalmente diluida (fila `acc_portada_mas_301_sobre_fd`). Los VPA "corregidos" de **04 v1**, sobre la media diluida (3.541 M), las subestimaban un 10,7 % (fila `acc_diluida_media_sobre_fd`), porque excluyen las 423,7 M ya emitidas. Las dos líneas están retiradas en 03 v2 y 04 v2.1.
+- No se analiza aquí qué cifra debe usar el DCF: es decisión de Fase 3. Desde los datos, **la portada (3.953 M) ya es el techo razonable** para el plan del CEO. La frase de **03 v1** §6.4 ("el modelo solo recoge una parte") quedaba invertida. *Resuelto en 03 v2* (§6.5), que dice que la portada ya recoge entera la dilución del CEO.
 
 ---
 
@@ -254,7 +255,7 @@ Fuentes: portada, nota de BPA y estado de patrimonio de los 10-Q 1T, 2T y 3T 202
 | Capital invertido A, saldo final (M$) | 19.316 | 25.618 | 38.770 | 44.563 | 46.454 | 53.365 |
 | Capital invertido B, saldo final (M$) | 37.023 | 47.803 | 67.864 | 81.126 | 90.513 | 98.812 |
 | **ROIC A (neto de caja)** | 26,7 % | 48,0 % | 21,8 % | 13,4 % | 7,6 % | 5,5 % |
-| **ROIC B (bruto)** | 13,9 % | 25,4 % | 12,2 % | 7,5 % | 4,0 % | 2,9 % |
+| **ROIC B (bruto)** | 13,9 % | 25,4 % | 12,1 % | 7,5 % | 4,0 % | 2,9 % |
 | ROE (beneficio neto / patrimonio medio) | 18,3 % | 33,5 % | 27,9 % | 10,5 % | 4,9 % | 3,8 % |
 
 **Lectura.** El capital invertido sigue creciendo (patrimonio +99,7 % entre 31-dic-2022 y 30-sep-2026) mientras el NOPAT se ha dividido entre 3,9 desde su máximo de FY2022. Por cualquiera de las dos definiciones, el ROIC actual (3-6 %) es inferior al que justificaría por sí solo el negocio existente.
@@ -282,17 +283,19 @@ Todos coinciden con 01-negocio.md (ver los controles en `checks.csv`).
 
 ## 8. Calidad del dato y discrepancias
 
-### 8.1 Discrepancias frente a 01-negocio.md (Fase 1)
+### 8.1 Discrepancias frente a 01-negocio.md v1 (Fase 1)
 
-| # | Dato | 01-negocio.md | Dato primario de Fase 2 | Valoración |
+**Estado v3:** D1-D6 son discrepancias con **01 v1** y están **resueltas en 01 v2** (registro de cambios v2 de 01: 1.165, 13.014, caja y deuda a 30-sep-2026 con los 8.180 M$ como nota aparte, 45.447, PER marcado DESFASADO y 787 atribuible / 804 total). D7 también está incorporada en 01 v2. La tabla se conserva como histórico. Los controles de `checks.csv` siguen dando DISCREPANCIA porque comparan el dato primario con la fuente secundaria (S2, S11) o con otro concepto (P1 Item 1A), no con 01 v2.
+
+| # | Dato | 01-negocio.md v1 | Dato primario de Fase 2 | Valoración |
 |---|---|---|---|---|
-| D1 | SBC 3T 2026 | 1.170 M$ (S2, Electrek) | **1.165 M$** (P4, estado de flujos y reconciliación EBITDA) | Diferencia menor (−5 M$). S2 redondea o usa otra partida. Prevalece P4 |
-| D2 | Capex 9M 2026 | 13.010 M$ (S2) | **13.014 M$** (10-Q 3T 2026) | Redondeo de S2. Prevalece el 10-Q |
-| D3 | Deuda a 31-dic-2025 | "8.180 M$ de deuda principal" (P1, Item 1A) | **8.376 M$** de deuda y arrendamientos financieros contables (10-Q 3T 2026 y P4) | No es un error, sino **dos conceptos distintos**: principal nominal frente a valor contable que incluye arrendamientos financieros. Fase 1 los presenta como "deuda" sin matizar. Además, en §2 de 01-negocio.md compara caja a 30-sep-2026 (45.400) con deuda a 31-dic-2025: **fechas mezcladas**. A 30-sep-2026 la deuda contable es de 9.523 M$ |
-| D4 | Caja e inversiones 3T 2026 | 45.400 M$ | **45.447 M$** (10-Q: 17.853 de efectivo + 27.594 de inversiones a corto plazo) | Redondeo. Correcto en sustancia |
-| D5 | PER de ~327x (S11) | ~327x | Con el BPA GAAP TTM hasta 2T 2026 (1,08 $, P4) sale 328x. Con el BPA TTM hasta 3T 2026 (0,91 $), **390x** | El ~327x de S11 era previo a los resultados del 3T. Con el último BPA, el PER al mismo precio de 354,72 $ es ~390x. Fase 1 no está mal, pero el dato ya está **desfasado** |
-| D6 | "Beneficio neto GAAP 3T 2026: 787 M$" | 787 | 787 es el atribuible a comunes. El beneficio neto total es de 804 M$ (P4) | Etiqueta imprecisa, no error de cifra |
-| D7 | Cifras FY2025 marcadas como "solo secundaria" (S1) | Solo secundaria | **Confirmadas con fuente primaria** (9M 10-Q + 4T deck 8-K, cuadre al dólar) | Mejora de calidad: pueden dejar de marcarse como "solo secundaria" |
+| D1 | SBC 3T 2026 | 1.170 M$ (S2, Electrek) | **1.165 M$** (P4, estado de flujos y reconciliación EBITDA) | Diferencia menor (−5 M$). S2 redondea o usa otra partida. Prevalece P4. **Resuelto en 01 v2** (cifra de 01 v1) |
+| D2 | Capex 9M 2026 | 13.010 M$ (S2) | **13.014 M$** (10-Q 3T 2026) | Redondeo de S2. Prevalece el 10-Q. **Resuelto en 01 v2** (cifra de 01 v1) |
+| D3 | Deuda a 31-dic-2025 | "8.180 M$ de deuda principal" (P1, Item 1A) | **8.376 M$** de deuda y arrendamientos financieros contables (10-Q 3T 2026 y P4) | No es un error, sino **dos conceptos distintos**: principal nominal frente a valor contable que incluye arrendamientos financieros. Fase 1 los presenta como "deuda" sin matizar. Además, en §2 de 01-negocio.md compara caja a 30-sep-2026 (45.400) con deuda a 31-dic-2025: **fechas mezcladas**. A 30-sep-2026 la deuda contable es de 9.523 M$. **Resuelto en 01 v2** (cifra de 01 v1) |
+| D4 | Caja e inversiones 3T 2026 | 45.400 M$ | **45.447 M$** (10-Q: 17.853 de efectivo + 27.594 de inversiones a corto plazo) | Redondeo. Correcto en sustancia. **Resuelto en 01 v2** (cifra de 01 v1) |
+| D5 | PER de ~327x (S11) | ~327x | Con el BPA GAAP TTM hasta 2T 2026 (1,08 $, P4) sale 328x. Con el BPA TTM hasta 3T 2026 (0,91 $), **390x** | El ~327x de S11 era previo a los resultados del 3T. Con el último BPA, el PER al mismo precio de 354,72 $ es ~390x. Fase 1 no está mal, pero el dato ya está **desfasado**. **Resuelto en 01 v2** (cifra de 01 v1) |
+| D6 | "Beneficio neto GAAP 3T 2026: 787 M$" | 787 | 787 es el atribuible a comunes. El beneficio neto total es de 804 M$ (P4) | Etiqueta imprecisa, no error de cifra. **Resuelto en 01 v2** (cifra de 01 v1) |
+| D7 | Cifras FY2025 marcadas como "solo secundaria" (S1) | Solo secundaria | **Confirmadas con fuente primaria** (9M 10-Q + 4T deck 8-K, cuadre al dólar) | Mejora de calidad: pueden dejar de marcarse como "solo secundaria". **Resuelto en 01 v2** (cifra de 01 v1) |
 | D8 | Créditos FY2025: −28 % y 46 % del beneficio operativo | −28 % / 46 % | −27,9 % / 45,8 % | Coinciden (redondeo) |
 
 ### 8.2 Otras incidencias de calidad del dato
@@ -319,7 +322,8 @@ Todos coinciden con 01-negocio.md (ver los controles en `checks.csv`).
 5. Desglose del crecimiento de Servicios y otros (FSD, seguros, supercarga, usados).
 6. Desglose del circulante que explica la diferencia entre FCO y beneficio en 2026.
 7. (v2) Desglose de las 301 M de "stock-based awards" (286 M del ejercicio de 2018 + ~15 M de empleados es una INFERENCIA; el 10-Q no lo desglosa).
-8. (v2) Cancelación de las 96 M del CEO Interim Award 2025: solo fuente secundaria.
+8. (v2) Cancelación de las 96 M del CEO Interim Award 2025: solo fuente secundaria, que no da la cifra (v3). La cifra de 96 M sale del Form 4.
+9. (v3) Precio medio de TSLA en 1T26 que usa el método de tesorería de §5.1 (a): ~400 $ como supuesto, con un rango de 350-450 $.
 
 ---
 
@@ -344,3 +348,18 @@ Fecha: 2026-10-25. Origen: [05-veredicto.md](05-veredicto.md) §5, prioridad 4 (
 **Lo que no cambia:** ninguna cifra existente del CSV ni de las tablas §2-§7 de v1. Todas las filas de `ratios.csv` de v1 se mantienen con el mismo valor (se añaden 13 filas, de 81 a 94).
 
 **Pendiente para otras fases (no aplicado aquí):** Fase 3 debe sustituir `DA_TTM_APROX` (7.408) por 6.704 y revisar la línea `SH_DIL_MAX` (portada + 301) a la luz de §5.1. Fase 4 debe reformular W2.
+
+---
+
+## Registro de cambios v3
+
+Fecha: 2026-10-25. Origen: [05-veredicto-v2.md](05-veredicto-v2.md) §8, prioridad 1 (Fase 2), con §2.2, §4.1 ("Observación sobre la inferencia 286 + 15") y §5 (E1, E2). Archivos tocados: `scripts/fase2_ratios.py`, `data/ratios.csv`, `data/checks.csv`, el nuevo `data/tablas_02_redondeo.csv` y este documento. `data/tesla_financials.csv` no cambia. No hay fuentes nuevas, así que no se crea `fuentes/nuevas_fase2_v3.md`.
+
+| Punto del veredicto | Qué cambió |
+|---|---|
+| **(a)** % de las tablas calculados desde el valor completo, no desde `ratios.csv` a 4 decimales | El script genera `data/tablas_02_redondeo.csv` (% a 1 decimal, M$ a 0, redondeo mitad hacia arriba con `Decimal` sobre el valor completo) e imprime las celdas en las que re-redondear el CSV daría otra cifra. Corregidas las 6 celdas del veredicto: margen operativo TTM **3,4 → 3,3 %** (también en §0), créditos / BO FY24 39,1 → 39,0 %, margen neto FY21 10,2 → 10,3 %, crecimiento BO FY22 109,3 → 109,4 %, crecimiento de ingresos FY22 51,3 → 51,4 %, SBC / ingresos FY24 2,1 → 2,0 %. **Otros casos del mismo tipo que encontró el script:** ROIC B FY23 **12,2 → 12,1 %** (12,145 %), CAGR de automoción 10,2 → 10,1 % (§2) y crecimiento del FCF FY25 +73,6 → +73,5 % (§4). El crecimiento de la SBC FY22 (−26,4 %) no se cita en 02. Además, las filas % de `ratios.csv` pasan a 6 decimales, para que el ROIC B FY23 también salga bien a quien redondee desde el CSV. Excepción: `roic_A_neto_caja`, `margen_operativo_sin_creditos` y `crec_9M26_vs_9M25_ingresos_energia` siguen con 4, porque `fase3_dcf.py` las usa en cálculos y Fase 2 no debe cambiar sus resultados (comprobado: la salida de fase3 es idéntica salvo la línea informativa del ROIC B FY23, que pasa a 12,1 %). Se añaden 15 filas a `ratios.csv` (de 94 a 109) para cifras del texto: capex neto / ingresos (8,4 %), D&A aproximada +10,5 % / 704 M$, dilución legal +18,9 %, cuadres de §5.1 y método de tesorería. Ninguna fila de v2 cambia de valor. El script también fuerza la salida en UTF-8, porque en consolas Windows (cp1252) fallaba al imprimir "≈" y hacía caer `fase5v2_cifras.py` si se ejecutaba sin `PYTHONIOENCODING` |
+| **(b)** E1: §5.1 presentaba las 4.254 M y "03 §6.4" como vigentes | Ahora se presentan como **03 v1**, resuelto en 03 v2 (§3 y §6.5). Los "~7 %" y "~10 %" se sustituyen por cifras del script: 7,2 % y 10,7 % (filas `acc_portada_mas_301_sobre_fd` y `acc_diluida_media_sobre_fd`). Los VPA de 04 v1 se marcan como retirados |
+| **(c)** E2: D1-D6 de §8.1 y etiquetas de `checks.csv` | §8.1 lleva una nota de estado y cada fila D1-D7 dice "**Resuelto en 01 v2**". La columna pasa a llamarse "01-negocio.md v1". En `checks.csv`, los cuatro controles DISCREPANCIA que citaban 01 ahora dicen "S2 / 01 v1 (S2 Electrek)" (SBC y capex 9M), "P1 Item 1A / 01 v1" (deuda) y "S11 / 01 v1" (PER). **Discrepancia parcial con el veredicto, con evidencia del propio `checks.csv`:** de los 5 controles, el de capex FY2024 (11.339 frente a 11.342) compara con S1 Tabla 2.2 y nunca con 01, así que conserva su etiqueta. Al PER y a la deuda no les corresponde "S2" porque su fuente es S11 y P1. Los controles siguen en DISCREPANCIA (67 OK + 5) porque comparan con la fuente secundaria, no con 01 v2 |
+| **(d)** Frase de 1T26 y secundaria de la cancelación | §5.1 (a): por el método de tesorería, las 303,96 M de opciones de 2018 aportaban ~286,2 M a ~400 $ (283,7-288,2 M entre 350 y 450 $). Las 304 M de "awards" de 1T26 son ~286 M de Musk + ~17,8 M de empleados (15,8-20,3 M). El precio medio de 1T26 queda **SIN VERIFICAR** (§8.3, punto 9). §5.1 (c) y §8.3 (8): la cifra de 96 M sale del Form 4. La secundaria (Not a Tesla App) solo recoge la cancelación y **no da la cifra**: habla de un "$29 billion interim award" |
+
+**Cifras que cambian y que otras fases copian:** margen operativo TTM **3,4 % → 3,3 %** (03 §7 y 04 §3.2, según 05-veredicto-v2 §5). Las demás cifras corregidas no aparecen en 01, 03 ni 04, según el catálogo de `fase5v2_cifras.py` y una búsqueda en esos documentos. Las cifras de 02 que usa Fase 3 (importes, acciones totalmente diluidas 3.967,3 M, D&A 6.704 M$) no cambian.

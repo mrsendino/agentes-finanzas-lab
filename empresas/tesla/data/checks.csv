@@ -44,10 +44,10 @@ Q3-26: BB - opex = benef. operativo (P4),718.0,718,"8-K Ex.99.1 Q3 2026, acc. 00
 Q3-26: FCO - capex = FCF (P4),1531.0,1531,"8-K Ex.99.1 Q3 2026, acc. 0001628280-26-066738",0.0,OK
 "Q3-26 margen bruto vs 01-negocio.md (19,6 %)",0.1959,0.196,01-negocio.md,-0.0001,OK
 "Q3-26 margen operativo vs 01-negocio.md (2,6 %)",0.0256,0.026,01-negocio.md,-0.0004,OK
-Q3-26 SBC P4 (1.165) vs 01-negocio.md/S2 (1.170),1165.0,1170,01-negocio.md (S2 Electrek),-5.0,DISCREPANCIA
+"Q3-26 SBC P4 (1.165) vs S2 (1.170; citado en 01 v1, resuelto en 01 v2)",1165.0,1170,S2 / 01 v1 (S2 Electrek),-5.0,DISCREPANCIA
 Q3-26 I+D P4 (2.761) vs 01-negocio.md/S2 (2.760),2761.0,2760,01-negocio.md (S2 Electrek),1.0,OK
-Capex 9M2026 10-Q (13.014) vs 01-negocio.md/S2 (13.010),13014.0,13010,01-negocio.md (S2 Electrek),4.0,DISCREPANCIA
-"Deuda contable 31-dic-2025 (8.376) vs 'deuda principal' 01-negocio.md (8.180, P1 Item 1A)",8376.0,8180,01-negocio.md (P1 Item 1A),196.0,DISCREPANCIA
+"Capex 9M2026 10-Q (13.014) vs S2 (13.010; citado en 01 v1, resuelto en 01 v2)",13014.0,13010,S2 / 01 v1 (S2 Electrek),4.0,DISCREPANCIA
+"Deuda contable 31-dic-2025 (8.376) vs 'deuda principal' P1 Item 1A (8.180; otro concepto, 01 v2 lo separa)",8376.0,8180,P1 Item 1A / 01 v1,196.0,DISCREPANCIA
 Crec. ingresos Q3-26 vs Q3-25 (P4: 28.046 vs 28.095),-0.0017,0.0,01-negocio.md (≈0 %),-0.0017,OK
 "Crec. benef. operativo Q3-26 vs Q3-25 (718 vs 1.624, P4)",-0.5579,-0.56,01-negocio.md (−56 %),0.0021,OK
 "Crec. créditos Q3-26 vs Q3-25 (113 vs 417, P4)",-0.729,-0.73,01-negocio.md (−73 %),0.001,OK
@@ -55,7 +55,7 @@ Crec. ingresos Q3-26 vs Q3-25 (P4: 28.046 vs 28.095),-0.0017,0.0,01-negocio.md (
 "Crec. servicios Q3-26 vs Q3-25 (4.605 vs 3.475, P4)",0.3252,0.33,01-negocio.md (+33 %),-0.0048,OK
 Crec. benef. neto FY2025 vs FY2024,-0.465,-0.46,01-negocio.md (−46 %),-0.005,OK
 "PER GAAP a 354,72 $ con BPA TTM a Q2-26 (P4) vs ~327x (S11)",328.4444,327,01-negocio.md (S11),1.4444,OK
-"PER GAAP a 354,72 $ con BPA TTM a Q3-26 (P4) — tras resultados",389.8022,327,"01-negocio.md (S11, previo a resultados)",62.8022,DISCREPANCIA
+"PER GAAP a 354,72 $ con BPA TTM a Q3-26 (P4) — tras resultados (S11 desfasado; 01 v2 lo marca DESFASADO)",389.8022,327,S11 / 01 v1 (previo a resultados),62.8022,DISCREPANCIA
 D&A 9M2026 (10-Q) = 1T+2T+3T 2026 de P4 (1.590+1.619+1.852),5061.0,5061.0,"8-K Ex.99.1 Q3 2026, acc. 0001628280-26-066738",0.0,OK
 D&A TTM P4 = 4T25+1T26+2T26+3T26 (1.643+1.590+1.619+1.852),6704.0,6704.0,"8-K Ex.99.1 Q3 2026, acc. 0001628280-26-066738",0.0,OK
 "FY2021 BN atribuible (10-K FY2022) vs deck Q4-2021 (5,5 B$)",5519.0,5500,"8-K Ex.99.1 Q4 2021 Update, acc. 0001564590-22-002476 (texto, cifras en B$ redondeadas)",19.0,OK

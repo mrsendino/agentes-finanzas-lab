@@ -18,6 +18,18 @@ v2 (2026-10-25, ronda de correcciones de 05-veredicto.md §5 Fase 2):
   - Añade la descomposición de acciones (portada / básica / diluida / emitidas 9M26) con controles.
   - Añade contraste de FY2021 con el deck Q4-2021 (cifras redondeadas a 0,1 B$).
 
+v3 (2026-10-25, ronda de correcciones de 05-veredicto-v2.md §8 prioridad 1):
+  - (a) Nueva salida data/tablas_02_redondeo.csv: cada celda de ratios.csv redondeada para el documento
+    (% a 1 decimal, M USD a 0, resto a 1) con redondeo MITAD HACIA ARRIBA sobre el valor COMPLETO, no sobre
+    el valor de ratios.csv (4 decimales). ratios.csv conserva su formato (lo leen fase3 y fase5).
+    Se añaden filas para cifras citadas en el texto de 02 (capex neto / ingresos, sobrestimación de la
+    D&A aproximada, dilución legal 30-sep-25 -> 30-sep-26, cuadres de acciones de §5.1).
+  - (c) Etiquetas de los controles DISCREPANCIA: la referencia es S2 / S11 / P1 tal como la citaba 01 v1;
+    01 v2 ya adoptó la cifra primaria (02 §8.1).
+  - (d) Método de tesorería de las 303,96 M de opciones de 2018 antes del ejercicio (1T26), con
+    precio medio parametrizado (INFERENCIA; el precio medio de 1T26 no se ha verificado).
+  - stdout en UTF-8 para que el script no falle en consolas Windows (cp1252).
+
 Método ROIC (aproximación, declarada):
   NOPAT = beneficio operativo x (1 - 21 %)   [tipo federal EE. UU. normativo; se evita el tipo
           efectivo porque FY2023 incluye una liberación de provisión fiscal no recurrente]
@@ -29,11 +41,43 @@ Método ROIC (aproximación, declarada):
 """
 import csv
 import os
+import sys
+from decimal import Decimal, ROUND_HALF_UP
+
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+except (AttributeError, ValueError):
+    pass
 
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(BASE, "data", "tesla_financials.csv")
 OUT = os.path.join(BASE, "data", "ratios.csv")
 CHK = os.path.join(BASE, "data", "checks.csv")
+RND = os.path.join(BASE, "data", "tablas_02_redondeo.csv")
+
+# (v3) Precisión de las filas % en ratios.csv: 6 decimales (v1-v2: 4), para que quien redondee desde el CSV
+# a 1 decimal en % no haga doble redondeo (p. ej. ROIC B FY2023: 0,12145 -> 0,1215 -> 12,2 % en vez de 12,1 %).
+# Excepción: las filas que fase3_dcf.py usa en cálculos se mantienen a 4 decimales, para no cambiar los
+# resultados de Fase 3 desde Fase 2 (roic_A FY2024 entra en una sensibilidad del DCF).
+PCT_DEC = 6
+PCT_DEC_FASE3 = {"roic_A_neto_caja": 4, "margen_operativo_sin_creditos": 4,
+                 "crec_9M26_vs_9M25_ingresos_energia": 4}
+
+
+def half_up(x, d):
+    """Redondeo mitad hacia arriba (en valor absoluto) sobre el valor completo, vía Decimal(repr)."""
+    return float(Decimal(repr(x)).quantize(Decimal(1).scaleb(-d), rounding=ROUND_HALF_UP))
+
+
+def doc_value(v, unit):
+    """Valor tal como se escribe en 02: % a 1 decimal, M USD a 0, resto a 1 (todo desde el valor completo)."""
+    if v is None:
+        return None
+    if unit == "%":
+        return half_up(float(Decimal(repr(v)) * 100), 1)
+    if unit == "M USD":
+        return half_up(v, 0)
+    return half_up(v, 1)
 
 TAX_NORM = 0.21
 YEARS = ["FY2021", "FY2022", "FY2023", "FY2024", "FY2025", "TTM_Q3_2026"]
@@ -137,11 +181,11 @@ def main():
     chk("Q3-26: FCO - capex = FCF (P4)", float(q326["fco"] - q326["capex"]), q326["fcf"], P4)
     chk("Q3-26 margen bruto vs 01-negocio.md (19,6 %)", q326["bb"] / q326["ingresos"], 0.196, "01-negocio.md", tol=0.0005)
     chk("Q3-26 margen operativo vs 01-negocio.md (2,6 %)", q326["oi"] / q326["ingresos"], 0.026, "01-negocio.md", tol=0.0005)
-    chk("Q3-26 SBC P4 (1.165) vs 01-negocio.md/S2 (1.170)", float(q326["sbc"]), 1170, "01-negocio.md (S2 Electrek)")
+    chk("Q3-26 SBC P4 (1.165) vs S2 (1.170; citado en 01 v1, resuelto en 01 v2)", float(q326["sbc"]), 1170, "S2 / 01 v1 (S2 Electrek)")
     chk("Q3-26 I+D P4 (2.761) vs 01-negocio.md/S2 (2.760)", float(q326["rd"]), 2760, "01-negocio.md (S2 Electrek)")
-    chk("Capex 9M2026 10-Q (13.014) vs 01-negocio.md/S2 (13.010)", raw["capex"]["9M2026"], 13010, "01-negocio.md (S2 Electrek)")
-    chk("Deuda contable 31-dic-2025 (8.376) vs 'deuda principal' 01-negocio.md (8.180, P1 Item 1A)",
-        add(raw["deuda_corriente"]["FY2025"], raw["deuda_no_corriente"]["FY2025"]), 8180, "01-negocio.md (P1 Item 1A)")
+    chk("Capex 9M2026 10-Q (13.014) vs S2 (13.010; citado en 01 v1, resuelto en 01 v2)", raw["capex"]["9M2026"], 13010, "S2 / 01 v1 (S2 Electrek)")
+    chk("Deuda contable 31-dic-2025 (8.376) vs 'deuda principal' P1 Item 1A (8.180; otro concepto, 01 v2 lo separa)",
+        add(raw["deuda_corriente"]["FY2025"], raw["deuda_no_corriente"]["FY2025"]), 8180, "P1 Item 1A / 01 v1")
     chk("Crec. ingresos Q3-26 vs Q3-25 (P4: 28.046 vs 28.095)", 28046 / 28095 - 1, 0.0, "01-negocio.md (≈0 %)", tol=0.005)
     chk("Crec. benef. operativo Q3-26 vs Q3-25 (718 vs 1.624, P4)", 718 / 1624 - 1, -0.56, "01-negocio.md (−56 %)", tol=0.005)
     chk("Crec. créditos Q3-26 vs Q3-25 (113 vs 417, P4)", 113 / 417 - 1, -0.73, "01-negocio.md (−73 %)", tol=0.005)
@@ -152,7 +196,7 @@ def main():
     eps_ttm_q2 = 0.39 + 0.24 + 0.13 + 0.32   # BPA diluido GAAP Q3-25..Q2-26 (P4)
     eps_ttm_q3 = 0.24 + 0.13 + 0.32 + 0.22   # BPA diluido GAAP Q4-25..Q3-26 (P4)
     chk("PER GAAP a 354,72 $ con BPA TTM a Q2-26 (P4) vs ~327x (S11)", 354.72 / eps_ttm_q2, 327, "01-negocio.md (S11)", tol=3)
-    chk("PER GAAP a 354,72 $ con BPA TTM a Q3-26 (P4) — tras resultados", 354.72 / eps_ttm_q3, 327, "01-negocio.md (S11, previo a resultados)", tol=3)
+    chk("PER GAAP a 354,72 $ con BPA TTM a Q3-26 (P4) — tras resultados (S11 desfasado; 01 v2 lo marca DESFASADO)", 354.72 / eps_ttm_q3, 327, "S11 / 01 v1 (previo a resultados)", tol=3)
 
     # ---- 3b. (v2) D&A trimestral P4 y FY2021 frente al deck Q4-2021
     chk("D&A 9M2026 (10-Q) = 1T+2T+3T 2026 de P4 (1.590+1.619+1.852)", raw["dya_amortizacion_deterioro"]["9M2026"], 1590.0 + 1619 + 1852, P4)
@@ -299,17 +343,64 @@ def main():
     put("acc_doble_computo_portada_mas_301", "M acciones", {"TTM_Q3_2026": op2018_netas}, "INFERENCIA: parte de las 301 que ya está en la portada")
     put("acc_totalmente_diluidas_aprox", "M acciones", {"TTM_Q3_2026": SHR["portada_15oct26"] + SHR["awards_3T26"] - op2018_netas}, "portada + incentivos no emitidos (incluye las 423,7 M del CEO aún no ganadas)")
 
+    # (v3, punto d) Método de tesorería de las opciones de 2018 antes del ejercicio (1T26).
+    # awards 1T26 = 304 (10-Q 1T26: básica 3.234 + 304 = diluida 3.538). Precio de ejercicio 23,34 $ (Form 4).
+    # INFERENCIA: el precio medio de TSLA en 1T26 no se ha verificado; ~400 $ central, 350 / 450 $ como rango.
+    STRIKE_2018, AWARDS_1T26 = 23.34, 304.0
+    for px in (350.0, 400.0, 450.0):
+        tm = SHR["op2018_ejercidas"] * (1 - STRIKE_2018 / px)
+        put(f"acc_op2018_tesoreria_px{int(px)}", "M acciones", {"TTM_Q3_2026": tm},
+            f"INFERENCIA: 303,96 x (1 - 23,34 / {int(px)}) = acciones incrementales de las opciones 2018 por método de tesorería (1T26)")
+        put(f"acc_awards_1T26_resto_empleados_px{int(px)}", "M acciones", {"TTM_Q3_2026": AWARDS_1T26 - tm},
+            f"INFERENCIA: 304 (awards 1T26) - opciones 2018 por tesorería a {int(px)} $ = incentivos de empleados")
+
+    # (v3, punto a) Cifras citadas en el texto de 02 que antes no tenían fila propia
+    put("capex_neto_sobre_ingresos", "%", {y: div(sub(s["capex"][y], da[y]), rev[y]) for y in YEARS}, "(capex - D&A) / ingresos totales")
+    put("dya_aprox_3T_x4_sobre_real_ttm", "%", {"TTM_Q3_2026": div(1852.0 * 4, s["dya_amortizacion_deterioro"]["TTM_Q3_2026"]) - 1}, "D&A 3T26 x 4 (7.408) / D&A TTM real - 1")
+    put("dya_aprox_3T_x4_menos_real_ttm", "M USD", {"TTM_Q3_2026": 1852.0 * 4 - s["dya_amortizacion_deterioro"]["TTM_Q3_2026"]}, "D&A 3T26 x 4 - D&A TTM real")
+    put("var_acciones_balance_30sep25_30sep26", "%", {"TTM_Q3_2026": SHR["balance_30sep26"] / SHR["balance_30sep25"] - 1}, "acciones en circulación (balance) 30-sep-26 / 30-sep-25 - 1")
+    put("acc_portada_menos_basica_3T26", "M acciones", {"TTM_Q3_2026": SHR["portada_15oct26"] - SHR["basica_3T26"]}, "portada - básica media 3T26")
+    put("acc_emit_2T26_cuadre_sin_empleados", "M acciones", {"TTM_Q3_2026": op2018_netas - SHR["interim2025"]}, "netas 2018 - Interim 2025 cancelada (sin empleados)")
+    fd = SHR["portada_15oct26"] + SHR["awards_3T26"] - op2018_netas
+    put("acc_portada_mas_301_sobre_fd", "%", {"TTM_Q3_2026": (SHR["portada_15oct26"] + SHR["awards_3T26"]) / fd - 1}, "(portada + 301) / totalmente diluidas - 1 (línea de 03 v1)")
+    put("acc_diluida_media_sobre_fd", "%", {"TTM_Q3_2026": SHR["diluida_3T26"] / fd - 1}, "diluida media 3T26 / totalmente diluidas - 1 (base de los VPA de 04 v1)")
+    put("acc_totalmente_diluidas_contraste", "M acciones", {"TTM_Q3_2026": SHR["diluida_3T26"] + SHR["ceo2025_restringidas"]}, "diluida 3T26 + restringidas CEO 2025")
+
+    with open(RND, "w", newline="", encoding="utf-8") as f:
+        w = csv.DictWriter(f, fieldnames=["metrica", "unidad", "periodo", "valor_completo", "valor_documento", "regla"])
+        w.writeheader()
+        for r in out:
+            for y in YEARS:
+                v = r.get(y)
+                if isinstance(v, float):
+                    w.writerow({"metrica": r["metrica"], "unidad": r["unidad"], "periodo": y, "valor_completo": repr(v),
+                                "valor_documento": doc_value(v, r["unidad"]),
+                                "regla": {"%": "x100, 1 decimal", "M USD": "0 decimales"}.get(r["unidad"], "1 decimal")
+                                         + ", mitad hacia arriba sobre el valor completo"})
+
     with open(OUT, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=["metrica", "unidad"] + YEARS + ["metodo"])
         w.writeheader()
         for r in out:
-            w.writerow({k: (round(v, 4) if isinstance(v, float) and r["unidad"] == "%" else (round(v, 1) if isinstance(v, float) else v)) for k, v in r.items()})
+            pdec = PCT_DEC_FASE3.get(r["metrica"], PCT_DEC)
+            w.writerow({k: (round(v, pdec) if isinstance(v, float) and r["unidad"] == "%" else (round(v, 1) if isinstance(v, float) else v)) for k, v in r.items()})
     with open(CHK, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=["control", "calculado", "referencia", "fuente_referencia", "diferencia", "resultado"])
         w.writeheader()
         for c in checks:
             w.writerow({k: (round(v, 4) if isinstance(v, float) else v) for k, v in c.items()})
-    print(f"Escrito {OUT} ({len(out)} filas) y {CHK} ({len(checks)} controles)")
+    print(f"Escrito {OUT} ({len(out)} filas), {CHK} ({len(checks)} controles) y {RND}")
+    # (v3) Celdas en las que re-redondear ratios.csv (4 decimales) a 1 decimal daría otra cifra
+    print("Doble redondeo evitado (ratios.csv re-redondeado -> valor completo redondeado):")
+    for r in out:
+        if r["unidad"] != "%":
+            continue
+        for y in YEARS:
+            v = r.get(y)
+            if isinstance(v, float):
+                naive = float(f"{round(v, 4) * 100:.1f}")
+                if naive != doc_value(v, "%"):
+                    print(f"  {r['metrica']} [{y}]: {naive} -> {doc_value(v, '%')}  (completo {v * 100:.4f} %)")
     for c in checks:
         print(f"  [{c['resultado']}] {c['control']}: calc={c['calculado']} ref={c['referencia']} dif={c['diferencia']}")
 
