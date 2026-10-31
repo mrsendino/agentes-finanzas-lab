@@ -1,0 +1,138 @@
+bloque,concepto,valor,unidad,fuente
+FY2025,control: suma segmentos = total (ingresos y res. op.),OK,,script
+FY2025,peso en ingresos: Data Center,48.0,%,P1
+FY2025,peso en ingresos: Client,30.7,%,P1
+FY2025,peso en ingresos: Gaming,11.3,%,P1
+FY2025,peso en ingresos: Client and Gaming,42.0,%,P1
+FY2025,peso en ingresos: Embedded,10.0,%,P1
+FY2025,suma res. op. de segmentos (antes de All Other),7701,M$,P1
+FY2025,peso en res. op. de segmentos: Data Center,46.8,%,P1
+FY2025,margen operativo de segmento: Data Center,21.7,%,P1
+FY2025,peso en res. op. de segmentos: Client and Gaming,37.1,%,P1
+FY2025,margen operativo de segmento: Client and Gaming,19.6,%,P1
+FY2025,peso en res. op. de segmentos: Embedded,16.1,%,P1
+FY2025,margen operativo de segmento: Embedded,36.0,%,P1
+FY2025,margen operativo GAAP total,10.7,%,P1
+FY2025,All Other / ingresos,11.6,%,P1
+FY2024,control: suma segmentos = total (ingresos y res. op.),OK,,script
+FY2024,peso en ingresos: Data Center,48.8,%,P1
+FY2024,peso en ingresos: Client,27.4,%,P1
+FY2024,peso en ingresos: Gaming,10.1,%,P1
+FY2024,peso en ingresos: Client and Gaming,37.4,%,P1
+FY2024,peso en ingresos: Embedded,13.8,%,P1
+FY2024,suma res. op. de segmentos (antes de All Other),6090,M$,P1
+FY2024,peso en res. op. de segmentos: Data Center,57.2,%,P1
+FY2024,margen operativo de segmento: Data Center,27.7,%,P1
+FY2024,peso en res. op. de segmentos: Client and Gaming,19.5,%,P1
+FY2024,margen operativo de segmento: Client and Gaming,12.3,%,P1
+FY2024,peso en res. op. de segmentos: Embedded,23.3,%,P1
+FY2024,margen operativo de segmento: Embedded,39.9,%,P1
+FY2024,margen operativo GAAP total,7.4,%,P1
+FY2024,All Other / ingresos,16.2,%,P1
+Q2 2026,control: suma segmentos = total (ingresos y res. op.),OK,,script
+Q2 2026,peso en ingresos: Data Center,58.2,%,P2
+Q2 2026,peso en ingresos: Client,26.5,%,P2
+Q2 2026,peso en ingresos: Gaming,6.8,%,P2
+Q2 2026,peso en ingresos: Client and Gaming,33.3,%,P2
+Q2 2026,peso en ingresos: Embedded,8.5,%,P2
+Q2 2026,suma res. op. de segmentos (antes de All Other),3071,M$,P2
+Q2 2026,peso en res. op. de segmentos: Data Center,68.5,%,P2
+Q2 2026,margen operativo de segmento: Data Center,31.3,%,P2
+Q2 2026,peso en res. op. de segmentos: Client and Gaming,19.0,%,P2
+Q2 2026,margen operativo de segmento: Client and Gaming,15.2,%,P2
+Q2 2026,peso en res. op. de segmentos: Embedded,12.6,%,P2
+Q2 2026,margen operativo de segmento: Embedded,39.5,%,P2
+Q2 2026,margen operativo GAAP total,17.3,%,P2
+Q2 2026,All Other / ingresos,9.4,%,P2
+Q2 2025,control: suma segmentos = total (ingresos y res. op.),OK,,script
+Q2 2025,peso en ingresos: Data Center,42.2,%,P2
+Q2 2025,peso en ingresos: Client,32.5,%,P2
+Q2 2025,peso en ingresos: Gaming,14.6,%,P2
+Q2 2025,peso en ingresos: Client and Gaming,47.1,%,P2
+Q2 2025,peso en ingresos: Embedded,10.7,%,P2
+Q2 2025,suma res. op. de segmentos (antes de All Other),887,M$,P2
+Q2 2025,peso en res. op. de segmentos: Data Center,-17.5,%,P2
+Q2 2025,margen operativo de segmento: Data Center,-4.8,%,P2
+Q2 2025,peso en res. op. de segmentos: Client and Gaming,86.5,%,P2
+Q2 2025,margen operativo de segmento: Client and Gaming,21.2,%,P2
+Q2 2025,peso en res. op. de segmentos: Embedded,31.0,%,P2
+Q2 2025,margen operativo de segmento: Embedded,33.4,%,P2
+Q2 2025,margen operativo GAAP total,-1.7,%,P2
+Q2 2025,All Other / ingresos,13.3,%,P2
+H1 2026,control: suma segmentos = total (ingresos y res. op.),OK,,script
+H1 2026,peso en ingresos: Data Center,57.3,%,P2
+H1 2026,peso en ingresos: Client,27.3,%,P2
+H1 2026,peso en ingresos: Gaming,6.9,%,P2
+H1 2026,peso en ingresos: Client and Gaming,34.2,%,P2
+H1 2026,peso en ingresos: Embedded,8.5,%,P2
+H1 2026,suma res. op. de segmentos (antes de All Other),5583,M$,P2
+H1 2026,peso en res. op. de segmentos: Data Center,66.3,%,P2
+H1 2026,margen operativo de segmento: Data Center,29.6,%,P2
+H1 2026,peso en res. op. de segmentos: Client and Gaming,20.7,%,P2
+H1 2026,margen operativo de segmento: Client and Gaming,15.5,%,P2
+H1 2026,peso en res. op. de segmentos: Embedded,13.0,%,P2
+H1 2026,margen operativo de segmento: Embedded,39.1,%,P2
+H1 2026,margen operativo GAAP total,15.9,%,P2
+H1 2026,All Other / ingresos,9.7,%,P2
+Q1 2026 (derivado),ingresos: Data Center,5775,M$,P2 (H1 - Q2)
+Q1 2026 (derivado),ingresos: Client,2885,M$,P2 (H1 - Q2)
+Q1 2026 (derivado),ingresos: Gaming,720,M$,P2 (H1 - Q2)
+Q1 2026 (derivado),ingresos: Client and Gaming,3605,M$,P2 (H1 - Q2)
+Q1 2026 (derivado),ingresos: Embedded,873,M$,P2 (H1 - Q2)
+Q1 2026 (derivado),ingresos totales,10253,M$,P2 (H1 - Q2)
+Q1 2026 (derivado),res. op.: Data Center,1599,M$,P2 (H1 - Q2)
+Q1 2026 (derivado),res. op.: Client and Gaming,575,M$,P2 (H1 - Q2)
+Q1 2026 (derivado),res. op.: Embedded,338,M$,P2 (H1 - Q2)
+Q1 2026 (derivado),res. op.: All Other,-1036,M$,P2 (H1 - Q2)
+Crecimiento,FY2025 vs FY2024: Data Center,32.2,%,P1
+Crecimiento,Q2 2026 vs Q2 2025: Data Center,107.3,%,P2
+Crecimiento,Q2 2026 vs Q1 2026: Data Center,16.3,%,P2
+Crecimiento,FY2025 vs FY2024: Client,50.8,%,P1
+Crecimiento,Q2 2026 vs Q2 2025: Client,22.5,%,P2
+Crecimiento,Q2 2026 vs Q1 2026: Client,6.1,%,P2
+Crecimiento,FY2025 vs FY2024: Gaming,50.7,%,P1
+Crecimiento,Q2 2026 vs Q2 2025: Gaming,-30.6,%,P2
+Crecimiento,Q2 2026 vs Q1 2026: Gaming,8.2,%,P2
+Crecimiento,FY2025 vs FY2024: Client and Gaming,50.8,%,P1
+Crecimiento,Q2 2026 vs Q2 2025: Client and Gaming,6.1,%,P2
+Crecimiento,Q2 2026 vs Q1 2026: Client and Gaming,6.5,%,P2
+Crecimiento,FY2025 vs FY2024: Embedded,-2.9,%,P1
+Crecimiento,Q2 2026 vs Q2 2025: Embedded,18.6,%,P2
+Crecimiento,Q2 2026 vs Q1 2026: Embedded,11.9,%,P2
+Crecimiento,FY2025 vs FY2024: total,34.3,%,P1
+Crecimiento,Q2 2026 vs Q2 2025: total,50.1,%,P2
+Geografía FY2025,peso en ingresos: Estados Unidos,32.8,%,P1
+Geografía FY2025,peso en ingresos: China (incl. Hong Kong),22.4,%,P1
+Geografía FY2025,peso en ingresos: Taiwán,15.0,%,P1
+Geografía FY2025,peso en ingresos: Singapur,12.4,%,P1
+Geografía FY2025,peso en ingresos: Otras regiones,17.5,%,P1
+GAAP vs no-GAAP,FY2025 amortización intangibles / res. op. GAAP,61.0,%,P1
+GAAP vs no-GAAP,FY2025 SBC / ingresos,4.7,%,P1
+GAAP vs no-GAAP,FY2025 res. op. no-GAAP - GAAP,4074,M$,"P1, P5"
+GAAP vs no-GAAP,FY2025 res. op. no-GAAP / GAAP,2.1,x,"P1, P5"
+GAAP vs no-GAAP,FY2025 beneficio neto no-GAAP - GAAP,2496,M$,"P1, P5"
+GAAP vs no-GAAP,Q2 2026 res. op. no-GAAP - GAAP,1104,M$,"P2, P6"
+GAAP vs no-GAAP,Q2 2026 SBC / ingresos,4.4,%,P2
+GAAP vs no-GAAP,Q2 2026 amortización / ingresos,4.7,%,P2
+Balance,FY2025 (fondo de comercio + intangibles) / activo total,54.4,%,P1
+Balance,Q2 2026 (fondo de comercio + intangibles) / activo total,48.7,%,P2
+Balance,Compromisos incondicionales: Q2 2026 / FY2025,2.48,x,"P1, P2"
+Caja,FY2025 FCF aprox. (CFO continuadas - capex continuadas),5519,M$,P1
+Caja,H1 2026 FCF aprox. (CFO - capex),4124,M$,P2
+Dilución,FY2025 recompras programa / SBC,0.8,x,P1
+Dilución,H1 2026 recompras programa / SBC,0.22,x,P2
+Dilución,Acciones en circulación: var. FY2025 vs FY2024,0.49,%,P1
+Warrants,acciones máximas de warrants OpenAI + Meta,320.0,M acc.,"P2, P7, P8"
+Warrants,warrants / acciones en circulación (29-jul-2026),19.6,%,P2
+Warrants,warrants / acciones tras ejercicio total (dilución),16.4,%,P2
+Warrants,un warrant (160 M) / acciones en circulación,9.8,%,P2
+Competidores,Ingresos Nvidia FY2026 / ingresos AMD FY2025,6.23,x,"P10, P1"
+Competidores,Ingresos Intel FY2025 / ingresos AMD FY2025,1.53,x,"P11, P1"
+Objetivos,BPA objetivo (>20 $) / BPA no-GAAP FY2025,4.8,x,"P17, P5"
+Objetivos,BPA objetivo (>20 $) / BPA GAAP FY2025,7.55,x,"P17, P1"
+Objetivos,Guía Q3 2026 (punto medio) vs Q3 2025,40.6,%,"P6, P5"
+Objetivos,"Ingresos FY2025 x 1,35^3 (objetivo >35% CAGR, 3 años)",85225,M$,"P17, P1"
+Objetivos,"Ingresos FY2025 x 1,35^5 (objetivo >35% CAGR, 5 años)",155322,M$,"P17, P1"
+Caja,FY2025 capex / ingresos,2.8,%,P1
+Q2 2026,ingresos fuera de Data Center (Client and Gaming + Embedded),4818,M$,P2
+Q2 2026,"ingresos anualizados (Q2 x 4, orientativo)",46144,M$,P2
