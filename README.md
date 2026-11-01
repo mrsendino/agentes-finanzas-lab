@@ -10,7 +10,9 @@ audita el resultado y devuelve el trabajo a la fase responsable.
 
 | Empresa | Estado | Último veredicto |
 |---|---|---|
-| [Tesla (TSLA)](empresas/tesla/docs) | v2 | NECESITA TRABAJO (menor), nota B+ |
+| [Tesla (TSLA)](empresas/tesla/docs) | v4, completo | APTO, nota A |
+| [SpaceX (SPCX)](empresas/spacex/docs) | v1, fases 1-4 | Pendiente de fase 5 (Reality Checker) |
+| [AMD (AMD)](empresas/amd/docs) | v1, fase 1 | Pendiente de fases 2-5 |
 
 ## Cómo funciona
 
