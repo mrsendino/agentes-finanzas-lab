@@ -1,0 +1,15 @@
+# Fuentes nuevas — Fase 4 (Tesis), v1
+
+Fecha de consulta: **2026-10-28**. Complementa a [`fuentes.md`](fuentes.md), [`nuevas_fase2_v1.md`](nuevas_fase2_v1.md) y [`nuevas_fase3_v1.md`](nuevas_fase3_v1.md), que no se modifican. Clasificación: **[P]** = primaria (SEC), **[M]** = dato de mercado, **[S]** = secundaria.
+
+La Fase 4 **no ha leído documentos SEC nuevos**. Todas las cifras históricas vienen de la Fase 2 (`data/spacex_financials.csv`, `data/ratios.csv`) o de la Fase 1 (`docs/01-negocio.md`), y todas las cifras del modelo, de `scripts/fase3_dcf.py`, que `scripts/fase4_tesis.py` importa. La única fuente nueva es una secundaria buscada para intentar verificar la guía de la call del 3T26 (punto pendiente de la Fase 3).
+
+| ID | Dato usado en 04 | Documento | URL | Fecha del dato | Tipo | Acceso |
+|---|---|---|---|---|---|---|
+| S9 | Guía de la call del 3T26: capex del 4T26 de 35.000-40.000 M$; ingresos del 1T27 de 33.000-37.000 M$; objetivo reafirmado de **100.000 M$ de ingresos anualizados a fin de 2026, medidos con los ingresos de diciembre**; ~2 GW a fin de octubre, 2,5-3 GW a fin de 2026 y "al menos 13 GW" a fin de 2027 (atribuido a Musk); Flight 15 previsto "next month" y vuelos semanales de Starship en el 1S27 (Musk); comités especiales de SpaceX y Tesla sin acuerdo de términos (Musk). No menciona a Customer B ni a Anthropic | MarketBeat, "Transcript: What SpaceX (SPCX) said on its Q3 earnings call" (resumen de la call, **no es una transcripción literal**) | https://marketbeat.com/instant-alerts/transcript-what-spacex-spcx-said-on-its-q3-earnings-call-2026-10-20 | 20-oct-2026 | S | Accesible (WebFetch). Coincide con S7 en capex e ingresos. Las cifras de capex, ingresos y del objetivo de 100.000 M$ no se atribuyen a ningún directivo concreto |
+
+**Resultado de la verificación de la guía (punto pendiente de la Fase 3).** Con S7, S8 y S9 hay ya varias fuentes secundarias independientes que coinciden en el capex del 4T26 (35.000-40.000 M$) y en los ingresos del 1T27 (33.000-37.000 M$). **Sigue SIN VERIFICAR** contra fuente primaria: no se ha encontrado la transcripción literal (la búsqueda web del 28-oct-2026 no devolvió ninguna en ir.spacex.com) y el 8-K P5 no contiene guía numérica (comprobado por la Fase 3).
+
+**Fuentes intentadas sin éxito:** transcripción oficial de la call del 3T26 en ir.spacex.com (no localizada por búsqueda web; no se intentó acceder directamente a la web del emisor).
+
+**Datos de fases anteriores usados en 04 que no están en los CSV** (con su fuente original, vía Fase 1): ARPU de consumo 83 / 69 / 67 $ al mes en 3T25 / 3T26 / 9M26 y 91 / 81 $ en FY2024 / FY2025 (P3 y P2, MD&A Key Business Metrics; 01 §1.1-1.2); suscriptores de consumo 7,2 y 13,6 M (P3; 01 §1.2); Customer A 16,6 % y Customer B 34,5 % de los ingresos del 3T26 (P3 Note 3; 01 §4.3); contrato de 1.250 M$/mes hasta mayo de 2029 rescindible con 90 días (P2 p. 147; 01 §1.4); voto de Musk 82,4 % (P2 portada) y ≈86,1 % (estimación de 01 §4.1, SIN VERIFICAR); lock-up de Musk de 366 días (P2; 01 §6.1); comité especial para una posible combinación con Tesla (P3 MD&A; 01 §4.2); apertura del 12-jun-2026 a 150,00 $ (M1, vía Fase 3).
