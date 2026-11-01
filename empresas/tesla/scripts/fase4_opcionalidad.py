@@ -8,6 +8,11 @@ v2.1 (2026-10-25): sincronización con 02 v2 (§5.1, descomposición de acciones
 (scripts/fase3_dcf.py) se importa AL PRINCIPIO, en una COPIA TEMPORAL de scripts/ y data/, y de él salen los valores
 DCF por escenario (antes estaban copiados a mano de 03 v1), las acciones totalmente diluidas y las mediciones de §13.
 No escribe nada en data/ del proyecto.
+v3 (2026-10-25): sincronización con 03 v3 (beta de regresión 1,84 -> WACC inicial 11,55 %). Las tasas WACC0 y WACC_T se
+toman del modelo importado (antes WACC0 = 0,1160 estaba copiado a mano de 03 v2). Nueva §14: imprime cada cifra que
+04 copia, redondeada UNA sola vez (mitad hacia arriba, Decimal) desde el valor completo y con el formato del documento.
+v4 (2026-10-25): M-v3-1 de 05-veredicto-v3.md. ROIC A TTM a precisión completa (antes 0.055 a mano) y las demás cifras
+de 02/03 (precio, caja neta, ingresos, EBIT, créditos, BN, SBC, FCF, plan CEO, energía FY25) leídas de ratios.csv / del modelo.
 Convenciones:
   * Cifras en M$ salvo que se indique.
   * DATO = cifra con fuente (ID entre corchetes, ver fuentes/fuentes.md).
@@ -21,9 +26,16 @@ import math
 import os
 import shutil
 import tempfile
+from decimal import Decimal, ROUND_HALF_UP
 
 def pr(*a):
     print(*a)
+
+def fmt(x, d=1, pct=False):
+    """Redondeo único mitad hacia arriba sobre el valor completo; formato del documento (miles '.', decimales ',')."""
+    v = Decimal(repr(x * 100 if pct else x)).quantize(Decimal(1).scaleb(-d), rounding=ROUND_HALF_UP)
+    s = f"{abs(v):,.{d}f}".replace(",", "_").replace(".", ",").replace("_", ".")
+    return ("−" if v < 0 else "") + s
 
 def h(t):
     print("\n" + "=" * 100 + "\n" + t + "\n" + "=" * 100)
@@ -41,29 +53,48 @@ with contextlib.redirect_stdout(io.StringIO()):
     _spec.loader.exec_module(f3)          # ejecuta fase3 en la copia temporal (su Excel se escribe allí)
 shutil.rmtree(_tmp, ignore_errors=True)
 
-PRICE = 372.22                      # 03 §1 (M1)
-SH_COVER = 3952.757946              # 10-Q 3T26 portada (P2/M3)
+# v4 (M-v3-1): las cifras de 02 y 03 ya no se copian a mano; se leen de data/ratios.csv (vía f3.r, que lo carga del
+# modelo importado) o del propio modelo de Fase 3. Los asserts comprueban que coinciden con los valores de v3.
+PRICE = f3.PRICE                    # 03 §1 (M1): 372,22
+SH_COVER = 3952.757946              # 10-Q 3T26 portada (P2/M3); se comprueba contra 03 abajo
 SH_DIL_3T = 3541.0                  # P2
 SH_BAS_3T = 3240.0                  # P2
-CEO_AWARD_SH = 423.7                # 02 §5.1 (Form 4 jun-2026: 423.743.904 restringidas del plan CEO 2025)
-EX2018_NET_SH = 286.43              # 02 §5.1 (Form 4 16-jun-2026: 303,96 ejercidas - 17,53 retenidas)
+CEO_AWARD_SH = f3.r("acc_restringidas_ceo2025")   # 02 §5.1 (Form 4 jun-2026: 423.743.904 restringidas del plan CEO 2025)
+EX2018_NET_SH = 286.43              # Form 4 16-jun-2026: 303,96 ejercidas - 17,53 retenidas (02 §5.1 lo da a 1 decimal)
+assert fmt(EX2018_NET_SH, 1) == fmt(f3.r("acc_netas_ejercicio_2018"), 1), "ejercicio 2018 neto distinto de 02 §5.1"
 SH_FD = f3.SH_FD                    # 03 v2 / 02 §5.1: totalmente diluidas aprox. (portada + ~15 M de empleados)
 assert abs(SH_COVER - f3.SH) < 1e-6, "acciones de portada distintas de las de 03"
 MCAP = PRICE * SH_COVER
-NETCASH = 35924.0                   # 02 §5
-REV_TTM = 103570.0                  # 02 §2
-EBIT_TTM = 3466.0                   # 02 §3
-CRED_TTM = 1181.0                   # 02 §2
-NI_TTM = 3218.0                     # 02 §3 (atribuible a comunes)
-SBC_TTM = 4300.0                    # 02 §4
-SBC_FY24 = 1999.0                   # 02 §4
-FCF_TTM = 3303.0                    # 02 §4
-ROIC_A_TTM = 0.055                  # 02 §6
-WACC0 = 0.1160                      # 03 §1.1
-WACC_T = 0.0979                     # 03 §1.1
+NETCASH = f3.r("caja_neta")                       # 02 §5 (ratios.csv)
+REV_TTM = f3.r("ingresos_totales")                # 02 §2
+EBIT_TTM = f3.r("beneficio_operativo")            # 02 §3
+CRED_TTM = f3.r("creditos_regulatorios")          # 02 §2
+NI_TTM = f3.r("beneficio_neto_atrib_comunes")     # 02 §3 (atribuible a comunes)
+SBC_TTM = f3.r("sbc")                             # 02 §4
+SBC_FY24 = f3.r("sbc", "FY2024")                  # 02 §4 (ratios.csv, FY2024)
+FCF_TTM = f3.r("fcf")                             # 02 §4
+_v3 = {"PRICE": (PRICE, 372.22), "CEO": (CEO_AWARD_SH, 423.7), "NETCASH": (NETCASH, 35924.0), "REV": (REV_TTM, 103570.0),
+       "EBIT": (EBIT_TTM, 3466.0), "CRED": (CRED_TTM, 1181.0), "NI": (NI_TTM, 3218.0), "SBC": (SBC_TTM, 4300.0), "FCF": (FCF_TTM, 3303.0), "SBC24": (SBC_FY24, 1999.0)}
+for _k, (_a, _b) in _v3.items():
+    assert abs(_a - _b) < 1e-9, f"{_k}: {_a} distinto del valor de v3 {_b}"
+
+# ROIC A TTM a precisión completa (M-v3-1; v3: ROIC_A_TTM = 0.055 copiado a mano de 02 §6 a un decimal).
+# Misma fórmula que fase2_ratios.py: NOPAT (beneficio operativo x (1 - 0,21)) / capital invertido A medio
+# (saldo 30-sep-2026 de ratios.csv y saldo 30-sep-2025 de tesla_financials.csv). ratios.csv guarda el ratio a 4 decimales.
+_s2 = importlib.util.spec_from_file_location("f2", os.path.join(BASE, "scripts", "fase2_ratios.py"))
+f2 = importlib.util.module_from_spec(_s2)
+_s2.loader.exec_module(f2)          # solo define funciones y constantes (main() va bajo __main__); no escribe nada
+_raw = f2.load()
+_ic_open = (_raw["patrimonio_neto_accionistas"]["9M2025"] + _raw["deuda_corriente"]["9M2025"]
+            + _raw["deuda_no_corriente"]["9M2025"] - _raw["caja_y_inversiones_cp"]["9M2025"])
+_ic_close = f3.r("capital_invertido_A_neto_caja")
+ROIC_A_TTM = EBIT_TTM * (1 - f2.TAX_NORM) / ((_ic_close + _ic_open) / 2)   # 02 §6
+assert round(ROIC_A_TTM, 4) == f3.r("roic_A_neto_caja"), "ROIC A TTM distinto de ratios.csv"
+WACC0 = f3.WACC0                    # 03 v3 §1.1 (11,55 %; v2: 0,1160 copiado a mano)
+WACC_T = f3.WACC_T                  # 03 v3 §1.1 (9,79 %)
 
 EQ_DCF_V1 = {"bajista": 40940.0, "base": 96964.0, "alcista": 216931.0}   # 03 v1 §3 (solo para el registro de cambios)
-EQ_DCF = {k: f3.RES[k]["eq"] for k in ("bajista", "base", "alcista")}       # 03 v2 §3, desde el modelo importado
+EQ_DCF = {k: f3.RES[k]["eq"] for k in ("bajista", "base", "alcista")}       # 03 v3 §3, desde el modelo importado
 VPS_DCF = {k: v / SH_COVER for k, v in EQ_DCF.items()}
 VPS_FD = {k: v / SH_FD for k, v in EQ_DCF.items()}
 
@@ -83,7 +114,8 @@ FSD_ARR_ANALYST = 1000.0            # ~1.000 M$: estimación de un analista que 
 # Energía (P4/P6): despliegues GWh
 STOR_FY25 = 46.7
 STOR_Q = [12.5, 14.2, 8.8, 13.5, 13.7]  # 3T25..3T26
-REV_ENERGY_FY25 = 12771.0
+REV_ENERGY_FY25 = f3.r("ingresos_energia", "FY2025")   # 02 (ratios.csv, FY2025); v4: antes 12771.0 a mano
+assert REV_ENERGY_FY25 == 12771.0
 
 # Comparables robotaxi
 WAYMO_RIDES_WEEK = 500_000          # abr-2026, Alphabet 1T26 vía T4 (solo secundaria)
@@ -114,7 +146,7 @@ pr(f"    03 v2 usa totalmente diluidas = {SH_FD:,.1f} M (portada + {SH_FD - SH_C
 SH_EX_AWARD = SH_COVER - CEO_AWARD_SH
 pr(f"    Denominador de los VPA 'corregidos' de 04 v1 (portada - plan CEO = {SH_EX_AWARD:,.1f} M): {SH_EX_AWARD / SH_FD - 1:+.1%} frente a las "
    f"totalmente diluidas (02 §5.1: ~-10 % medido sobre la media diluida {SH_DIL_3T:,.0f}: {SH_DIL_3T / SH_FD - 1:+.1%}) -> INFRACONTABAN acciones")
-pr("VPA por escenario con el modelo de 03 v2:")
+pr("VPA por escenario con el modelo de 03 (v3):")
 for k in EQ_DCF:
     pr(f"  VPA {k:8s}: portada {VPS_DCF[k]:6.2f} $ | totalmente diluidas {VPS_FD[k]:6.2f} $ "
        f"| [03 v1: portada {EQ_DCF_V1[k] / SH_COVER:6.2f} $ ; portada + 301 {EQ_DCF_V1[k] / sh_v1_line:6.2f} $ ; "
@@ -135,7 +167,7 @@ m_ex = (EBIT_TTM - CRED_TTM) / (REV_TTM - CRED_TTM)
 m_ex_adj = (EBIT_TTM - CRED_TTM + d_sbc) / (REV_TTM - CRED_TTM)
 pr(f"SBC TTM - SBC FY24 = {d_sbc:,.0f} M$ (coincide con el plan CEO 2025, P4)")
 pr(f"Margen TTM sin créditos: {m_ex:.2%} | añadiendo de vuelta el exceso de SBC: {m_ex_adj:.2%}")
-pr(f"Lectura: el punto de partida del DCF ({f3.M_EX0:.2%}, 03 v2) incluye costes ligados a la opcionalidad cuyos ingresos el modelo pone a 0.")
+pr(f"Lectura: el punto de partida del DCF ({f3.M_EX0:.2%}, 03 v3) incluye costes ligados a la opcionalidad cuyos ingresos el modelo pone a 0.")
 
 h("3. ¿Cuánto EBIT tendría que generar la opcionalidad en el año 10? (orden de magnitud)")
 pr("Método: brecha de valor G (03 §5) = VP de la opcionalidad. Valor en año 10 = múltiplo x NOPAT_10.")
@@ -280,9 +312,9 @@ h("12. Umbral de la señal A1")
 q_growth = (50 / RT_MILES_CUM) ** (1 / 5)
 pr(f"De {RT_MILES_CUM} M a 50 M millas acumuladas en 5 trimestres (3T26->4T27): crecimiento trimestral necesario {q_growth:.2f}x")
 
-h("13. Controles medidos con el modelo de Fase 3 (W3 / §4.1.2, W9 / §4.1.3, asimetría §4.1.1) — v2.1, modelo de 03 v2")
+h("13. Controles medidos con el modelo de Fase 3 (W3 / §4.1.2, W9 / §4.1.3, asimetría §4.1.1) — v3, modelo de 03 v3")
 b0 = f3.run_dcf(f3.SCEN["base"])
-pr(f"Reproducción del caso base de 03 v2: VPA {b0['vps']:.2f} $ (03 v2: 24,61) | WACC0 {f3.WACC0:.2%} | WACC_T {f3.WACC_T:.2%}")
+pr(f"Reproducción del caso base de 03 v3: VPA {b0['vps']:.2f} $ (03 v3: 24,65) | WACC0 {f3.WACC0:.2%} | WACC_T {f3.WACC_T:.2%}")
 assert abs(b0["vps"] - VPS_DCF["base"]) < 1e-9
 
 # W3 / §4.1.2: capex implícito del año 1
@@ -303,8 +335,8 @@ pr(f"    VPA base con WACC terminal sin cambios: {v_sec:.2f} $ ({v_sec - b0['vps
 pr(f"    VPA base desplazando también el WACC terminal (como la tabla 4.1 de 03): {v_sec_shift:.2f} $ ({v_sec_shift - b0['vps']:+.2f} $)")
 _ig = f3.G_GRID.index(0.03)
 _v116, _v106 = f3.SENS[f3.W_GRID.index(round(f3.WACC0, 4))][_ig], f3.SENS[f3.W_GRID.index(round(f3.WACC0 - 0.01, 4))][_ig]
-pr(f"    Interpolación lineal de la tabla 4.1 de 03 v2 (método de 05 §3.3): {_v116 + (_v106 - _v116) * (f3.WACC0 - w0_sec) / 0.01:.1f} $")
-pr(f"    Contraste con 03 v2 §4.3: {f3.W9_15:.2f} $ / {f3.W9_SHIFT:.2f} $")
+pr(f"    Interpolación lineal de la tabla 4.1 de 03 v3 (método de 05 §3.3): {_v116 + (_v106 - _v116) * (f3.WACC0 - w0_sec) / 0.01:.1f} $")
+pr(f"    Contraste con 03 v3 §4.3: {f3.W9_15:.2f} $ / {f3.W9_SHIFT:.2f} $")
 
 # §4.1.1: sensibilidad del margen de partida (no es corrección: la SBC es un coste real)
 m0_03 = f3.M_EX0
@@ -318,7 +350,7 @@ for lab, m0 in (("+ exceso de SBC sobre FY24", m0_adj_sbc), ("+ I+D incremental 
     pr(f"§4.1.1 sensibilidad: margen de partida {m0_03:.2%} -> {m0:.2%} ({lab}): VPA base {v:.2f} $ ({v - b0['vps']:+.2f}) ; "
        f"junto con beta sectorial {v2:.2f} $ ({v2 - b0['vps']:+.2f})")
 f3.M_EX0 = m0_03
-pr(f"    Contraste con 03 v2 §6.3 (script §9 c): " + " | ".join(f"{v:.2f} $" for _, _, _, v in f3.ASYM_RES[1:3]))
+pr(f"    Contraste con 03 v3 §6.3 (script §9 c): " + " | ".join(f"{v:.2f} $" for _, _, _, v in f3.ASYM_RES[1:3]))
 SPACEX_FV = 2002.0 + 863.0   # P2: compra + plusvalía no realizada 9M26 (inferencia del valor contable)
 DIGITAL = 962.0              # P2
 pr(f"W8: SpaceX (~{SPACEX_FV:,.0f}) + activos digitales ({DIGITAL:,.0f}) fuera de la caja neta = {(SPACEX_FV + DIGITAL) / SH_COVER:.2f} $/acción")
@@ -329,3 +361,56 @@ up_hi = f3.run_dcf(f3.SCEN["base"], w0=w0_sec, wt=f3.WACC_T + (w0_sec - f3.WACC0
 f3.M_EX0 = m0_03
 pr(f"Ajuste máximo medido hacia arriba (§4.1: beta sectorial + margen de partida sin I+D incremental + W8): VPA base {up_lo:.2f} - {up_hi:.2f} $ "
    f"({up_lo - b0["vps"]:+.2f} a {up_hi - b0["vps"]:+.2f} $) ; el capex (W3) ya no suma")
+
+h("14. Cifras que cita 04-tesis.md (v3): redondeo ÚNICO mitad hacia arriba sobre el valor completo, formato del documento")
+pr("Copiar al documento SOLO desde esta sección (miles con '.', decimales con ','). Nunca re-redondear una cifra de arriba.")
+SENS_EBIT = {(mult, yr): GAP["base"] * (1 + WACC_T) ** yr / mult / 0.79 for mult, yr in ((40, 10), (30, 7), (40, 7))}
+cifras = [
+    ("WACC inicial (03) / terminal", f"{fmt(WACC0, 2, True)} % / {fmt(WACC_T, 2, True)} %"),
+    ("ROIC A TTM - WACC inicial (pp)", f"{fmt(ROIC_A_TTM - WACC0, 1, True)} pp"),
+    ("Beta de regresión / inicial / sectorial (03)", f"{fmt(f3.BETA_REG, 2)} / {fmt(f3.BETA0, 2)} / {fmt(f3.BETA_BU, 2)}"),
+    ("VPA DCF portada bajista / base / alcista (2 dec.)", " / ".join(fmt(VPS_DCF[k], 2) for k in EQ_DCF) + " $"),
+    ("VPA DCF portada (1 dec.)", " / ".join(fmt(VPS_DCF[k], 1) for k in EQ_DCF) + " $"),
+    ("VPA DCF totalmente diluidas (2 dec.)", " / ".join(fmt(VPS_FD[k], 2) for k in EQ_DCF) + " $"),
+    ("VPA DCF totalmente diluidas (1 dec.)", " / ".join(fmt(VPS_FD[k], 1) for k in EQ_DCF) + " $"),
+    ("Negocio reportado (0 dec.)", f"{fmt(VPS_DCF['bajista'], 0)}-{fmt(VPS_DCF['alcista'], 0)} $"),
+    ("Opcionalidad / precio (base)", f"{fmt(GAP['base'] / MCAP, 1, True)} % ; {fmt(GAP['base'] / 1e6, 2)} billones $"),
+    ("Opcionalidad por acción alcista-bajista", f"{fmt(GAP['alcista'] / SH_COVER, 1)}-{fmt(GAP['bajista'] / SH_COVER, 1)} $"),
+    ("EBIT_10 necesario: rango", f"{fmt(EBIT_REQ_LO, 0)}-{fmt(EBIT_REQ_HI, 0)} M$ ({fmt(EBIT_REQ_LO / EBIT_TTM, 0)}x-{fmt(EBIT_REQ_HI / EBIT_TTM, 0)}x EBIT TTM)"),
+    ("EBIT_10 necesario: central", f"{fmt(EBIT_REQ_MID, 0)} M$ ({fmt(EBIT_REQ_MID / EBIT_TTM, 0)}x EBIT TTM)"),
+    ("Sensibilidad 40x año 10 / 30x año 7 / 40x año 7", " / ".join(fmt(v, 0) for v in SENS_EBIT.values()) + " M$"),
+]
+for n, e in COMBO_EBIT.items():
+    pv_lo, pv_hi = PV_SUCCESS[(n, WACC0)], PV_SUCCESS[(n, WACC_T)]
+    cifras.append((f"Combinación {n}: EBIT ; % central ; VP ; $/acc ; prob. implícita",
+                   f"{fmt(e, 0)} M$ ; {fmt(e / EBIT_REQ_MID, 0, True)} % ; {fmt(pv_lo, 0)}-{fmt(pv_hi, 0)} M$ ; "
+                   f"{fmt(pv_lo / SH_COVER, 0)}-{fmt(pv_hi / SH_COVER, 0)} $ ; {fmt(GAP['base'] / pv_hi, 1, True)}-{fmt(GAP['base'] / pv_lo, 1, True)} %"))
+for n in COMBOS:
+    for P in (0.25, 0.50):
+        lo = base_core + P * PV_SUCCESS[(n, WACC0)] / SH_COVER
+        hi = base_core + P * PV_SUCCESS[(n, WACC_T)] / SH_COVER
+        cifras.append((f"Base + {P:.0%} x {n}", f"{fmt(lo, 0)}-{fmt(hi, 0)} $ (frente al precio: {fmt(hi / PRICE - 1, 0, True)} % a {fmt(lo / PRICE - 1, 0, True)} %)"))
+    lo = VPS_DCF["alcista"] + PV_SUCCESS[(n, WACC0)] / SH_COVER
+    hi = VPS_DCF["alcista"] + PV_SUCCESS[(n, WACC_T)] / SH_COVER
+    cifras.append((f"Alcista + {n} al 100 %", f"{fmt(lo, 0)}-{fmt(hi, 0)} $"))
+cifras += [
+    ("Recorte a la mitad de la opcionalidad", f"{fmt(half, 1)} $ ({fmt(half / PRICE - 1, 0, True)} %)"),
+    ("Caída hasta el VPA DCF bajista / base / alcista", " / ".join(fmt(VPS_DCF[k] / PRICE - 1, 0, True) + " %" for k in EQ_DCF)),
+    ("Base - bajista (lado optimista del saldo)", f"−{fmt(VPS_DCF['base'] - VPS_DCF['bajista'], 0)} $"),
+    ("Efecto neto en el caso base frente a 03 v1 (24,53 $)", f"{fmt(VPS_DCF['base'] - EQ_DCF_V1['base'] / SH_COVER, 2)} $ "
+     f"({fmt(EQ_DCF_V1['base'] / SH_COVER, 2)} → {fmt(VPS_DCF['base'], 2)} $)"),
+    ("W9 beta sectorial, WACC años 1-5", f"{fmt(v_sec, 1)} $ (+{fmt(v_sec - b0['vps'], 1)} $) ; 2 dec.: {fmt(v_sec, 2)} $"),
+    ("W9 con WACC terminal desplazado", f"{fmt(v_sec_shift, 1)} $ (+{fmt(v_sec_shift - b0['vps'], 1)} $) ; 2 dec.: {fmt(v_sec_shift, 2)} $ ; "
+     f"WACC_T {fmt(WACC_T + (w0_sec - f3.WACC0), 2, True)} %"),
+    ("W9 interpolación de la tabla 4.1 de 03", f"{fmt(_v116 + (_v106 - _v116) * (f3.WACC0 - w0_sec) / 0.01, 1)} $"),
+    ("§4.1.1 margen sin SBC extra / sin I+D incr.", f"{fmt(m0_adj_sbc, 2, True)} % / {fmt(m0_adj_rd, 2, True)} %"),
+    ("§4.1.1 VPA sin SBC extra / sin I+D incr. (2 dec.)", f"{fmt(f3.ASYM_RES[1][3], 2)} / {fmt(f3.ASYM_RES[2][3], 2)} $"),
+    ("§4.1.1 VPA sin SBC extra / sin I+D incr. (1 dec.)", f"{fmt(f3.ASYM_RES[1][3], 1)} / {fmt(f3.ASYM_RES[2][3], 1)} $"),
+    ("Ajuste máximo hacia arriba", f"{fmt(up_lo, 1)}-{fmt(up_hi, 1)} $ (+{fmt(up_lo - b0['vps'], 1)} a +{fmt(up_hi - b0['vps'], 1)} $) ; 2 dec.: "
+     f"{fmt(up_lo, 2)}-{fmt(up_hi, 2)} $"),
+    ("Capex bruto implícito año 1 (reinv. + D&A) / bajo la guía", f"{fmt(capex_y1, 0)} M$ ({fmt(y1['reinv'], 0)} + {fmt(f3.DA_TTM_APROX, 0)}) / {fmt(20000 - capex_y1, 0)} M$"),
+    ("SpaceX + activos digitales por acción", f"{fmt((SPACEX_FV + DIGITAL) / SH_COVER, 2)} $"),
+    ("Valores con acciones totalmente diluidas: caída", f"{fmt(SH_COVER / SH_FD - 1, 1, True)} %"),
+]
+for k, v in cifras:
+    pr(f"  {k:62s}: {v}")

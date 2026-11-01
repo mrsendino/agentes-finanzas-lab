@@ -32,6 +32,24 @@ La versión v1 de este script está en versiones/v1/scripts/fase5_consistencia.p
     FCFF año 1 esperado -5.039 -> -5.700
   §4 W9: puntos de la tabla 4.1 usados para interpolar {10,6 %: 28,49 ; 11,6 %: 24,52} -> {28,55 ; 24,60};
     W2: texto "SIN VERIFICAR en ambos sentidos" -> "doble cómputo real de ~286 M, resuelto en 03 v2" (02 §5.1).
+
+REGISTRO DE CAMBIOS v3 (2026-10-25, tercera verificación). Solo VALORES ESPERADOS (lo que dicen 01-04 v3); ningún
+modelo cambia aquí. El cambio de fondo es de 03 v3: beta de regresión 1,86 (1,85 / 1,87) -> 1,84 (1,84 / 1,84).
+  §1 KEY (cifra esperada, v2 -> v3):
+    WACC0               0.1160  -> 0.1155
+    VPA bajista         10.4    -> 10.4     (10,40 -> 10,41)
+    VPA base            24.6    -> 24.7     (24,61 -> 24,65; a 1 decimal 24,7)
+    VPA alcista         55.8    -> 55.9     (55,76 -> 55,88)
+    EV base             61353   -> 61526
+    TACC margen 20 %    36.1    -> 36.0     (36,04 %)
+    EBIT_10 central     147527  -> 147484   (04 v3 lee ahora WACC0/WACC_T de fase3)
+    VPA tot. diluidos   10,36 / 24,52 / 55,55 -> 10,37 / 24,56 / 55,67
+    W9 desplazando el terminal  +4,6 -> +4,4 $ (WACC terminal desplazado 8,65 -> 8,70 %)
+    Sin cambio: WACC_T 9,79 %; TACC 30 % 27,8; 407,4 $; 198 $; 6,6 %; D&A 6.704; 3.967,3 M; capex año 1 15.884; W9 +1,2 $;
+    controles fase2 67 + 5 (ratios.csv pasa de 94 a 109 filas; checks.csv solo cambia etiquetas)
+  §2 DIFS: Servicios FY25 (01 +18,9 % = 02) y margen operativo TTM 3,3 % en 02/03/04.
+  §4 W9: puntos de la tabla 4.1 para interpolar {10,6 %: 28,55 ; 11,6 %: 24,60} -> {10,55 %: 28,6 ; 11,55 %: 24,7}
+    (la rejilla de 03 v3 está centrada en el WACC inicial nuevo); WACC0 de la interpolación 0,116 -> 0,1155.
 """
 import csv
 import os
@@ -71,33 +89,33 @@ print("ratios.csv idéntico al del proyecto:", same_file("data/ratios.csv"))
 print("checks.csv idéntico al del proyecto:", same_file("data/checks.csv"))
 n_ok = OUT["fase2_ratios.py"].count("[OK]")
 n_disc = OUT["fase2_ratios.py"].count("[DISCREPANCIA]")
-print(f"Controles fase2: {n_ok} OK + {n_disc} DISCREPANCIA (02 v2 §1.3 dice 67 + 5 = 72; v1: 50 + 5)")
+print(f"Controles fase2: {n_ok} OK + {n_disc} DISCREPANCIA (02 v3 §1.3 dice 67 + 5 = 72; v1: 50 + 5)")
 print(f"  [{'OK' if (n_ok, n_disc) == (67, 5) else 'MISMATCH'}] recuento de controles fase2")
 
 # Cifras clave: (descripción, regex sobre la salida, valor citado en docs v2, tolerancia). v1 -> v2 en el docstring.
 o3, o4 = OUT["fase3_dcf.py"], OUT["fase4_opcionalidad.py"]
 KEY = [
-    ("WACC0 (03 §1.1: 11,60 %)", o3, r"WACC0 ([\d.]+) \|", 0.1160, 1e-4),
+    ("WACC0 (03 v3 §1.1: 11,55 %; v2 11,60)", o3, r"WACC0 ([\d.]+) \|", 0.1155, 1e-4),
     ("WACC_T (03: 9,79 %)", o3, r"WACC_T ([\d.]+)", 0.0979, 1e-4),
-    ("VPA bajista (03 v2: 10,4; v1 10,4)", o3, r"bajista : .*?VPA ([\d.]+)", 10.4, 0.05),
-    ("VPA base (03 v2: 24,6; v1 24,5)", o3, r"base    : .*?VPA ([\d.]+)", 24.6, 0.05),
-    ("VPA alcista (03 v2: 55,8; v1 54,9)", o3, r"alcista : .*?VPA ([\d.]+)", 55.8, 0.05),
-    ("EV base (03 v2: 61.353; v1 61.040)", o3, r"base    : .*?\| EV ([\d,]+)", 61353, 1),
-    ("TACC margen 20 % (03: 36,1 %)", o3, r"Margen 20%: TACC necesaria ([\d.]+)%", 36.1, 0.05),
+    ("VPA bajista (03 v3: 10,4; v2 10,4)", o3, r"bajista : .*?VPA ([\d.]+)", 10.4, 0.05),
+    ("VPA base (03 v3: 24,7; v2 24,6)", o3, r"base    : .*?VPA ([\d.]+)", 24.7, 0.05),
+    ("VPA alcista (03 v3: 55,9; v2 55,8)", o3, r"alcista : .*?VPA ([\d.]+)", 55.9, 0.05),
+    ("EV base (03 v3: 61.526; v2 61.353)", o3, r"base    : .*?\| EV ([\d,]+)", 61526, 1),
+    ("TACC margen 20 % (03 v3: 36,0 %; v2 36,1)", o3, r"Margen 20%: TACC necesaria ([\d.]+)%", 36.0, 0.05),
     ("TACC margen 30 % (03: 27,8 %)", o3, r"Margen 30%: TACC necesaria ([\d.]+)%", 27.8, 0.05),
     ("Precio implícito big tech EV/Ventas (03: 407,4)", o3, r"Mediana Big tech.*?'EV/Ventas': ([\d.]+)", 407.4, 0.05),
-    ("EBIT_10 central (04 v2.1: 147.527; v1 147.561)", o4, r"referencia central .*?: ([\d,]+) M\$", 147527, 1),
+    ("EBIT_10 central (04 v3: 147.484; v2.1 147.527)", o4, r"referencia central .*?: ([\d,]+) M\$", 147484, 1),
     ("Recorte 50 % opcionalidad (04: 198 $)", o4, r"recortara a la mitad .*?: (\d+) \$", 198, 0.5),
     ("Margen 3T26 + I+D incremental (04: 6,6 %)", o4, r"sumando el incremento de I\+D: ([\d.]+)%", 6.6, 0.05),
     # nuevas expectativas v2
-    ("VPA bajista totalmente diluido (03 v2: 10,36)", o3, r"bajista : .*?VPA totalmente diluido ([\d.]+)", 10.36, 0.005),
-    ("VPA base totalmente diluido (03 v2: 24,52)", o3, r"base    : .*?VPA totalmente diluido ([\d.]+)", 24.52, 0.005),
-    ("VPA alcista totalmente diluido (03 v2: 55,55)", o3, r"alcista : .*?VPA totalmente diluido ([\d.]+)", 55.55, 0.005),
+    ("VPA bajista totalmente diluido (03 v3: 10,37; v2 10,36)", o3, r"bajista : .*?VPA totalmente diluido ([\d.]+)", 10.37, 0.005),
+    ("VPA base totalmente diluido (03 v3: 24,56; v2 24,52)", o3, r"base    : .*?VPA totalmente diluido ([\d.]+)", 24.56, 0.005),
+    ("VPA alcista totalmente diluido (03 v3: 55,67; v2 55,55)", o3, r"alcista : .*?VPA totalmente diluido ([\d.]+)", 55.67, 0.005),
     ("D&A TTM (02 v2 / 03 v2: 6.704)", o3, r"D&A TTM ([\d,]+) \(", 6704, 0.5),
     ("Acciones totalmente diluidas (03 v2: 3.967,3)", o3, r"totalmente diluidas ([\d,.]+) \(contraste", 3967.3, 0.05),
     ("Capex bruto año 1 (03/04 v2: 15.884)", o3, r"Capex bruto implícito año 1 \(base\) = .*?= ([\d,]+) M\$", 15884, 0.5),
     ("W9 solo años 1-5 (03/04 v2: +1,2 $)", o3, r"años 1-5 solo [\d.]+ \$ \(\+([\d.]+)\)", 1.2, 0.05),
-    ("W9 desplazando terminal (03/04 v2: +4,6 $)", o3, r"terminal a [\d.]+%: [\d.]+ \$ \(\+([\d.]+)\)", 4.6, 0.05),
+    ("W9 desplazando terminal (03/04 v3: +4,4 $; v2 +4,6)", o3, r"terminal a [\d.]+%: [\d.]+ \$ \(\+([\d.]+)\)", 4.4, 0.05),
 ]
 for desc, txt, rx, cited, tol in KEY:
     m = re.search(rx, txt)
@@ -105,7 +123,7 @@ for desc, txt, rx, cited, tol in KEY:
     if cited is None:
         print(f"  [INFO] {desc}: {v}")
         continue
-    st = "OK" if v is not None and abs(v - cited) <= tol else "MISMATCH"
+    st = "OK" if v is not None and abs(v - cited) <= tol + 1e-9 else "MISMATCH"   # v3: +1e-9 (24,65 impreso a 2 dec. -> 24,7)
     print(f"  [{st}] {desc}: script={v}")
 
 # ------------------------------------------------------------------------------------------
@@ -122,7 +140,8 @@ DIFS = [  # (cifra, estado v1, estado v2 esperado, valoración)
     ("PER TSLA", "01 ~327x | 02 390x | 03 410x | 04 457x", "01 ~327x DESFASADO | 02 390x (D5, 354,72 $) | 03/04 410x estándar; 457x alternativa", "sigue sin definición única fuera de 03/04; aceptable con etiquetas"),
     ("Capitalización", "01: ~1,4 bill. (16-oct)", "01 etiquetada 'anterior a resultados' | 03: 1,47 bill. (23-oct)", "declarado"),
     ("Capex 2026 (guía)", "01 >20.000 y >25.000 | 03 '>20.000-25.000'", "01/03/04: ~20.000 (T1)", "corregido"),
-    ("Servicios FY25 vs FY24", "01: +19,0 %", "01: +19,0 % | 02: +18,9 %", "redondeo (12.530/10.534-1 = 18,95 %); sigue"),
+    ("Servicios FY25 vs FY24", "01: +19,0 %", "01 v3: +18,9 % | 02: +18,9 %", "corregido en 01 v3 (12.530/10.534-1 = 18,948 %)"),
+    ("Margen operativo TTM", "02/03/04: 3,4 %", "02/03/04 v3: 3,3 % (3,347 %)", "corregido en v3 (doble redondeo de v2)"),
     ("Margen sin créditos TTM", "02 2,21 % | 04 script 2,23 %", "02 2,2 % (ingresos totales) | 03/04 2,23 % (ingresos sin créditos)", "dos definiciones, ya declaradas en 03 §2.1"),
 ]
 for d in DIFS:
@@ -183,10 +202,10 @@ ev_tm, evs_tm = 418590.0, 1.45
 print(f"W5 Toyota: ingresos implícitos = EV/(EV/Ventas) = {ev_tm / evs_tm:,.0f}. 03 §5 ya dice 'implícitos en su EV/Ventas'.")
 print("    El argumento de 04 de que la deuda de la financiera 'infla' esta cifra es erróneo: EV/(EV/Ventas) = Ventas, la deuda se cancela.")
 # W9 / 4.1.3: efecto de la beta sectorial
-sens = {0.106: 28.55, 0.116: 24.60}   # v2: tabla 4.1 de 03 v2 (v1: 28.49 / 24.52)
-d_int = (sens[0.106] - sens[0.116]) * (0.116 - 0.1046) / 0.01
-print(f"W9 beta: interpolación de la tabla 4.1 v2 (g=3 %) VPA ≈ {sens[0.116] + d_int:.1f} $ (+{d_int:.1f} $). Esta interpolación desplaza también el WACC terminal")
-print("    (la tabla 4.1 lo hace): es la cota superior (+4,6 $ medido). 03/04 v2 miden +1,2 $ cambiando solo los años 1-5: ver regex KEY. 05 v1 (+4,5 $) era la cota, no el efecto coherente")
+sens = {0.1055: 28.6, 0.1155: 24.7}   # v3: tabla 4.1 de 03 v3 (v2: {0,106: 28,55; 0,116: 24,60}; v1: 28,49 / 24,52)
+d_int = (sens[0.1055] - sens[0.1155]) * (0.1155 - 0.1046) / 0.01
+print(f"W9 beta: interpolación de la tabla 4.1 v3 (g=3 %) VPA ≈ {sens[0.1155] + d_int:.1f} $ (+{d_int:.1f} $). Esta interpolación desplaza también el WACC terminal")
+print("    (la tabla 4.1 lo hace): es la cota superior (+4,4 $ medido en v3; +4,6 en v2). 03/04 miden +1,2 $ cambiando solo los años 1-5: ver regex KEY. 05 v1 (+4,5 $) era la cota, no el efecto coherente")
 # W1: PER
 price, ni, sh_dil, sh_cov = 372.22, 3218.0, 3541.0, 3952.757946
 print(f"W1 PER: precio/(BN/diluida) = {price / (ni / sh_dil):.0f}x ; capitalización/BN = {price * sh_cov / ni:.0f}x ; GuruFocus 410,4x -> 03 usa la convención estándar; 457x es alternativa, no corrección")

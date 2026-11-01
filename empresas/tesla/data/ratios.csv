@@ -25,65 +25,65 @@ fcf_menos_sbc,M USD,2894.0,6006.0,2546.0,1585.0,3395.0,-997.0,FCF - SBC (SBC tra
 beneficio_operativo_sin_creditos,M USD,5058.0,11880.0,7101.0,4313.0,2362.0,2285.0,benef. operativo - créditos regulatorios (créditos asumidos ~100 % margen)
 capex_neto_de_dya,M USD,3571.0,3411.0,4231.0,5971.0,2379.0,8703.0,capex - D&A (D&A incluye deterioros)
 ebitda_aprox,M USD,9434.0,17403.0,13558.0,12444.0,10503.0,10170.0,benef. operativo + D&A (sin ajustar SBC; no es el EBITDA ajustado de Tesla)
-margen_bruto,%,0.2528,0.256,0.1825,0.1786,0.1803,0.1929,beneficio_bruto / ingresos totales
-margen_operativo,%,0.1212,0.1676,0.0919,0.0724,0.0459,0.0335,beneficio_operativo / ingresos totales
-margen_neto,%,0.1025,0.1541,0.155,0.0726,0.04,0.0311,beneficio_neto_atrib_comunes / ingresos totales
-margen_fco,%,0.2136,0.1807,0.137,0.1528,0.1555,0.1807,flujo_caja_operativo / ingresos totales
-capex_sobre_ingresos,%,0.1204,0.0879,0.0919,0.1161,0.0899,0.1488,capex / ingresos totales
-sbc_sobre_ingresos,%,0.0394,0.0192,0.0187,0.0205,0.0298,0.0415,sbc / ingresos totales
-dya_sobre_ingresos,%,0.0541,0.046,0.0482,0.0549,0.0648,0.0647,dya_amortizacion_deterioro / ingresos totales
-margen_fcf,%,0.0932,0.0929,0.045,0.0367,0.0656,0.0319,FCF / ingresos totales
+margen_bruto,%,0.252792,0.255984,0.182489,0.178626,0.180265,0.192855,beneficio_bruto / ingresos totales
+margen_operativo,%,0.121194,0.167636,0.091875,0.072433,0.045926,0.033465,beneficio_operativo / ingresos totales
+margen_neto,%,0.10254,0.154133,0.154971,0.072587,0.04001,0.031071,beneficio_neto_atrib_comunes / ingresos totales
+margen_fco,%,0.213608,0.180747,0.13698,0.152759,0.155515,0.180651,flujo_caja_operativo / ingresos totales
+capex_sobre_ingresos,%,0.120432,0.087869,0.091947,0.116071,0.089922,0.148759,capex / ingresos totales
+sbc_sobre_ingresos,%,0.039407,0.01915,0.018724,0.020463,0.029791,0.041518,sbc / ingresos totales
+dya_sobre_ingresos,%,0.054085,0.045997,0.048226,0.054949,0.064834,0.064729,dya_amortizacion_deterioro / ingresos totales
+margen_fcf,%,0.093176,0.092878,0.045033,0.036687,0.065593,0.031891,FCF / ingresos totales
 margen_operativo_sin_creditos,%,0.094,0.1458,0.0734,0.0441,0.0249,0.0221,(benef. operativo - créditos) / ingresos
-creditos_sobre_benef_operativo,%,0.2246,0.1301,0.2013,0.3905,0.4576,0.3407,créditos regulatorios / benef. operativo
-creditos_sobre_benef_neto,%,0.2654,0.1414,0.1194,0.3896,0.5253,0.367,créditos regulatorios / benef. neto (antes de impuestos sobre créditos; orientativo)
-capex_sobre_fco,%,0.5638,0.4861,0.6712,0.7598,0.5782,0.8235,capex / FCO
-peso_automocion,%,0.8775,0.8772,0.8517,0.7889,0.7332,0.7242,ingresos_automocion_total / ingresos totales
-peso_energia,%,0.0518,0.048,0.0624,0.1032,0.1347,0.1184,ingresos_energia / ingresos totales
-peso_servicios,%,0.0706,0.0748,0.086,0.1078,0.1321,0.1574,ingresos_servicios_otros / ingresos totales
-peso_creditos,%,0.0272,0.0218,0.0185,0.0283,0.021,0.0114,creditos_regulatorios / ingresos totales
-crec_ingresos_totales,%,,0.5135,0.188,0.0095,-0.0293,,variación interanual (FY vs FY anterior)
-crec_ingresos_automocion_total,%,,0.513,0.1533,-0.0649,-0.0979,,variación interanual (FY vs FY anterior)
-crec_creditos_regulatorios,%,,0.2123,0.0079,0.5436,-0.2787,,variación interanual (FY vs FY anterior)
-crec_ingresos_energia,%,,0.4016,0.5439,0.6713,0.2662,,variación interanual (FY vs FY anterior)
-crec_ingresos_servicios_otros,%,,0.6021,0.3658,0.2663,0.1895,,variación interanual (FY vs FY anterior)
-crec_beneficio_bruto,%,,0.5326,-0.1531,-0.0119,-0.0204,,variación interanual (FY vs FY anterior)
-crec_beneficio_operativo,%,,1.0935,-0.3489,-0.2041,-0.3845,,variación interanual (FY vs FY anterior)
-crec_beneficio_neto_atrib_comunes,%,,1.275,0.1944,-0.5272,-0.465,,variación interanual (FY vs FY anterior)
-crec_flujo_caja_operativo,%,,0.2807,-0.0997,0.1258,-0.0118,,variación interanual (FY vs FY anterior)
-crec_capex,%,,0.1043,0.2431,0.2743,-0.248,,variación interanual (FY vs FY anterior)
-crec_sbc,%,,-0.2645,0.1615,0.1032,0.4132,,variación interanual (FY vs FY anterior)
-crec_acciones_diluidas_media,%,,0.0263,0.0029,0.0037,,,variación interanual (FY vs FY anterior)
-crec_fcf,%,,0.5087,-0.424,-0.1776,0.7355,,variación interanual del FCF
-crec_9M26_vs_9M25_ingresos_totales,%,,,,,,0.125,9M2026 / 9M2025 - 1 (10-Q Q3 2026 vs 10-Q Q3 2025)
-crec_9M26_vs_9M25_ingresos_automocion_total,%,,,,,,0.1057,9M2026 / 9M2025 - 1 (10-Q Q3 2026 vs 10-Q Q3 2025)
-crec_9M26_vs_9M25_creditos_regulatorios,%,,,,,,-0.5596,9M2026 / 9M2025 - 1 (10-Q Q3 2026 vs 10-Q Q3 2025)
+creditos_sobre_benef_operativo,%,0.22459,0.130053,0.201327,0.390475,0.457635,0.340739,créditos regulatorios / benef. operativo
+creditos_sobre_benef_neto,%,0.265447,0.141446,0.119357,0.389649,0.525303,0.366998,créditos regulatorios / benef. neto (antes de impuestos sobre créditos; orientativo)
+capex_sobre_fco,%,0.563799,0.486145,0.671243,0.759834,0.578219,0.823463,capex / FCO
+peso_automocion,%,0.877543,0.877243,0.851674,0.788924,0.733188,0.724177,ingresos_automocion_total / ingresos totales
+peso_energia,%,0.051818,0.047986,0.062362,0.103245,0.134677,0.118422,ingresos_energia / ingresos totales
+peso_servicios,%,0.070639,0.074771,0.085964,0.107831,0.132135,0.157401,ingresos_servicios_otros / ingresos totales
+peso_creditos,%,0.027219,0.021802,0.018497,0.028283,0.021017,0.011403,creditos_regulatorios / ingresos totales
+crec_ingresos_totales,%,,0.513517,0.187953,0.009476,-0.029307,,variación interanual (FY vs FY anterior)
+crec_ingresos_automocion_total,%,,0.513,0.153326,-0.0649,-0.097885,,variación interanual (FY vs FY anterior)
+crec_creditos_regulatorios,%,,0.212287,0.007883,0.543575,-0.278683,,variación interanual (FY vs FY anterior)
+crec_ingresos_energia,%,,0.401578,0.543873,0.671251,0.266211,,variación interanual (FY vs FY anterior)
+crec_ingresos_servicios_otros,%,,0.602052,0.365786,0.266258,0.189482,,variación interanual (FY vs FY anterior)
+crec_beneficio_bruto,%,,0.532633,-0.153119,-0.011891,-0.020401,,variación interanual (FY vs FY anterior)
+crec_beneficio_operativo,%,,1.093515,-0.348931,-0.204139,-0.384539,,variación interanual (FY vs FY anterior)
+crec_beneficio_neto_atrib_comunes,%,,1.27505,0.194409,-0.527172,-0.464956,,variación interanual (FY vs FY anterior)
+crec_flujo_caja_operativo,%,,0.280682,-0.099701,0.125754,-0.011794,,variación interanual (FY vs FY anterior)
+crec_capex,%,,0.104289,0.243085,0.274331,-0.247994,,variación interanual (FY vs FY anterior)
+crec_sbc,%,,-0.264498,0.161538,0.103201,0.413207,,variación interanual (FY vs FY anterior)
+crec_acciones_diluidas_media,%,,0.026285,0.002878,0.00373,,,variación interanual (FY vs FY anterior)
+crec_fcf,%,,0.508674,-0.424002,-0.177604,0.735491,,variación interanual del FCF
+crec_9M26_vs_9M25_ingresos_totales,%,,,,,,0.125032,9M2026 / 9M2025 - 1 (10-Q Q3 2026 vs 10-Q Q3 2025)
+crec_9M26_vs_9M25_ingresos_automocion_total,%,,,,,,0.105666,9M2026 / 9M2025 - 1 (10-Q Q3 2026 vs 10-Q Q3 2025)
+crec_9M26_vs_9M25_creditos_regulatorios,%,,,,,,-0.559614,9M2026 / 9M2025 - 1 (10-Q Q3 2026 vs 10-Q Q3 2025)
 crec_9M26_vs_9M25_ingresos_energia,%,,,,,,-0.0566,9M2026 / 9M2025 - 1 (10-Q Q3 2026 vs 10-Q Q3 2025)
-crec_9M26_vs_9M25_ingresos_servicios_otros,%,,,,,,0.4118,9M2026 / 9M2025 - 1 (10-Q Q3 2026 vs 10-Q Q3 2025)
-crec_9M26_vs_9M25_beneficio_bruto,%,,,,,,0.2383,9M2026 / 9M2025 - 1 (10-Q Q3 2026 vs 10-Q Q3 2025)
-crec_9M26_vs_9M25_beneficio_operativo,%,,,,,,-0.3018,9M2026 / 9M2025 - 1 (10-Q Q3 2026 vs 10-Q Q3 2025)
-crec_9M26_vs_9M25_beneficio_neto_atrib_comunes,%,,,,,,-0.195,9M2026 / 9M2025 - 1 (10-Q Q3 2026 vs 10-Q Q3 2025)
-crec_9M26_vs_9M25_flujo_caja_operativo,%,,,,,,0.3624,9M2026 / 9M2025 - 1 (10-Q Q3 2026 vs 10-Q Q3 2025)
-crec_9M26_vs_9M25_capex,%,,,,,,1.1216,9M2026 / 9M2025 - 1 (10-Q Q3 2026 vs 10-Q Q3 2025)
-crec_9M26_vs_9M25_sbc,%,,,,,,0.7883,9M2026 / 9M2025 - 1 (10-Q Q3 2026 vs 10-Q Q3 2025)
-cagr_21_25_ingresos_totales,%,,,,,0.1521,,CAGR 4 años FY2021->FY2025
-cagr_21_25_ingresos_energia,%,,,,,0.4628,,CAGR 4 años FY2021->FY2025
-cagr_21_25_ingresos_servicios_otros,%,,,,,0.3474,,CAGR 4 años FY2021->FY2025
-cagr_21_25_ingresos_automocion_total,%,,,,,0.1015,,CAGR 4 años FY2021->FY2025
+crec_9M26_vs_9M25_ingresos_servicios_otros,%,,,,,,0.411835,9M2026 / 9M2025 - 1 (10-Q Q3 2026 vs 10-Q Q3 2025)
+crec_9M26_vs_9M25_beneficio_bruto,%,,,,,,0.238312,9M2026 / 9M2025 - 1 (10-Q Q3 2026 vs 10-Q Q3 2025)
+crec_9M26_vs_9M25_beneficio_operativo,%,,,,,,-0.301765,9M2026 / 9M2025 - 1 (10-Q Q3 2026 vs 10-Q Q3 2025)
+crec_9M26_vs_9M25_beneficio_neto_atrib_comunes,%,,,,,,-0.19499,9M2026 / 9M2025 - 1 (10-Q Q3 2026 vs 10-Q Q3 2025)
+crec_9M26_vs_9M25_flujo_caja_operativo,%,,,,,,0.362447,9M2026 / 9M2025 - 1 (10-Q Q3 2026 vs 10-Q Q3 2025)
+crec_9M26_vs_9M25_capex,%,,,,,,1.121617,9M2026 / 9M2025 - 1 (10-Q Q3 2026 vs 10-Q Q3 2025)
+crec_9M26_vs_9M25_sbc,%,,,,,,0.788348,9M2026 / 9M2025 - 1 (10-Q Q3 2026 vs 10-Q Q3 2025)
+cagr_21_25_ingresos_totales,%,,,,,0.152102,,CAGR 4 años FY2021->FY2025
+cagr_21_25_ingresos_energia,%,,,,,0.462831,,CAGR 4 años FY2021->FY2025
+cagr_21_25_ingresos_servicios_otros,%,,,,,0.347363,,CAGR 4 años FY2021->FY2025
+cagr_21_25_ingresos_automocion_total,%,,,,,0.101483,,CAGR 4 años FY2021->FY2025
 nopat_21pct,M USD,5153.2,10788.2,7023.9,5590.0,3440.5,2738.1,"benef. operativo x (1-0,21)"
 capital_invertido_A_neto_caja,M USD,19316.0,25618.0,38770.0,44563.0,46454.0,53365.0,patrimonio + deuda - caja e inv. CP (saldo final)
 capital_invertido_B_bruto,M USD,37023.0,47803.0,67864.0,81126.0,90513.0,98812.0,patrimonio + deuda (saldo final)
 roic_A_neto_caja,%,0.2668,0.4802,0.2182,0.1342,0.0756,0.0551,NOPAT / capital invertido A medio (FY2021: saldo final)
-roic_B_bruto,%,0.1392,0.2544,0.1215,0.075,0.0401,0.0294,NOPAT / capital invertido B medio (FY2021: saldo final)
-roe,%,0.1828,0.3353,0.2794,0.1046,0.0489,0.038,benef. neto / patrimonio medio
-roic_A_tipo_15pct,%,0.287,0.5167,0.2347,0.1444,0.0813,0.0593,sensibilidad: NOPAT con tipo 15 %
-roic_A_tipo_25pct,%,0.2533,0.4559,0.2071,0.1274,0.0718,0.0523,sensibilidad: NOPAT con tipo 25 %
-var_acum_ventas_vehiculos_23_25,%,,,,,-0.1616,,venta vehículos FY2025/FY2023 - 1
+roic_B_bruto,%,0.139188,0.254362,0.12145,0.075039,0.040089,0.029366,NOPAT / capital invertido B medio (FY2021: saldo final)
+roe,%,0.182815,0.335305,0.279435,0.104628,0.048939,0.038025,benef. neto / patrimonio medio
+roic_A_tipo_15pct,%,0.287044,0.516651,0.234744,0.144351,0.081342,0.059284,sensibilidad: NOPAT con tipo 15 %
+roic_A_tipo_25pct,%,0.253274,0.455869,0.207127,0.127369,0.071772,0.052309,sensibilidad: NOPAT con tipo 25 %
+var_acum_ventas_vehiculos_23_25,%,,,,,-0.161612,,venta vehículos FY2025/FY2023 - 1
 multiplo_energia_21_25,x,,,,,4.6,,energía FY2025 / FY2021
-var_patrimonio_22_3T26,%,,,,,,0.9973,patrimonio 30-sep-26 / 31-dic-22 - 1
+var_patrimonio_22_3T26,%,,,,,,0.997338,patrimonio 30-sep-26 / 31-dic-22 - 1
 nopat_max_sobre_ttm,x,,,,,,3.9,NOPAT FY2022 / NOPAT TTM
 var_caja_neta_9M26,M USD,,,,,,241.0,caja neta 30-sep-26 - caja neta 31-dic-25
 multiplo_caja_neta_21_3T26,x,,,,,,3.3,caja neta 30-sep-26 / 31-dic-21
-var_sbc_24_ttm,%,,,,,,1.1511,SBC TTM / FY2024 - 1
+var_sbc_24_ttm,%,,,,,,1.151076,SBC TTM / FY2024 - 1
 acc_portada_15oct26,M acciones,,,,,,3952.8,portada 10-Q 3T26 (P2)
 acc_basica_media_3T26,M acciones,,,,,,3240.0,nota de BPA P2
 acc_restringidas_ceo2025,M acciones,,,,,,423.7,"Form 4: 423.743.904 restringidas; en portada, fuera de básica y de diluida (no 'ganadas')"
@@ -93,3 +93,18 @@ acc_stock_based_awards_3T26,M acciones,,,,,,301.0,"diluida - básica (P2), méto
 acc_awards_no_incluidos_en_portada_aprox,M acciones,,,,,,14.6,INFERENCIA: 301 - acciones netas 2018 (ya en portada) = incentivos de empleados aún no emitidos
 acc_doble_computo_portada_mas_301,M acciones,,,,,,286.4,INFERENCIA: parte de las 301 que ya está en la portada
 acc_totalmente_diluidas_aprox,M acciones,,,,,,3967.3,"portada + incentivos no emitidos (incluye las 423,7 M del CEO aún no ganadas)"
+acc_op2018_tesoreria_px350,M acciones,,,,,,283.7,"INFERENCIA: 303,96 x (1 - 23,34 / 350) = acciones incrementales de las opciones 2018 por método de tesorería (1T26)"
+acc_awards_1T26_resto_empleados_px350,M acciones,,,,,,20.3,INFERENCIA: 304 (awards 1T26) - opciones 2018 por tesorería a 350 $ = incentivos de empleados
+acc_op2018_tesoreria_px400,M acciones,,,,,,286.2,"INFERENCIA: 303,96 x (1 - 23,34 / 400) = acciones incrementales de las opciones 2018 por método de tesorería (1T26)"
+acc_awards_1T26_resto_empleados_px400,M acciones,,,,,,17.8,INFERENCIA: 304 (awards 1T26) - opciones 2018 por tesorería a 400 $ = incentivos de empleados
+acc_op2018_tesoreria_px450,M acciones,,,,,,288.2,"INFERENCIA: 303,96 x (1 - 23,34 / 450) = acciones incrementales de las opciones 2018 por método de tesorería (1T26)"
+acc_awards_1T26_resto_empleados_px450,M acciones,,,,,,15.8,INFERENCIA: 304 (awards 1T26) - opciones 2018 por tesorería a 450 $ = incentivos de empleados
+capex_neto_sobre_ingresos,%,0.066347,0.041872,0.043721,0.061122,0.025088,0.08403,(capex - D&A) / ingresos totales
+dya_aprox_3T_x4_sobre_real_ttm,%,,,,,,0.105012,D&A 3T26 x 4 (7.408) / D&A TTM real - 1
+dya_aprox_3T_x4_menos_real_ttm,M USD,,,,,,704.0,D&A 3T26 x 4 - D&A TTM real
+var_acciones_balance_30sep25_30sep26,%,,,,,,0.18923,acciones en circulación (balance) 30-sep-26 / 30-sep-25 - 1
+acc_portada_menos_basica_3T26,M acciones,,,,,,712.8,portada - básica media 3T26
+acc_emit_2T26_cuadre_sin_empleados,M acciones,,,,,,190.4,netas 2018 - Interim 2025 cancelada (sin empleados)
+acc_portada_mas_301_sobre_fd,%,,,,,,0.072197,(portada + 301) / totalmente diluidas - 1 (línea de 03 v1)
+acc_diluida_media_sobre_fd,%,,,,,,-0.10746,diluida media 3T26 / totalmente diluidas - 1 (base de los VPA de 04 v1)
+acc_totalmente_diluidas_contraste,M acciones,,,,,,3964.7,diluida 3T26 + restringidas CEO 2025

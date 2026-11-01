@@ -1,29 +1,33 @@
 # 03 — Valoración de Tesla (TSLA): DCF por escenarios, sensibilidad, DCF inverso y múltiplos
 
-**Fecha del análisis:** 2026-10-24 · **Versión:** v2 (2026-10-25, correcciones pedidas en [05-veredicto.md](05-veredicto.md) §5, prioridad 2, y datos nuevos de [02-financieros.md](02-financieros.md) v2; ver «Registro de cambios v2» al final) · **Analista:** Fase 3 (rol *Financial Analyst*) · **Precio de referencia:** 372,22 $ (cierre del 23-oct-2026)
+**Fecha del análisis:** 2026-10-24 · **Versión:** v3 (2026-10-25, correcciones pedidas en [05-veredicto-v2.md](05-veredicto-v2.md) §8, prioridad 2, y margen TTM de [02-financieros.md](02-financieros.md) v3; ver «Registro de cambios v3» al final. v2: correcciones de [05-veredicto.md](05-veredicto.md) §5) · **Analista:** Fase 3 (rol *Financial Analyst*) · **Precio de referencia:** 372,22 $ (cierre del 23-oct-2026)
 **Alcance:** esto es una valoración, no una recomendación de compra o venta. Los resultados se dan como rangos y dependen de los supuestos declarados abajo.
 
 **Archivos de esta fase:**
 
 | Archivo | Contenido |
 |---|---|
-| [`scripts/fase3_dcf.py`](../scripts/fase3_dcf.py) | Todos los cálculos. Lee `data/ratios.csv` de Fase 2. La §9 del script (nueva en v2) contiene los controles que pidió el veredicto |
-| [`data/dcf.xlsx`](../data/dcf.xlsx) | Hojas `Supuestos`, `Escenarios`, `Sensibilidad`, `DCF_inverso` y `Multiplos`. En `Supuestos` y `Escenarios` los inputs van en azul y el resto son fórmulas de Excel vivas. **v2:** el script lo recalcula con LibreOffice al guardarlo, así que el archivo ya lleva los valores cacheados. Los valores coinciden con Python y no hay errores de fórmula |
+| [`scripts/fase3_dcf.py`](../scripts/fase3_dcf.py) | Todos los cálculos. Lee `data/ratios.csv` de Fase 2. La §9 del script (nueva en v2) contiene los controles que pidió el veredicto; la §10 (v3) escribe `cifras_03_redondeo.csv` |
+| [`data/cifras_03_redondeo.csv`](../data/cifras_03_redondeo.csv) | (v3) Cada cifra de este documento con su valor completo y el texto tal como se escribe, redondeado **una sola vez** (mitad hacia arriba) desde el valor completo |
+| [`data/dcf.xlsx`](../data/dcf.xlsx) | Hojas `Supuestos`, `Escenarios`, `Sensibilidad`, `DCF_inverso` y `Multiplos`. En `Supuestos` y `Escenarios` los inputs van en azul y el resto son fórmulas de Excel vivas. **v2:** el script lo recalcula con LibreOffice al guardarlo, así que el archivo ya lleva los valores cacheados. Los valores coinciden con Python y no hay errores de fórmula. **v3:** en el equipo de esta ronda no hay LibreOffice, así que el libro se guarda sin valores cacheados (las fórmulas son las mismas; se recalcula al abrirlo en Excel o LibreOffice) |
 | [`fuentes/nuevas_fase3_v2.md`](../fuentes/nuevas_fase3_v2.md) | Fuentes nuevas o re-leídas en v2 |
+| [`fuentes/nuevas_fase3_v3.md`](../fuentes/nuevas_fase3_v3.md) | (v3) Re-consulta de las dos betas de regresión |
 
-No hay ningún cálculo hecho a mano en este documento: todas las cifras salen de la salida del script.
+No hay ningún cálculo hecho a mano en este documento: todas las cifras salen de la salida del script. **v3:** se copian de la columna `texto` de `data/cifras_03_redondeo.csv`, no redondeando a mano una cifra ya redondeada.
 
 ---
 
 ## 0. Resumen
 
-1. **El DCF del negocio que Tesla reporta hoy no se acerca al precio.** Con supuestos que van desde un estancamiento hasta volver al mejor margen de su historia, el valor por acción queda entre **~10 $ y ~56 $**, con **~25 $ en el caso base**. El precio es de 372 $. Con la cifra de acciones totalmente diluidas (~3.967 M) los valores apenas cambian: 10,4 / 24,5 / 55,6 $.
+1. **El DCF del negocio que Tesla reporta hoy no se acerca al precio.** Con supuestos que van desde un estancamiento hasta volver al mejor margen de su historia, el valor por acción queda entre **~10 $ y ~56 $**, con **~25 $ en el caso base**. El precio es de 372 $. Con la cifra de acciones totalmente diluidas (~3.967 M) los valores apenas cambian: 10,4 / 24,6 / 55,7 $.
 2. **Entre el 85 % y el 97 % de la capitalización (1,47 billones $) no se explica** por los flujos de automoción, energía y servicios proyectados con los datos de Fase 1 y Fase 2. Esa diferencia es lo que el mercado paga por la opcionalidad: robotaxi, Optimus, FSD como software y cómputo de IA. Parte de ese importe corresponde a un gasto en esas iniciativas que el DCF ya carga al negocio actual (§6.3).
 3. **Para justificar el precio con un DCF convencional** hace falta que los ingresos crezcan entre un **~28 % y un ~36 % anual durante 10 años**, es decir, que se multipliquen por 12 a 22 veces, con márgenes operativos del 20-30 %. Con la intensidad de capital de un negocio de software, la exigencia baja al ~26-32 % anual, que sigue siendo multiplicar los ingresos por 10 a 16 (§5). Nada parecido aparece en la historia reportada.
-4. **Ni tocando el WACC ni el crecimiento terminal se cierra la brecha.** Con un WACC 3 puntos más bajo y un crecimiento terminal del 4 %, el caso base sube solo hasta ~50 $.
+4. **Ni tocando el WACC ni el crecimiento terminal se cierra la brecha.** Con un WACC 3 puntos más bajo y un crecimiento terminal del 4 %, el caso base sube solo hasta ~51 $.
 5. **Por múltiplos, Tesla cotiza a 13,9x EV/Ventas.** Esto se parece más a Nvidia (21x) o Apple (9,4x) que a los fabricantes de coches (~1x). Su EV/EBITDA (141x), su EV/EBIT (414x) y su PER (410x) no tienen comparación con ningún par.
 
 **Qué cambia en v2 (detalle en el registro final).** El valor del caso base pasa de 24,5 $ a 24,6 $. Los cambios de supuestos se compensan entre sí: energía más baja, D&A real más baja (y por tanto más reinversión neta) y anclas de margen calculadas sobre el denominador correcto. La línea de dilución de v1 (portada + 301 M) contaba dos veces ~286 M de acciones y se sustituye por la cifra totalmente diluida de Fase 2.
+
+**Qué cambia en v3.** Las dos betas de regresión se han vuelto a consultar y ambas dan hoy 1,84 (v2: 1,85 y 1,87). El WACC inicial baja de 11,60 % a 11,55 % y el caso base pasa de 24,61 $ a 24,65 $ (+0,04 $), que a un decimal es **24,7 $** (v2: 24,6 $). Ninguna conclusión cambia.
 
 ---
 
@@ -40,7 +44,7 @@ No hay ningún cálculo hecho a mano en este documento: todas las cifras salen d
 | Valor de la empresa (EV) de mercado | 1.435.372 M$ | Calculado como capitalización − caja neta |
 | Tipo libre de riesgo (bono a 10 años de EE. UU.) | **4,97 %** | 4,967 % el 23-oct-2026, ~15:53 ET; cierre del 22-oct en 4,954 %. Fuente: [Mortgage News Daily](https://www.mortgagenewsdaily.com/treasury/10yr) |
 | Prima de riesgo del mercado (ERP) | **4,20 %** | ERP implícito del S&P 500 a 1-oct-2026, "trailing 12 month, with adjusted payout", según la [página de Damodaran](https://pages.stern.nyu.edu/~adamodar/New_Home_Page/home.htm). La variante con rendimiento en efectivo de los últimos doce meses da 3,70 % |
-| Beta de regresión | 1,85 y 1,87 → **1,86** | [TipRanks](https://www.tipranks.com/stocks/tsla/statistics) (actualizado 23-oct-2026) y [MarketChameleon](https://marketchameleon.com/Overview/TSLA/Summary/) (23-oct-2026). Ninguna de las dos fuentes indica la ventana de cálculo |
+| Beta de regresión — **v3** | 1,84 y 1,84 → **1,84** | [TipRanks](https://www.tipranks.com/stocks/tsla/statistics) ("Beta 1.84"; fecha de modificación de la página 24-oct-2026) y [MarketChameleon](https://marketchameleon.com/Overview/TSLA/Summary/) ("TSLA has a beta of 1.84"; "Data as of October 23, 2026"). Ambas consultadas el 25-oct-2026 (`fuentes/nuevas_fase3_v3.md`). Ninguna de las dos fuentes indica la ventana de cálculo. v2 citaba 1,85 y 1,87, que ya no aparecen en ninguna de las dos páginas |
 | Beta del sector, desapalancada | **1,31** | [Damodaran, betas por sector de EE. UU.](https://pages.stern.nyu.edu/~adamodar/New%5FHome%5FPage/datafile/Betas.html) (ene-2026): Auto & Truck, 33 empresas, corregida por caja |
 | Diferencial de la deuda sobre el tipo libre de riesgo | 1,0 % | **SIN VERIFICAR.** Es un supuesto: no se consultó el rating vigente. Su efecto es inmaterial, porque la deuda pesa un 0,6 % del capital |
 | Tipo impositivo | 21 % | Tipo federal de EE. UU., con el mismo criterio que Fase 2 (§6) |
@@ -51,14 +55,14 @@ No hay ningún cálculo hecho a mano en este documento: todas las cifras salen d
 |---|---|---|
 | Deuda / capitalización | 0,65 % | 9.523 / 1.471.296 |
 | Beta *bottom-up* reapalancada | 1,32 | 1,31 × (1 + 0,79 × D/E) |
-| **Beta inicial** | **1,59** | Media al 50 % de la regresión (1,86) y la *bottom-up* (1,32). La regresión refleja la volatilidad real de la acción; la del sector, el negocio que genera los flujos que se descuentan |
-| Coste del capital propio inicial | 11,64 % | 4,97 % + 1,59 × 4,20 % |
+| **Beta inicial** | **1,58** | Media al 50 % de la regresión (1,84) y la *bottom-up* (1,32). La regresión refleja la volatilidad real de la acción; la del sector, el negocio que genera los flujos que se descuentan |
+| Coste del capital propio inicial | 11,60 % | 4,97 % + 1,58 × 4,20 % |
 | Coste de la deuda después de impuestos | 4,72 % | (4,97 % + 1 %) × 0,79 |
-| **WACC inicial (años 1-5)** | **11,60 %** | Deuda al 0,64 % del capital |
+| **WACC inicial (años 1-5)** | **11,55 %** | Deuda al 0,64 % del capital |
 | Beta terminal | 1,16 | Punto medio entre el mercado (1,0) y el sector del automóvil (1,31) |
 | **WACC terminal (años 6-10 en convergencia lineal; perpetuidad)** | **9,79 %** | — |
 
-Usar solo la beta de regresión (1,86) subiría el WACC inicial a ~12,7 %. Usar solo la del sector lo bajaría a ~10,5 %. El efecto de esta segunda opción sobre el valor se mide en la §4.3 (W9).
+Usar solo la beta de regresión (1,84) subiría el WACC inicial a ~12,6 %. Usar solo la del sector lo bajaría a ~10,5 %. El efecto de esta segunda opción sobre el valor se mide en la §4.3 (W9).
 
 ---
 
@@ -94,7 +98,7 @@ Usar solo la beta de regresión (1,86) subiría el WACC inicial a ~12,7 %. Usar 
 | **Margen operativo objetivo sin créditos (desde el año 5)** — **v2** | **3,54 %** | **9,15 %** | **14,91 %** | Bajista = media FY24-25. Base = media FY21-24. Alcista = máximo histórico (FY22). **v2:** todos calculados como (EBIT − créditos) / (ingresos − créditos), el mismo denominador al que se aplican, y sin redondeo intermedio. Por año: 9,66 % (FY21), 14,91 % (FY22), 7,48 % (FY23), 4,54 % (FY24), 2,54 % (FY25); TTM 2,23 %. El mecanismo del caso base se explica en §2.3 |
 | Ventas / capital incremental | 1,2x | 1,5x | 2,0x | Entre el 1,05x (B) y el 1,94x (A) de Fase 2. El alcista supone más eficiencia que la actual |
 | Crecimiento terminal (g) | 2,5 % | 3,0 % | 3,5 % | Siempre por debajo del tipo libre de riesgo nominal (4,97 %). **No se usa g para meter la opcionalidad** (ver §6) |
-| ROIC terminal — **v2: justificación corregida** | = WACC (9,8 %) | 12 % | 15 % | **Bajista:** el crecimiento no crea valor. **Base, 12 %:** está **por debajo** del rango del ROIC A de FY21-24 (13,4-48,0 %; mínimo en FY24, Fase 2 §6) y **por encima** del ROIC A de FY25 (7,6 %) y del TTM (5,5 %). Supone un diferencial modesto de 2,2 puntos sobre el WACC terminal (9,79 %) para una empresa madura con ventaja de escala. Es un punto intermedio entre el ROIC de hoy y el peor año de 2021-24, no un valor "dentro del rango histórico". **Alcista, 15 %:** sí está dentro de ese rango, cerca de su parte baja. Sensibilidad en §4.3: de 23,6 $ (ROIC = WACC) a 25,5 $ (15 %) en el caso base |
+| ROIC terminal — **v2: justificación corregida** | = WACC (9,8 %) | 12 % | 15 % | **Bajista:** el crecimiento no crea valor. **Base, 12 %:** está **por debajo** del rango del ROIC A de FY21-24 (13,4-48,0 %; mínimo en FY24, Fase 2 §6) y **por encima** del ROIC A de FY25 (7,6 %) y del TTM (5,5 %). Supone un diferencial modesto de 2,2 puntos sobre el WACC terminal (9,79 %) para una empresa madura con ventaja de escala. Es un punto intermedio entre el ROIC de hoy y el peor año de 2021-24, no un valor "dentro del rango histórico". **Alcista, 15 %:** sí está dentro de ese rango, cerca de su parte baja. Sensibilidad en §4.3: de 23,7 $ (ROIC = WACC) a 25,5 $ (15 %) en el caso base |
 | Robotaxi, Optimus, cómputo de IA | 0 | 0 | 0 | No tienen ingresos separados ni métricas públicas (Fase 1 §5). Se tratan aparte, en la §6 |
 
 **Nota sobre el escenario alcista.** No es un escenario optimista sobre la tesis completa de Tesla. Es el escenario optimista **del negocio que se reporta hoy**: los tres segmentos crecen con fuerza y el margen vuelve a su máximo. Lo que el mercado descuenta más allá de eso se trata explícitamente en la §5 y la §6.
@@ -130,9 +134,9 @@ El volumen crece, pero el precio cae más deprisa. Tesla ya anunció compresión
 
 | Escenario | Ingresos año 10 (M$) | EBIT año 10 (M$) | VP FCFF años 1-10 | VP del valor terminal | % del EV en el valor terminal | EV (M$) | Valor de las acciones (M$) | **Valor por acción (portada, 3.952,8 M)** | Valor por acción (totalmente diluidas, 3.967,3 M) | vs. precio (372,22 $) |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| Bajista | 132.730 | 4.704 | −8.451 | 13.641 | 263 %¹ | 5.190 | 41.114 | **10,4 $** | 10,4 $ | −97 % |
-| **Base (media FY21-24)** | 176.762 | 16.169 | 10.399 | 50.954 | 83 % | 61.353 | 97.277 | **24,6 $** | 24,5 $ | −93 % |
-| Alcista | 263.026 | 39.213 | 47.438 | 137.030 | 74 % | 184.468 | 220.392 | **55,8 $** | 55,6 $ | −85 % |
+| Bajista | 132.730 | 4.704 | −8.452 | 13.676 | 262 %¹ | 5.225 | 41.149 | **10,4 $** | 10,4 $ | −97 % |
+| **Base (media FY21-24)** | 176.762 | 16.169 | 10.438 | 51.088 | 83 % | 61.526 | 97.450 | **24,7 $** | 24,6 $ | −93 % |
+| Alcista | 263.026 | 39.213 | 47.558 | 137.390 | 74 % | 184.948 | 220.872 | **55,9 $** | 55,7 $ | −85 % |
 
 ¹ En el bajista los FCFF de los años 1-10 suman un valor presente negativo, por la ola de capex y un margen que apenas se recupera. Por eso el valor terminal supera el 100 % del EV. Casi todo el valor de este escenario es la caja neta: 35.924 M$, unos 9,1 $ por acción.
 
@@ -161,23 +165,23 @@ El WACC terminal se desplaza lo mismo que el inicial.
 
 | WACC inicial \ g | 2,0 % | 2,5 % | 3,0 % | 3,5 % | 4,0 % |
 |---|---:|---:|---:|---:|---:|
-| 8,60 % | 38,7 | 40,6 | 43,0 | 46,2 | 50,4 |
-| 9,60 % | 32,0 | 33,0 | 34,2 | 35,7 | 37,6 |
-| 10,60 % | 27,4 | 27,9 | 28,6 | 29,3 | 30,2 |
-| **11,60 %** | 24,0 | 24,3 | **24,6** | 25,0 | 25,4 |
-| 12,60 % | 21,4 | 21,5 | 21,7 | 21,9 | 22,1 |
-| 13,60 % | 19,4 | 19,5 | 19,5 | 19,6 | 19,6 |
+| 8,55 % | 38,8 | 40,8 | 43,2 | 46,4 | 50,7 |
+| 9,55 % | 32,1 | 33,1 | 34,4 | 35,9 | 37,8 |
+| 10,55 % | 27,5 | 28,0 | 28,6 | 29,4 | 30,3 |
+| **11,55 %** | 24,0 | 24,3 | **24,7** | 25,0 | 25,5 |
+| 12,55 % | 21,5 | 21,6 | 21,8 | 21,9 | 22,1 |
+| 13,55 % | 19,4 | 19,5 | 19,6 | 19,6 | 19,7 |
 
 ### 4.2 Margen operativo objetivo × multiplicador del crecimiento de los años 1-5 (valor por acción, $)
 
 | Margen \ crecimiento × | 0,5x | 1,0x (base) | 1,5x | 2,0x |
 |---|---:|---:|---:|---:|
-| 6 % | 16,3 | 16,3 | 16,2 | 15,9 |
-| 9 % | 22,7 | 24,2 | 26,0 | 28,2 |
-| 12 % | 29,1 | 32,1 | 35,8 | 40,4 |
-| 15 % | 35,6 | 40,0 | 45,5 | 52,6 |
-| 20 % | 46,3 | 53,1 | 61,8 | 73,0 |
-| 25 % | 57,0 | 66,2 | 78,1 | 93,4 |
+| 6 % | 16,3 | 16,4 | 16,3 | 16,0 |
+| 9 % | 22,8 | 24,3 | 26,1 | 28,2 |
+| 12 % | 29,2 | 32,2 | 35,8 | 40,5 |
+| 15 % | 35,6 | 40,1 | 45,6 | 52,7 |
+| 20 % | 46,4 | 53,2 | 61,9 | 73,2 |
+| 25 % | 57,1 | 66,4 | 78,3 | 93,6 |
 
 ### 4.3 ROIC terminal y beta (v2)
 
@@ -185,7 +189,7 @@ El WACC terminal se desplaza lo mismo que el inicial.
 
 | ROIC terminal | Igual al WACC terminal (9,79 %) | 10 % | **12 % (base)** | 13,4 % (mínimo FY21-24) | 15 % |
 |---|---:|---:|---:|---:|---:|
-| Valor por acción | 23,6 $ | 23,8 $ | **24,6 $** | 25,1 $ | 25,5 $ |
+| Valor por acción | 23,7 $ | 23,8 $ | **24,7 $** | 25,1 $ | 25,5 $ |
 
 Que la justificación de v1 fuera incorrecta no cambia el resultado: entre "sin creación de valor" y el 15 % hay menos de 2 $.
 
@@ -193,14 +197,14 @@ Que la justificación de v1 fuera incorrecta no cambia el resultado: entre "sin 
 
 | Variante | WACC años 1-5 | WACC terminal | VPA base | Diferencia |
 |---|---:|---:|---:|---:|
-| **Modelo (beta mezclada 50/50)** | 11,60 % | 9,79 % | **24,6 $** | — |
-| Beta sectorial (1,32) solo en los años 1-5 | 10,46 % | 9,79 % | 25,9 $ | **+1,2 $** |
-| Beta sectorial y WACC terminal desplazado lo mismo (como la tabla 4.1) | 10,46 % | 8,65 % | 29,2 $ | +4,6 $ |
+| **Modelo (beta mezclada 50/50)** | 11,55 % | 9,79 % | **24,7 $** | — |
+| Beta sectorial (1,32) solo en los años 1-5 | 10,46 % | 9,79 % | 25,8 $ | **+1,2 $** |
+| Beta sectorial y WACC terminal desplazado lo mismo (como la tabla 4.1) | 10,46 % | 8,70 % | 29,1 $ | +4,4 $ |
 
-**El modelo mantiene la beta mezclada.** La variante coherente es la segunda, **+1,2 $**. La beta terminal (1,16) ya es una beta de empresa madura que no incluye la de regresión, así que bajar también el WACC terminal contaría dos veces el mismo ajuste. La tercera fila (+4,6 $) es la cota superior; coincide con lo que medía Fase 4 y con los ~+4,5 $ de 05.
+**El modelo mantiene la beta mezclada.** La variante coherente es la segunda, **+1,2 $**. La beta terminal (1,16) ya es una beta de empresa madura que no incluye la de regresión, así que bajar también el WACC terminal contaría dos veces el mismo ajuste. La tercera fila (+4,4 $) es la cota superior; es lo que medía Fase 4 (+4,6 $ con la beta de regresión de v2, 1,86) y está cerca de los ~+4,5 $ de 05.
 
 **Lectura:**
-- **El margen es la variable dominante.** Con márgenes bajos, crecer más **destruye** valor (fila del 6 %), porque cada dólar de ingresos nuevos exige ~0,67 $ de capital y rinde menos que el WACC.
+- **El margen es la variable dominante.** Con márgenes bajos, crecer más que en el caso base **destruye** valor (fila del 6 %: 16,4 $ con 1,0x, 16,0 $ con 2,0x), porque cada dólar de ingresos nuevos exige ~0,67 $ de capital y rinde menos que el WACC.
 - **El WACC, g, la beta y el ROIC terminal mueven el resultado en unidades o decenas de dólares, no en cientos.** Ninguna combinación razonable de las tablas pasa de ~100 $ por acción.
 - **La conclusión es robusta.** El valor del negocio reportado está un orden de magnitud por debajo del precio. Cambios del 15 % en cualquier supuesto no lo alteran.
 
@@ -218,29 +222,29 @@ Que la justificación de v1 fuera incorrecta no cambia el resultado: entre "sin 
 
 | Margen operativo en el año 10 | **TACC necesaria de los ingresos** | Ingresos en el año 10 (M$) | Múltiplo sobre el TTM | EBIT en el año 10 (M$) |
 |---|---:|---:|---:|---:|
-| 10 % | 61,8 % | 12.711.646 | 122,7x | 1.271.165 |
-| 15 % | 43,7 % | 3.889.508 | 37,6x | 583.426 |
-| **20 %** | **36,1 %** | **2.255.182** | **21,8x** | 451.036 |
-| **25 %** | **31,3 %** | **1.576.411** | **15,2x** | 394.103 |
-| **30 %** | **27,8 %** | **1.206.301** | **11,6x** | 361.890 |
-| 35 % | 25,1 % | 973.900 | 9,4x | 340.865 |
+| 10 % | 61,7 % | 12.671.686 | 122,3x | 1.267.169 |
+| 15 % | 43,7 % | 3.878.013 | 37,4x | 581.702 |
+| **20 %** | **36,0 %** | **2.248.629** | **21,7x** | 449.726 |
+| **25 %** | **31,3 %** | **1.571.868** | **15,2x** | 392.967 |
+| **30 %** | **27,8 %** | **1.202.840** | **11,6x** | 360.852 |
+| 35 % | 25,1 % | 971.115 | 9,4x | 339.890 |
 
-Con las TACC de los tres escenarios (2,5 %, 5,5 % y 9,8 %) **no existe ningún margen, ni siquiera del 100 %, que justifique el precio.**
+Con las TACC de los escenarios bajista y base (2,5 % y 5,5 %) **no existe ningún margen, ni siquiera del 100 %, que justifique el precio.** Con la del alcista (9,8 %) haría falta un margen operativo del **100,0 %** en el año 10, es decir, que no hubiera ningún coste (v3; con la beta de v2 tampoco bastaba el 100 %).
 
 **Valor por acción ($) para combinaciones redondas de TACC y margen en el año 10:**
 
 | TACC \ margen | 15 % | 20 % | 25 % | 30 % |
 |---|---:|---:|---:|---:|
-| 10 % | 46 | 66 | 85 | 105 |
+| 10 % | 46 | 66 | 86 | 105 |
 | 15 % | 61 | 91 | 120 | 150 |
-| 20 % | 81 | 125 | 169 | 213 |
-| 25 % | 110 | 175 | 240 | 304 |
+| 20 % | 82 | 126 | 170 | 214 |
+| 25 % | 111 | 176 | 240 | 305 |
 
 **Advertencia: intensidad de capital del software (v2, 04 §4.1.5).** El DCF inverso aplica a todo el crecimiento la intensidad de capital de un negocio industrial (1,5 $ de ventas por cada dólar invertido). Si una parte grande de los ingresos futuros fuera software (FSD) o servicios de flota con menos capital por dólar de ventas, la exigencia bajaría. Medido con ventas/capital de **3,0x** (script §9 h):
 
 | Margen en el año 10 | TACC necesaria con 1,5x | TACC necesaria con 3,0x | Múltiplo de los ingresos en 10 años con 3,0x |
 |---|---:|---:|---:|
-| 20 % | 36,1 % | 32,3 % | 16,4x |
+| 20 % | 36,0 % | 32,2 % | 16,4x |
 | 25 % | 31,3 % | 28,6 % | 12,4x |
 | 30 % | 27,8 % | 25,8 % | 9,9x |
 
@@ -261,9 +265,9 @@ Medido de otra forma, la parte del precio que el DCF del negocio reportado no ex
 
 | Escenario | Valor de las acciones DCF (M$) | Diferencia con la capitalización (M$) | % de la capitalización | $ por acción |
 |---|---:|---:|---:|---:|
-| Bajista | 41.114 | 1.430.182 | 97,2 % | 361,8 |
-| Base | 97.277 | 1.374.019 | 93,4 % | 347,6 |
-| Alcista | 220.392 | 1.250.904 | 85,0 % | 316,5 |
+| Bajista | 41.149 | 1.430.147 | 97,2 % | 361,8 |
+| Base | 97.450 | 1.373.846 | 93,4 % | 347,6 |
+| Alcista | 220.872 | 1.250.423 | 85,0 % | 316,3 |
 
 Este resultado es coherente con el cálculo ilustrativo de Fase 1 §5, que estimaba en "menos del 10 % de la capitalización" el peso del negocio actual.
 
@@ -283,7 +287,7 @@ Proyectar sus flujos exigiría inventar a la vez la cuota de mercado, el precio,
 
 La alternativa habitual es subir el crecimiento terminal hasta que el DCF "cuadre". Eso es incorrecto por tres motivos:
 - g por encima del tipo libre de riesgo (4,97 %) implica que la empresa acaba siendo más grande que la economía;
-- la tabla de la §4.1 demuestra que, incluso con g = 4 % y un WACC 3 puntos más bajo, el caso base no pasa de ~50 $;
+- la tabla de la §4.1 demuestra que, incluso con g = 4 % y un WACC 3 puntos más bajo, el caso base no pasa de ~51 $;
 - mezclar opcionalidad y negocio maduro en un solo número oculta lo que se está suponiendo.
 
 Por eso aquí se separan: **valor del negocio reportado (10-56 $)** más una **opcionalidad implícita (~316-362 $ por acción)** que el mercado asigna.
@@ -301,11 +305,11 @@ En consecuencia, la "opcionalidad implícita" de 316-362 $ por acción **no es s
 
 | Variante del caso base | Margen de partida (año 0) | Suelo de capex en años 1-2 | VPA base | Diferencia |
 |---|---:|:---:|---:|---:|
-| **Base v2 (todo cargado al negocio actual)** | 2,23 % | sí | **24,6 $** | — |
+| **Base v3 (todo cargado al negocio actual)** | 2,23 % | sí | **24,7 $** | — |
 | Sin la SBC por encima de FY2024 (+2.301 M$, 2,25 % de los ingresos sin créditos) | 4,48 % | sí | 25,5 $ | +0,8 $ |
 | Sin la I+D incremental de 3T26 anualizada (+4.524 M$, 4,42 %) | 6,65 % | sí | 26,3 $ | +1,6 $ |
 | Sin ninguna de las dos | 8,90 % | sí | 27,1 $ | +2,5 $ |
-| Sin suelo de capex: la ola de capex de 2026 se atribuye a la opcionalidad | 2,23 % | no | 26,9 $ | +2,3 $ |
+| Sin suelo de capex: la ola de capex de 2026 se atribuye a la opcionalidad | 2,23 % | no | 27,0 $ | +2,3 $ |
 | **Las tres cosas a la vez (cota superior)** | 8,90 % | no | **29,4 $** | **+4,8 $** |
 
 **Lectura:**
@@ -378,7 +382,7 @@ Como orden de magnitud, que sale directamente de la tabla de la §5: con la prob
 
 **Lectura:**
 - **Como fabricante de automóviles**, los múltiplos dan **~12-35 $**, en línea con el DCF.
-- **Solo el EV/Ventas de las grandes tecnológicas reproduce el precio** (~407 $), con una muestra de dos empresas. Ese múltiplo lo justifican márgenes operativos que en Apple y Nvidia son de varias veces el 3,4 % de Tesla. Con el PER de esas mismas tecnológicas, Tesla valdría ~31 $.
+- **Solo el EV/Ventas de las grandes tecnológicas reproduce el precio** (~407 $), con una muestra de dos empresas. Ese múltiplo lo justifican márgenes operativos que en Apple y Nvidia son de varias veces el 3,3 % de Tesla (margen operativo TTM, 02 v3). Con el PER de esas mismas tecnológicas, Tesla valdría ~31 $.
 - El mercado valora a Tesla por sus ingresos **como si ya tuviera márgenes de software**, mientras que por beneficio la valora como un fabricante de coches en su peor momento de márgenes.
 
 ---
@@ -387,10 +391,10 @@ Como orden de magnitud, que sale directamente de la tabla de la §5: con la prob
 
 | Enfoque | Rango del valor por acción |
 |---|---|
-| DCF del negocio reportado, del bajista al alcista | **10-56 $** (base ~25 $); con acciones totalmente diluidas, 10-56 $ (base 24,5 $) |
-| Sensibilidad del caso base, WACC 8,6-13,6 % × g 2-4 % | 19-50 $ |
-| Sensibilidad del caso base, margen 6-25 % × crecimiento 0,5-2x | 16-93 $ |
-| Sensibilidad del caso base, ROIC terminal (WACC-15 %) y beta sectorial | 23,6-25,9 $ (coherente); hasta 29,2 $ si se baja también el WACC terminal |
+| DCF del negocio reportado, del bajista al alcista | **10-56 $** (base ~25 $); con acciones totalmente diluidas, 10-56 $ (base 24,6 $) |
+| Sensibilidad del caso base, WACC 8,55-13,55 % × g 2-4 % | 19-51 $ |
+| Sensibilidad del caso base, margen 6-25 % × crecimiento 0,5-2x | 16-94 $ |
+| Sensibilidad del caso base, ROIC terminal (WACC-15 %) y beta sectorial | 23,7-25,8 $ (coherente); hasta 29,1 $ si se baja también el WACC terminal |
 | Asimetría costes/ingresos de la opcionalidad (cota superior) | hasta 29 $ (base +4,8 $) |
 | Activos fuera de la caja neta (SpaceX y activos digitales) | +0,97 $ sobre cualquiera de las cifras anteriores |
 | Múltiplos de fabricantes de automóviles | 12-35 $ |
@@ -407,7 +411,7 @@ Si esa apuesta está justificada o no depende de variables que hoy no tienen mé
 
 ---
 
-*Reproducibilidad:* `python3 scripts/fase3_dcf.py` regenera `data/dcf.xlsx` (y lo recalcula con LibreOffice si está instalado; `DCF_NO_RECALC=1` lo evita) e imprime todos los resultados de este documento. Los IDs de fuente M1-M10 están en `fuentes/fuentes.md`; las fuentes nuevas o re-leídas en v2, en `fuentes/nuevas_fase3_v2.md`.
+*Reproducibilidad:* `python3 scripts/fase3_dcf.py` regenera `data/dcf.xlsx` (y lo recalcula con LibreOffice si está instalado; `DCF_NO_RECALC=1` lo evita) e imprime todos los resultados de este documento. Los IDs de fuente M1-M10 están en `fuentes/fuentes.md`; las fuentes nuevas o re-leídas en v2, en `fuentes/nuevas_fase3_v2.md`, y en v3, en `fuentes/nuevas_fase3_v3.md`. Desde v3, las cifras del texto se copian de `data/cifras_03_redondeo.csv`.
 
 ---
 
@@ -449,3 +453,63 @@ DCF inverso (TACC necesaria con márgenes del 20 / 25 / 30 %): **36,1 / 31,3 / 2
 - **VPA "corregidos" de 04 v1** (11,6 / 27,5 / 61,5 $ sobre la media diluida): no se usan, porque excluyen acciones emitidas legalmente (05 §3.3; 04 v2 los retiró).
 
 **Efecto en otras fases (no modificadas aquí):** `fase4_opcionalidad.py` §13 importa este modelo. Con v2, sus cifras se mueven en décimas: capex del año 1, 15.883 → 15.884 M$; sensibilidad de §4.1.1, 25,44 / 26,24 $ (sigue redondeando a 25,4 / 26,2); ajuste máximo, 28,5-31,8 $ (04 dice 28,4-31,8). Las expectativas de `fase5_consistencia.py` siguen siendo los valores de v1 y darán diferencias en los VPA (por ejemplo, alcista 54,9 → 55,8).
+
+---
+
+## Registro de cambios v3
+
+**Fecha:** 2026-10-25 · **Origen:** [05-veredicto-v2.md](05-veredicto-v2.md) §8, prioridad 2 (Fase 3), con §2.1 (M1, M2) y §4.2 (FAIL-v2-1); «Registro de cambios v3» de [02-financieros.md](02-financieros.md) · **Archivos tocados:** `docs/03-valoracion.md`, `scripts/fase3_dcf.py`, `data/dcf.xlsx`, el archivo nuevo `data/cifras_03_redondeo.csv` y el archivo nuevo `fuentes/nuevas_fase3_v3.md`. `fuentes/fuentes.md` no se toca.
+
+| Punto | Qué cambió |
+|---|---|
+| **(a) M1** W9 "25,9 $" (25,848) | §4.3 (tabla W9): **25,8 $**. §8: "23,6-25,9 $" pasa a "**23,7-25,8 $**". El 25,8 no cambia con la beta nueva (la variante W9 usa solo la beta sectorial, 25,848 $). El extremo bajo pasa de 23,6 a **23,7 $** por el cambio de beta del punto (c): el ROIC terminal = WACC da ahora 23,680 $ (v2: 23,639). La diferencia "+1,2 $" se mantiene (+1,19) |
+| **(b) M2** §6.3 "Sin la SBC por encima de FY2024" 25,5 $ (25,446) | Con el modelo v2, la cifra correcta era 25,4 $ y el veredicto tenía razón. **Con el modelo v3 (punto c), el valor completo es 25,490 $, que da 25,5 $**: la cifra del documento vuelve a coincidir con el script, ahora sin doble redondeo (`asim_1_vpa` en `cifras_03_redondeo.csv`). La diferencia sigue en +0,8 $ (+0,84). **Fase 4 debe copiar 25,5 $, no 25,4** (ver la lista de cifras de abajo) |
+| **(c) FAIL-v2-1** Beta de MarketChameleon 1,87 no reproducible | **Re-consultadas las dos fuentes el 25-oct-2026** (`fuentes/nuevas_fase3_v3.md`). MarketChameleon da 1,84 ("Data as of October 23, 2026"). **TipRanks también da hoy 1,84** (fecha de modificación de la página: 24-oct-2026; no aparece ningún 1,85), así que la otra mitad de la media tampoco es ya reproducible. **Decisión:** se citan los valores actuales de ambas, 1,84 y 1,84, y no se retira la beta de regresión, para no cambiar el criterio de mezcla 50/50 declarado en §1.1 y discutido en W9. Es el único cambio de modelo de esta ronda, y todo se recalcula desde el script: beta de regresión 1,86 → **1,84**; beta inicial 1,59 → **1,58**; Ke inicial 11,64 % → **11,60 %**; WACC inicial 11,60 % → **11,55 %** (el WACC terminal no cambia: 9,79 %); VPA base 24,61 → **24,65 $** (+0,04 $; a un decimal, 24,6 → **24,7 $**). El veredicto estimaba +0,03 $ cambiando solo MarketChameleon; con las dos fuentes en 1,84, el efecto es de +0,04 $. Actualizadas §0, §1, §1.1, §2.2, §3, §4.1 (las filas de la tabla pasan a 8,55-13,55 %, porque la rejilla es el WACC base ± 1-3 puntos), §4.2, §4.3, §5, §6.2, §6.3 y §8. **Una frase de §5 cambia de sentido:** con la TACC alcista (9,8 %), un margen del 100,0 % basta ahora para justificar el precio (372,22 $, justo en el límite); en v2 no bastaba. La conclusión no cambia: haría falta un negocio sin costes |
+| **(d)** Margen operativo TTM 3,4 % → 3,3 % (02 v3) | §7, lectura de múltiplos: "varias veces el 3,3 % de Tesla (margen operativo TTM, 02 v3)". 03 no cita en ningún otro sitio el margen operativo TTM total; el margen sin créditos (2,23 %) no cambia |
+| **(e)** Evitar el doble redondeo | Nueva §10 del script: escribe `data/cifras_03_redondeo.csv` (220 cifras con clave, sección de 03, valor completo, decimales, unidad y texto). El texto se redondea **una sola vez**, mitad hacia arriba con `Decimal`, desde el valor completo, con el número de decimales y el formato del documento (miles con punto y decimales con coma). El script también imprime las cifras y avisa de las que saldrían distintas si se volviera a redondear una salida a d+1 decimales: hoy son 10, entre ellas W9 (25,85 → 25,8, no 25,9), el WACC inicial (11,555 → 11,55, no 11,56) y la cota superior de §6.3 (29,45 → 29,4). Todas las cifras de 03 que cambian en esta ronda se han copiado de ese CSV |
+
+**Cifras de 03 que cambian en v3 (antiguas → nuevas), para que Fase 4 las sincronice:**
+
+| Dónde en 03 | v2 | **v3** |
+|---|---:|---:|
+| §1 / §1.1 beta de regresión (fuentes) | 1,85 y 1,87 → 1,86 | **1,84 y 1,84 → 1,84** |
+| §1.1 beta inicial | 1,59 | **1,58** |
+| §1.1 Ke inicial | 11,64 % | **11,60 %** |
+| §1.1 WACC inicial (y fila base de 4.1, W9 "Modelo") | 11,60 % | **11,55 %** |
+| §1.1 WACC solo con beta de regresión | ~12,7 % | **~12,6 %** |
+| §3 VPA base (portada) / totalmente diluido | 24,6 / 24,5 $ | **24,7 / 24,6 $** (24,654 / 24,563) |
+| §3 VPA alcista (portada) / totalmente diluido | 55,8 / 55,6 $ | **55,9 / 55,7 $** (55,878 / 55,673) |
+| §3 VPA bajista | 10,4 / 10,4 $ | sin cambios |
+| §3 bajista: VP FCFF / VP TV / % TV / EV / acciones | −8.451 / 13.641 / 263 % / 5.190 / 41.114 | **−8.452 / 13.676 / 262 % / 5.225 / 41.149** |
+| §3 base: VP FCFF / VP TV / EV / acciones | 10.399 / 50.954 / 61.353 / 97.277 | **10.438 / 51.088 / 61.526 / 97.450** |
+| §3 alcista: VP FCFF / VP TV / EV / acciones | 47.438 / 137.030 / 184.468 / 220.392 | **47.558 / 137.390 / 184.948 / 220.872** |
+| §0 VPA totalmente diluidos | 10,4 / 24,5 / 55,6 $ | **10,4 / 24,6 / 55,7 $** |
+| §0 punto 4 y §6.2: máximo de la tabla 4.1 | ~50 $ | **~51 $** (50,69) |
+| §4.1 tabla | filas 8,60-13,60 % | **filas 8,55-13,55 %**; esquina 50,4 → **50,7**; celda base 24,6 → **24,7** (resto en la tabla) |
+| §4.2 tabla | 16,3 … 93,4 | 6 %: 16,3 / 16,4 / 16,3 / 16,0; 9 %: 22,8 / 24,3 / 26,1 / 28,2; 12 %: 29,2 / 32,2 / 35,8 / 40,5; 15 %: 35,6 / 40,1 / 45,6 / 52,7; 20 %: 46,4 / 53,2 / 61,9 / 73,2; 25 %: 57,1 / 66,4 / 78,3 / **93,6** |
+| §4.3 ROIC terminal = WACC / 10 % / 12 % / 13,4 % / 15 % | 23,6 / 23,8 / 24,6 / 25,1 / 25,5 $ | **23,7** / 23,8 / **24,7** / 25,1 / 25,5 $ |
+| §4.3 W9 beta sectorial años 1-5 | 25,9 $ (+1,2) | **25,8 $ (+1,2)** |
+| §4.3 W9 con WACC terminal desplazado | 8,65 % · 29,2 $ · +4,6 $ | **8,70 % · 29,1 $ · +4,4 $** |
+| §5 TACC necesaria con 10 / 15 / 20 / 25 / 30 / 35 % | 61,8 / 43,7 / 36,1 / 31,3 / 27,8 / 25,1 % | **61,7** / 43,7 / **36,0** / 31,3 / 27,8 / 25,1 % |
+| §5 ingresos del año 10 (10 / 15 / 20 / 25 / 30 / 35 %) | 12.711.646 / 3.889.508 / 2.255.182 / 1.576.411 / 1.206.301 / 973.900 | **12.671.686 / 3.878.013 / 2.248.629 / 1.571.868 / 1.202.840 / 971.115** |
+| §5 múltiplo sobre el TTM (10 / 15 / 20 %) | 122,7x / 37,6x / 21,8x | **122,3x / 37,4x / 21,7x** (25 / 30 / 35 %: 15,2x / 11,6x / 9,4x sin cambios) |
+| §5 EBIT del año 10 (10 / 15 / 20 / 25 / 30 / 35 %) | 1.271.165 / 583.426 / 451.036 / 394.103 / 361.890 / 340.865 | **1.267.169 / 581.702 / 449.726 / 392.967 / 360.852 / 339.890** |
+| §5 TACC con ventas/capital de 3,0x (20 %) | 32,3 % | **32,2 %** (25 % y 30 %: 28,6 / 25,8 %, sin cambios) |
+| §5 margen necesario con la TACC alcista | no alcanzable | **100,0 %** |
+| §5 combinaciones TACC × margen | (10,25) 85; (20,15) 81; (20,20) 125; (20,25) 169; (20,30) 213; (25,15) 110; (25,20) 175; (25,30) 304 | **86; 82; 126; 170; 214; 111; 176; 305** (resto igual) |
+| §5 brecha bajista / base / alcista (M$) | 1.430.182 / 1.374.019 / 1.250.904 | **1.430.147 / 1.373.846 / 1.250.423** |
+| §5 brecha alcista por acción | 316,5 $ | **316,3 $** (el rango "~316-362 $" y el 85,0-97,2 % no cambian) |
+| §6.3 base / sin SBC extra / sin suelo de capex | 24,6 / 25,5 (debía ser 25,4) / 26,9 $ | **24,7 / 25,5 / 27,0 $** (diferencias +0,8 / +2,3 sin cambios; resto de filas sin cambios: 26,3 / 27,1 / 29,4 $ y +1,6 / +2,5 / +4,8 $) |
+| §7 margen operativo TTM | 3,4 % | **3,3 %** |
+| §8 sensibilidad WACC × g | WACC 8,6-13,6 % · 19-50 $ | **WACC 8,55-13,55 % · 19-51 $** |
+| §8 sensibilidad margen × crecimiento | 16-93 $ | **16-94 $** |
+| §8 ROIC terminal y beta sectorial | 23,6-25,9 $; hasta 29,2 $ | **23,7-25,8 $; hasta 29,1 $** |
+| §8 DCF con acciones totalmente diluidas, base | 24,5 $ | **24,6 $** |
+
+No cambian: los rangos "~10-~56 $" y "~25 $" del caso base, el 85-97 % de brecha, los ~1,25-1,43 billones $, las TACC "~28-36 %" y "~26-32 %", los múltiplos de TSLA (13,9x / 141x / 414x / 410x), los +0,97 $ de activos no operativos, el capex del año 1 (15.884 M$) y la §2.3.
+
+**Para Fase 4 (no se modifica aquí):** el veredicto le pide "(25,4 / 26,3 $)" en §4.1.1. Con 03 v3 debe ser **(25,5 / 26,3 $)**, y "24,6 → 25,8 $" en §4.1.3 pasa a **"24,7 → 25,8 $"**. `fase4_opcionalidad.py` importa este script, así que sus salidas también se moverán ligeramente.
+
+**Para el Reality Checker:** las expectativas de `fase5_consistencia.py` (WACC 11,60 %, VPA 24,6…) corresponden al modelo v2.
+
+**Limitación:** en el equipo de esta ronda no hay LibreOffice, así que `data/dcf.xlsx` se ha regenerado **sin valores cacheados**. Las fórmulas son las mismas que en v2 y se recalculan al abrir el libro. Para recuperar la caché (arreglo de v2, 05 §1) hay que volver a ejecutar `fase3_dcf.py` en un equipo con LibreOffice.

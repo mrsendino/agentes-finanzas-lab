@@ -28,8 +28,15 @@ v2 (2026-10-25): ronda de correcciones tras 05-veredicto.md §5 (prioridad 2) y 
 - Bloques nuevos de control (§9): ROIC terminal, beta (W9), asimetría costes/ingresos de la opcionalidad,
   capex bruto implícito frente a la guía, mecanismo del margen base, energía, SpaceX y DCF inverso con
   ventas/capital de tipo software.
+
+v3 (2026-10-25): ronda tras 05-veredicto-v2.md §8, prioridad 2:
+- Beta de regresión: 1,84 y 1,84 (TipRanks y MarketChameleon re-consultadas el 25-oct-2026) en lugar de 1,85 y 1,87
+  (FAIL-v2-1). Es el único cambio de modelo; se recalcula todo.
+- §10 nueva: data/cifras_03_redondeo.csv con cada cifra del documento redondeada mitad hacia arriba (Decimal) desde el
+  valor completo, al número de decimales con que se escribe en 03. El documento copia de ahí (M1/M2: doble redondeo).
 """
 import csv
+from decimal import Decimal, ROUND_HALF_UP
 import os
 import shutil
 import statistics
@@ -117,8 +124,10 @@ MKT = {
     "acciones_basicas_3T": (3240.0, "M acciones", "10-Q 3T-2026 (P2), cuenta de resultados: media ponderada básica 3T-2026"),
     "rf": (0.0497, "%", "Bono EE. UU. 10 años 4,967 % (23-oct-2026, ~15:53 ET); cierre 22-oct 4,954 %. mortgagenewsdaily.com/treasury/10yr"),
     "erp": (0.0420, "%", "Damodaran, ERP implícito S&P 500 a 1-oct-2026 = 4,20 % (trailing 12m, payout ajustado). pages.stern.nyu.edu/~adamodar (home page)"),
-    "beta_reg_1": (1.85, "x", "TipRanks, estadísticas TSLA (actualizado 23-oct-2026). Beta de regresión; ventana no indicada"),
-    "beta_reg_2": (1.87, "x", "MarketChameleon, resumen TSLA (23-oct-2026). Beta de regresión; ventana no indicada"),
+    # v3 (FAIL-v2-1 de 05-veredicto-v2 §4.2): ambas re-consultadas el 25-oct-2026. v2 usaba 1,85 (TipRanks) y 1,87
+    # (MarketChameleon); ninguna de las dos páginas muestra ya esos valores.
+    "beta_reg_1": (1.84, "x", "TipRanks, estadísticas TSLA ('Beta 1.84'; dateModified de la página 24-oct-2026; consultado 25-oct-2026). Beta de regresión; ventana no indicada. v2: 1,85"),
+    "beta_reg_2": (1.84, "x", "MarketChameleon, resumen TSLA ('TSLA has a beta of 1.84'; 'Data as of October 23, 2026'; consultado 25-oct-2026). Beta de regresión; ventana no indicada. v2: 1,87"),
     "beta_u_auto": (1.31, "x", "Damodaran, betas por sector EE. UU. (ene-2026): Auto & Truck, beta desapalancada corregida por caja 1,31 (33 empresas)"),
     "beta_u_mercado": (1.00, "x", "Por definición, beta media del mercado = 1"),
     "spread_deuda": (0.010, "%", "SUPUESTO (SIN VERIFICAR): diferencial de 100 pb sobre rf, coherente con rating grado de inversión bajo; no se ha consultado el rating vigente"),
@@ -470,7 +479,7 @@ def hdr(ws, row, values, col=1):
 # --- Supuestos ---
 ws = wb.active
 ws.title = "Supuestos"
-ws["A1"] = "Tesla (TSLA) - Fase 3 v2 - Supuestos de valoración (azul = input; negro = fórmula). Fecha: 2026-10-24; v2 2026-10-25"
+ws["A1"] = "Tesla (TSLA) - Fase 3 v3 - Supuestos de valoración (azul = input; negro = fórmula). Fecha: 2026-10-24; v2 y v3 2026-10-25"
 ws["A1"].font = BOLD
 hdr(ws, 3, ["Parámetro", "Valor", "Unidad", "Fuente / justificación"])
 NAMES = {}
@@ -969,3 +978,129 @@ pr(f"(g) Fuera de la caja neta: SpaceX ~{SPACEX_FV_INF:,.0f} (inferencia: {SPACE
 pr("(h) DCF inverso con ventas/capital " + f"{STC_SW:.1f}x: " + "; ".join(
     f"margen {M:.0%} -> TACC {c_sw:.2%}" if c_sw is not None else f"margen {M:.0%} -> no alcanzable" for M, c_sw in REVERSE_SW))
 pr(f"\nExcel escrito en {OUT_XLSX} ; {RECALC}")
+
+# ---------------------------------------------------------------------------
+# 10. v3: cifras del documento redondeadas UNA sola vez desde el valor completo (05-veredicto-v2 §2.1 M1/M2, §8 (e))
+# Redondeo mitad hacia arriba con Decimal sobre repr(float) (no sobre una cifra ya redondeada a 2 decimales).
+# 03-valoracion.md copia las cifras de la columna "texto" de data/cifras_03_redondeo.csv.
+# ---------------------------------------------------------------------------
+OUT_CIFRAS = os.path.join(BASE, "data", "cifras_03_redondeo.csv")
+
+
+def red(x, d):
+    """Redondeo mitad hacia arriba (en valor absoluto) a d decimales desde el valor completo."""
+    q = Decimal(1).scaleb(-d) if d > 0 else Decimal(1)
+    return Decimal(repr(float(x))).quantize(q, rounding=ROUND_HALF_UP)
+
+
+def txt(x, d):
+    """Formato del documento: miles con punto, decimales con coma, signo menos tipográfico."""
+    v = red(x, d)
+    s_ = f"{abs(v):,.{d}f}".replace(",", "X").replace(".", ",").replace("X", ".")
+    return ("−" if v < 0 else "") + s_
+
+
+CIFRAS = []
+
+
+def cif(clave, seccion, valor, d, unidad=""):
+    CIFRAS.append((clave, seccion, valor, d, unidad))
+
+
+cif("beta_regresion", "§1 / §1.1", BETA_REG, 2, "x")
+cif("beta_bottom_up", "§1.1", BETA_BU, 2, "x")
+cif("beta_inicial", "§1.1", BETA0, 2, "x")
+cif("beta_terminal", "§1.1", BETA_T, 2, "x")
+cif("d_e", "§1.1", D_E * 100, 2, "%")
+cif("w_d", "§1.1", W_D * 100, 2, "%")
+cif("ke0", "§1.1", KE0 * 100, 2, "%")
+cif("kd", "§1.1", KD * 100, 2, "%")
+cif("wacc0", "§1.1 / §4", WACC0 * 100, 2, "%")
+cif("wacc_t", "§1.1 / §2.2 / §4.3", WACC_T * 100, 2, "%")
+for lab, b in (("solo_regresion", BETA_REG), ("solo_bottom_up", BETA_BU)):
+    cif(f"wacc0_{lab}", "§1.1", ((RF + b * ERP) * (1 - W_D) + KD * W_D) * 100, 1, "%")
+cif("roic12_menos_wacc_t", "§2.2", (0.12 - WACC_T) * 100, 1, "pp")
+for k in ("bajista", "base", "alcista"):
+    v = RES[k]
+    last = v["rows"][-1]
+    cif(f"{k}_ingresos_10", "§3", last["rev"], 0, "M$")
+    cif(f"{k}_ebit_10", "§3", last["ebit"], 0, "M$")
+    cif(f"{k}_vp_fcff", "§3", v["pv_sum"], 0, "M$")
+    cif(f"{k}_vp_tv", "§3", v["pv_tv"], 0, "M$")
+    cif(f"{k}_pct_tv", "§3", v["tv_share"] * 100, 0, "%")
+    cif(f"{k}_ev", "§3", v["ev"], 0, "M$")
+    cif(f"{k}_equity", "§3 / §5", v["eq"], 0, "M$")
+    cif(f"{k}_vpa", "§0 / §3 / §8", v["vps"], 1, "$")
+    cif(f"{k}_vpa_fd", "§0 / §3 / §8", RES_DIL[k], 1, "$")
+    cif(f"{k}_vs_precio", "§3", (v["vps"] / PRICE - 1) * 100, 0, "%")
+    gap = MCAP - v["eq"]
+    cif(f"{k}_brecha", "§5", gap, 0, "M$")
+    cif(f"{k}_brecha_pct", "§0 / §5", gap / MCAP * 100, 1, "%")
+    cif(f"{k}_brecha_por_accion", "§5 / §6", gap / SH, 1, "$")
+    cif(f"{k}_tacc_10", "§2.2", CAGR_SCEN[k] * 100, 1, "%")
+for i, x in enumerate(B0["rows"]):
+    cif(f"base_fcff_año{i + 1}", "§3", x["fcff"], 0, "M$")
+for w, row in zip(W_GRID, SENS):
+    for g, v in zip(G_GRID, row):
+        cif(f"sens41_w{w * 100:.2f}_g{g * 100:.1f}", "§4.1", v, 1, "$")
+for w in W_GRID:
+    cif(f"sens41_fila_wacc_{w * 100:.2f}", "§4.1", w * 100, 2, "%")
+for m, row in zip(M_GRID, SENS2):
+    for gm, v in zip(GM_GRID, row):
+        cif(f"sens42_m{m * 100:.0f}_x{gm}", "§4.2", v, 1, "$")
+for lab, v, vps in ROIC_SENS:
+    cif(f"roic_term_{lab.split(' ')[0]}", "§4.3 / §2.2 / §8", vps, 1, "$")
+cif("w9_wacc0_sector", "§4.3", WACC0_SEC * 100, 2, "%")
+cif("w9_vpa_años1_5", "§4.3 / §8", W9_15, 1, "$")
+cif("w9_dif_años1_5", "§4.3", W9_15 - B0["vps"], 1, "$")
+cif("w9_wacc_t_desplazado", "§4.3", (WACC_T + WACC0_SEC - WACC0) * 100, 2, "%")
+cif("w9_vpa_desplazado", "§4.3 / §8", W9_SHIFT, 1, "$")
+cif("w9_dif_desplazado", "§4.3", W9_SHIFT - B0["vps"], 1, "$")
+for i, (lab, m0, nf, vps) in enumerate(ASYM_RES):
+    cif(f"asim_{i}_vpa", "§6.3", vps, 1, "$")
+    cif(f"asim_{i}_dif", "§6.3", vps - B0["vps"], 1, "$")
+    cif(f"asim_{i}_margen0", "§6.3", m0 * 100, 2, "%")
+for d in REVERSE:
+    cif(f"inverso_m{d['M'] * 100:.0f}_tacc", "§5", d["c"] * 100, 1, "%")
+    cif(f"inverso_m{d['M'] * 100:.0f}_ingresos10", "§5", d["rev10"], 0, "M$")
+    cif(f"inverso_m{d['M'] * 100:.0f}_multiplo", "§5", d["rev10"] / REV0, 1, "x")
+    cif(f"inverso_m{d['M'] * 100:.0f}_ebit10", "§5", d["ebit10"], 0, "M$")
+for k, mm in REVERSE_M.items():
+    if mm is not None:   # v3: con la beta 1,84, la TACC alcista justifica el precio con un margen de ~100 % (v2: ninguno)
+        cif(f"inverso_margen_necesario_{k}", "§5", mm * 100, 1, "%")
+for c_, M_, v in REV_COMBOS:
+    cif(f"inverso_combo_c{c_ * 100:.0f}_m{M_ * 100:.0f}", "§5", v, 0, "$")
+for M_, c_sw in REVERSE_SW:
+    cif(f"inverso_sw_m{M_ * 100:.0f}_tacc", "§5", c_sw * 100, 1, "%")
+    cif(f"inverso_sw_m{M_ * 100:.0f}_multiplo", "§5", (1 + c_sw) ** N, 1, "x")
+for d in REVERSE:
+    if d["M"] in (0.20, 0.25, 0.30):
+        cif(f"inverso_m{d['M'] * 100:.0f}_vs_toyota", "§5", d["rev10"] / toyota_rev, 1, "x")
+        cif(f"inverso_m{d['M'] * 100:.0f}_ebit_vs_ttm", "§5", d["ebit10"] / EBIT0, 0, "x")
+        cif(f"inverso_m{d['M'] * 100:.0f}_capital_nuevo", "§5", (d["rev10"] - REV0) / STC_REV, 0, "M$")
+cif("capex_y1", "§2.1", CAPEX_Y1, 0, "M$")
+cif("reinv_y1", "§2.1", B0["rows"][0]["reinv"], 0, "M$")
+cif("capex_y1_vs_guia", "§2.1", CAPEX_GUIA_2026 - CAPEX_Y1, 0, "M$")
+cif("opex5_necesario", "§2.3", OPEX5_NEEDED, 0, "M$")
+cif("opex5_vs_ttm", "§2.3", (OPEX5_NEEDED / OPEX0 - 1) * 100, 1, "%")
+cif("tsla_ev_ventas", "§0 / §7", TSLA_EV_SALES, 1, "x")
+cif("tsla_ev_ebitda", "§0 / §7", TSLA_EV_EBITDA, 0, "x")
+cif("tsla_ev_ebit", "§0 / §7", TSLA_EV_EBIT, 0, "x")
+cif("tsla_per", "§0 / §7", TSLA_PE, 0, "x")
+cif("no_operativos_por_accion", "§6.4 / §8", NO_OPER_PS, 2, "$")
+
+with open(OUT_CIFRAS, "w", newline="", encoding="utf-8") as f:
+    w_ = csv.writer(f)
+    w_.writerow(["clave", "seccion_03", "valor_completo", "decimales", "unidad", "texto"])
+    for clave, sec, v, d, u in CIFRAS:
+        w_.writerow([clave, sec, repr(float(v)), d, u, txt(v, d)])
+
+# Aviso: cifras en las que redondear la salida a 2 decimales y luego a 1 daría otra cosa (el error de M1/M2)
+_dobles = [(cl, v, d) for cl, _, v, d, _ in CIFRAS if d >= 1 and red(red(v, d + 1), d) != red(v, d)]
+pr(f"\n=== CIFRAS DEL DOCUMENTO (v3, data/cifras_03_redondeo.csv: {len(CIFRAS)} cifras, redondeo único mitad hacia arriba) ===")
+for cl, sec, v, d, u in CIFRAS:
+    if not cl.startswith(("sens41_w", "sens42_", "inverso_combo", "base_fcff")):
+        pr(f"  {cl:38s} {txt(v, d):>12s} {u}")
+pr("  Cifras con riesgo de doble redondeo (re-redondear d+1 decimales daría otra cifra; usar el texto del CSV): "
+   + ("; ".join(f"{cl} {txt(v, d)} (no {txt(red(v, d + 1), d + 1)} → {txt(red(red(v, d + 1), d), d)})" for cl, v, d in _dobles) or "ninguna"))
+pr(f"Cifras escritas en {OUT_CIFRAS}")
